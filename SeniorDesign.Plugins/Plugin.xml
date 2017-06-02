@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- This XML is used to map plugins in this assembly for the Core -->
+<plugin name="Default Plugins" description="The default plugins included with Streamline">
+  
+  <!-- Media Connections are the raw IO ports, such as a websocket or Bluetooth -->
+  <media name="Random Data" class="SeniorDesign.Plugins.Connections.RandomDataController"/>
+  
+  <!-- Filters are objects that process data streams -->
+  <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
+  
+</plugin>

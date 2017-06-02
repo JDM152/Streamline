@@ -1,18 +1,19 @@
-﻿using SeniorDesign.Core.Enums;
+﻿using SeniorDesign.Core.Connections.Converter;
+using SeniorDesign.Core.Connections.MediaIO;
 
 namespace SeniorDesign.Core.Connections
 {
     /// <summary>
     ///     A single connection for input or output of data.
     ///     This is technically a container for the media type, 
-    ///     the decoding, and the push/pull controller.
+    ///     the decoding, and the push/pull controllers.
     /// </summary>
-    public abstract class DataConnection
+    public class DataConnection : IConnectable
     {
         /// <summary>
         ///     If this data connection is currently active or not
         /// </summary>
-        public virtual bool Enabled { get; set; }
+        public bool Enabled { get; set; }
 
         /// <summary>
         ///     An indentifier for this particular connection.
@@ -23,18 +24,23 @@ namespace SeniorDesign.Core.Connections
         /// <summary>
         ///     A name for this particular data connection type.
         /// </summary>
-        public abstract string InternalName { get; }
+        public string InternalName { get { return "Data Connection"; } }
 
         /// <summary>
         ///     The name given to this connection by the user to differentiate it
         ///     from the others.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <summary>
-        ///     Flags representing various static options for this data connection
+        ///     The physical connection that can send and recieve data
         /// </summary>
-        public abstract DataConnectionType ConnectionType { get; }
+        public MediaController MediaConnection;
+
+        /// <summary>
+        ///     The pipe to change the way the byte input and output is decoded and encoded
+        /// </summary>
+        public DataConverter Converter;
 
     }
 }
