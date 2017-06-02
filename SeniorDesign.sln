@@ -5,12 +5,12 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorDesign.Core", "src\Core\SeniorDesign.Core.csproj", "{9F6C41AB-DE80-4AF5-9A20-F54187B783AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorDesign.Plugins", "SeniorDesign.Plugins\SeniorDesign.Plugins.csproj", "{AC267EB6-6F60-4276-87E8-CF13518C6FF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorDesign.Plugins", "src\Plugins\SeniorDesign.Plugins.csproj", "{AC267EB6-6F60-4276-87E8-CF13518C6FF2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9F6C41AB-DE80-4AF5-9A20-F54187B783AC} = {9F6C41AB-DE80-4AF5-9A20-F54187B783AC}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorDesign.FrontEnd", "SeniorDesign.FrontEnd\SeniorDesign.FrontEnd.csproj", "{B93FF613-6A61-497D-800A-F6950B7E427A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorDesign.FrontEnd", "src\FrontEnd\SeniorDesign.FrontEnd.csproj", "{B93FF613-6A61-497D-800A-F6950B7E427A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9F6C41AB-DE80-4AF5-9A20-F54187B783AC} = {9F6C41AB-DE80-4AF5-9A20-F54187B783AC}
 		{AC267EB6-6F60-4276-87E8-CF13518C6FF2} = {AC267EB6-6F60-4276-87E8-CF13518C6FF2}
