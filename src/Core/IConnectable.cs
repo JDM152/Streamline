@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace SeniorDesign.Core
 {
     /// <summary>
@@ -28,6 +30,29 @@ namespace SeniorDesign.Core
         ///     from the others.
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        ///     The number of input connections this connectable accepts.
+        ///     -1 means an arbitrary number.
+        /// </summary>
+        int InputCount { get; }
+
+        /// <summary>
+        ///     The number of output connections this connectable provides.
+        /// </summary>
+        int OutputCount { get; }
+
+        /// <summary>
+        ///     The next connections in the connectable graph
+        /// </summary>
+        IList<IConnectable> NextConnections { get; }
+
+        /// <summary>
+        ///     Accepts incoming data from a previous connection.
+        ///     This is allowed to queue and store as needed.
+        /// </summary>
+        /// <param name="data">The data being pushed from the previous node</param>
+        void AcceptIncomingData(double[][] data);
 
     }
 }

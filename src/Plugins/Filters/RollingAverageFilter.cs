@@ -23,9 +23,20 @@ namespace SeniorDesign.Plugins.Filters
         #endregion
 
         /// <summary>
-        ///     The number of seperate data sets required to use this filter
+        ///     A name for this particular object type
         /// </summary>
-        public override int InputFieldCount { get { return 1; } }
+        public override string InternalName { get { return "Rolling Average Filter"; } }
+
+        /// <summary>
+        ///     The number of input connections this connectable accepts.
+        ///     -1 means an arbitrary number.
+        /// </summary>
+        public override int InputCount { get { return 1; } }
+
+        /// <summary>
+        ///     The number of output connections this connectable provides.
+        /// </summary>
+        public override int OutputCount { get { return 1; } }
 
         /// <summary>
         ///     The number of samples per field required to use this filter
@@ -33,16 +44,11 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return SmoothingFactor; } }
 
         /// <summary>
-        ///     The number of seperate data sets that this outputs
+        ///     Accepts incoming data from a previous connection.
+        ///     This is allowed to queue and store as needed.
         /// </summary>
-        public override int OutputFieldCount { get { return 1; } }
-
-        /// <summary>
-        ///     Filters incoming data, applying any equations
-        /// </summary>
-        /// <param name="data">The input data as specified by the filter parameters</param>
-        /// <returns>The filtered data</returns>
-        public override double[][] FilterData(double[][] data)
+        /// <param name="data">The data being pushed from the previous node</param>
+        public override void AcceptIncomingData(double[][] data)
         {
             // Return a 1x1 array with the average
             var currentData = data[0];
@@ -51,7 +57,10 @@ namespace SeniorDesign.Plugins.Filters
             for (var k = 0; k < currentData.Length; k++)
                 toReturn[0][0] += currentData[k];
             toReturn[0][0] /= currentData.Length;
-            return toReturn;
+
+            // Push to the next node
+            foreach (var connection in NextConnections)
+                connection.AcceptIncomingData(toReturn);
         }
 
     }

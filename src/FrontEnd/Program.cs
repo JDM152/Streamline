@@ -1,5 +1,8 @@
-﻿using SeniorDesign.FrontEnd.Windows;
+﻿using SeniorDesign.Core;
+using SeniorDesign.FrontEnd.Windows;
+using SeniorDesign.Plugins.Filters;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SeniorDesign.FrontEnd
@@ -12,9 +15,15 @@ namespace SeniorDesign.FrontEnd
         [STAThread]
         static void Main()
         {
+            // Create the Streamline Core object, and load the default plugins
+            var core = new StreamlineCore();
+            var pluginErrors = new List<string>();
+            core.LoadPluginsFromAssembly(typeof(RollingAverageFilter).Assembly, pluginErrors);
+
+            // Start the program GUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ControlPanel());
+            Application.Run(new ControlPanel(core));
         }
     }
 }

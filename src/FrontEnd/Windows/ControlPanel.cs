@@ -1,20 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SeniorDesign.Core;
 using System.Windows.Forms;
 
 namespace SeniorDesign.FrontEnd.Windows
 {
+    /// <summary>
+    ///     The main window for the Streamline application
+    /// </summary>
     public partial class ControlPanel : Form
     {
-        public ControlPanel()
+
+        /// <summary>
+        ///     The core of the program (the actual Streamline)
+        /// </summary>
+        protected readonly StreamlineCore Core;
+
+        /// <summary>
+        ///     Creates a new central control panel using a given core
+        /// </summary>
+        public ControlPanel(StreamlineCore core)
         {
+            Core = core;
             InitializeComponent();
+
+            // Don't show debug if not a dev
+            if (!CoreSettings.DebugMode)
+                debugToolStripMenuItem.Dispose();
+        }
+
+        /// <summary>
+        ///     Method triggered when the "Debug" option is clicked
+        /// </summary>
+        private void debugToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            // Open the debug control panel
+            new TestPanel(Core).Show();
         }
     }
 }

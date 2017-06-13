@@ -40,13 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connections\MediaIO\RandomDataController.cs" />
+    <Compile Include="Connections\Converters\SimpleStreamConverter.cs" />
+    <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
+    <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Filters\RollingAverageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\WorkflowTests.cs" />
+    <Compile Include="Util\ConversionUtil.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\src\Core\SeniorDesign.Core.csproj">
+    <ProjectReference Include="..\Core\SeniorDesign.Core.csproj">
       <Project>{9F6C41AB-DE80-4AF5-9A20-F54187B783AC}</Project>
       <Name>SeniorDesign.Core</Name>
     </ProjectReference>

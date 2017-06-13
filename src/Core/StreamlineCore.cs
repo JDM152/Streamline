@@ -1,5 +1,4 @@
 ﻿using SeniorDesign.Core.Connections;
-using SeniorDesign.Core.Connections.MediaIO;
 using SeniorDesign.Core.Filters;
 using System;
 using System.Collections.Generic;
@@ -14,17 +13,22 @@ namespace SeniorDesign.Core
     ///     Delegates work off to several smaller manager, each
     ///     responsible for their own work.
     /// </summary>
-    public sealed class CoreManager
+    public sealed class StreamlineCore
     {
         /// <summary>
-        ///     The connection manager for input and output data
+        ///     A list of all of the available nodes (inputs, outputs, and filters)
         /// </summary>
-        private DataConnectionManager _dataConnectionManager;
+        internal readonly IList<IConnectable> Nodes = new List<IConnectable>();
 
         /// <summary>
         ///     The plugins being used by the program
         /// </summary>
         internal readonly IList<PluginDefinition> Plugins = new List<PluginDefinition>();
+
+        /// <summary>
+        ///     The ID to assign the next new node
+        /// </summary>
+        private int _nodeIndex = 1;
 
         /// <summary>
         ///     Loads all of the plugin data from a particular assembly
@@ -77,7 +81,7 @@ namespace SeniorDesign.Core
                 switch (node.LocalName)
                 {
                     case "media":
-                        loadType = typeof(MediaController);
+                        loadType = typeof(Stream);
                         break;
 
                     case "filter":
@@ -127,6 +131,32 @@ namespace SeniorDesign.Core
 
             // Add the plugin to the list
             Plugins.Add(newPlugin);
+        }
+
+        /// <summary>
+        ///     Adds a new connection to the currently active ones
+        /// </summary>
+        /// <param name="obj">The connectable to add</param>
+        public void AddConnectable(IConnectable obj)
+        {
+            if (Nodes.Contains(obj))
+                return;
+
+            Nodes.Add(obj);
+            obj.Id = _nodeIndex++;
+        }
+
+        /// <summary>
+        ///     Removes a connection from the currently active ones
+        /// </summary>
+        /// <param name="obj">The connectable to remove</param>
+        public void DeleteConnectable(IConnectable obj)
+        {
+            if (Nodes.Contains(obj))
+            {
+                Nodes.Remove(obj);
+                obj.Id = -1;
+            }
         }
     }
 }

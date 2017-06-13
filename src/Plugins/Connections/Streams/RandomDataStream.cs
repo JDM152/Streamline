@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using SeniorDesign.Core.Connections.MediaIO;
 
 namespace SeniorDesign.Plugins.Connections
 {
@@ -8,7 +7,7 @@ namespace SeniorDesign.Plugins.Connections
     ///     A dummy type of Data Connection where random data is fed
     ///     as a byte stream.
     /// </summary>
-    public class RandomDataController : MediaController
+    public class RandomDataStream : Stream
     {
         /// <summary>
         ///     The random number generator used to supply data
@@ -65,7 +64,7 @@ namespace SeniorDesign.Plugins.Connections
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Ensure that the buffer will not overflow
-            if (offset + count >= buffer.Length)
+            if (offset + count > buffer.Length)
                 throw new IndexOutOfRangeException($"Cannot read [{count}] more values at an offset of [{offset}] into a buffer of size [{buffer.Length}]");
 
             // Copy over random data

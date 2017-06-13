@@ -1,0 +1,50 @@
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Connections;
+using SeniorDesign.Plugins.Connections;
+using SeniorDesign.Plugins.Connections.Converters;
+using SeniorDesign.Plugins.Connections.Pollers;
+using SeniorDesign.Plugins.Filters;
+using System;
+
+namespace SeniorDesign.FrontEnd.Test
+{
+
+    /// <summary>
+    ///     A test class used to debug workflows
+    /// </summary>
+    public static class WorkflowTests
+    {
+
+        /// <summary>
+        ///     A test that creates a complete dummy workflow from start to finish
+        ///     using random data inputs.
+        /// </summary>
+        /// <param name="core">The Streamline Core used in the test</param>
+        public static void CreateDummyWorkflowTestA(StreamlineCore core)
+        {
+            // Create the random input object that is polled every 100ms
+            var input = new DataConnection();
+            input.MediaConnection = new RandomDataStream();
+            input.Converter = new SimpleStreamConverter();
+            input.Poller = new PeriodicPoller();
+            core.AddConnectable(input);
+
+            // Create the rolling average filter object and connect it
+            var rollingAverageFilter = new RollingAverageFilter();
+            input.NextConnections.Add(rollingAverageFilter);
+            core.AddConnectable(rollingAverageFilter);
+
+            // Create the console output object and connect it to the filter
+            var output = new DataConnection();
+            output.IsOutput = true;
+            output.MediaConnection = Console.OpenStandardOutput();
+            output.Converter = new SimpleStreamConverter();
+            output.Poller = null;
+            rollingAverageFilter.NextConnections.Add(output);
+            core.AddConnectable(output);
+
+            // At this point, the workflow should work entirely on its own
+        }
+
+    }
+}

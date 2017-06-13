@@ -58,6 +58,12 @@
     <Compile Include="Windows\ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TestPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\TestPanel.Designer.cs">
+      <DependentUpon>TestPanel.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -69,6 +75,9 @@
     </Compile>
     <EmbeddedResource Include="Windows\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\TestPanel.resx">
+      <DependentUpon>TestPanel.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
@@ -85,7 +94,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Core\SeniorDesign.Core.csproj">
+      <Project>{9F6C41AB-DE80-4AF5-9A20-F54187B783AC}</Project>
+      <Name>SeniorDesign.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\SeniorDesign.Plugins.csproj">
+      <Project>{AC267EB6-6F60-4276-87E8-CF13518C6FF2}</Project>
+      <Name>SeniorDesign.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
