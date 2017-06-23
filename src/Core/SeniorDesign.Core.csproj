@@ -40,14 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\UserConfigurableAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurableIntegerAttribute.cs" />
+    <Compile Include="Connections\Converters\DataConverter.cs" />
     <Compile Include="Connections\DataConnection.cs" />
-    <Compile Include="Connections\DataConnectionManager.cs" />
-    <Compile Include="CoreManager.cs" />
+    <Compile Include="Connections\Pollers\PollingMechanism.cs" />
+    <Compile Include="CoreSettings.cs" />
+    <Compile Include="StreamlineCore.cs" />
     <Compile Include="Enums\DataConnectionType.cs" />
     <Compile Include="Exceptions\InvalidDataConnectionTypeException.cs" />
     <Compile Include="Exceptions\InvalidOperationException.cs" />
+    <Compile Include="Filters\DataFilter.cs" />
+    <Compile Include="IConnectable.cs" />
+    <Compile Include="PluginDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\ArrayUtil.cs" />
+    <Compile Include="Util\StreamUtil.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
