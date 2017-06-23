@@ -41,8 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connections\Converters\SimpleStreamConverter.cs" />
+    <Compile Include="Connections\Converters\SimpleStringConverter.cs" />
     <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
+    <Compile Include="Filters\AdditionFilter.cs" />
+    <Compile Include="Filters\QuantizerFilter.cs" />
     <Compile Include="Filters\RollingAverageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\WorkflowTests.cs" />

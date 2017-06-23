@@ -30,17 +30,27 @@ namespace SeniorDesign.FrontEnd.Test
             core.AddConnectable(input);
 
             // Create the rolling average filter object and connect it
+            /*
             var rollingAverageFilter = new RollingAverageFilter();
             input.NextConnections.Add(rollingAverageFilter);
             core.AddConnectable(rollingAverageFilter);
+            */
+
+            // Create the quantizer filter object and connect it
+            var quantizerFilter = new QuantizerFilter();
+            input.NextConnections.Add(quantizerFilter);
+            core.AddConnectable(quantizerFilter);
+            quantizerFilter.Maximum = double.MaxValue;
+            quantizerFilter.StepSize = 100;
 
             // Create the console output object and connect it to the filter
             var output = new DataConnection();
             output.IsOutput = true;
             output.MediaConnection = Console.OpenStandardOutput();
-            output.Converter = new SimpleStreamConverter();
+            output.Converter = new SimpleStringConverter();
             output.Poller = null;
-            rollingAverageFilter.NextConnections.Add(output);
+            //rollingAverageFilter.NextConnections.Add(output);
+            quantizerFilter.NextConnections.Add(output);
             core.AddConnectable(output);
 
             // At this point, the workflow should work entirely on its own
