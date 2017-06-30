@@ -7,7 +7,7 @@ namespace SeniorDesign.Core
     ///     A definition for a single loaded plugin, including every component that is a part of the plugin,
     ///     and some useful help information.
     /// </summary>
-    internal class PluginDefinition
+    public class PluginDefinition
     {
         /// <summary>
         ///     The name given to the full plugin
@@ -20,9 +20,19 @@ namespace SeniorDesign.Core
         public string Description;
 
         /// <summary>
-        ///     A collection of the Media Controllers in this plugin
+        ///     A collection of the Streams added in this plugin
         /// </summary>
-        public IDictionary<string, Type> MediaControllerTypes = new Dictionary<string, Type>();
+        public IDictionary<string, Type> StreamTypes = new Dictionary<string, Type>();
+
+        /// <summary>
+        ///     A collection of the Pollers added in this plugin
+        /// </summary>
+        public IDictionary<string, Type> PollerTypes = new Dictionary<string, Type>();
+
+        /// <summary>
+        ///     A collection of the data converters added in this plugin
+        /// </summary>
+        public IDictionary<string, Type> DataConverterTypes = new Dictionary<string, Type>();
 
         /// <summary>
         ///     A collection of the Filters in this plugin

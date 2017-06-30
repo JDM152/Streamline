@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NAudio.1.8.0\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +47,8 @@
     <Compile Include="Connections\Converters\SimpleStreamConverter.cs" />
     <Compile Include="Connections\Converters\SimpleStringConverter.cs" />
     <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
+    <Compile Include="Connections\Streams\AudioDataStream.cs" />
+    <Compile Include="Connections\Streams\ConstantDataStream.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
     <Compile Include="Filters\QuantizerFilter.cs" />
@@ -51,7 +57,9 @@
     <Compile Include="Test\WorkflowTests.cs" />
     <Compile Include="Util\ConversionUtil.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\SeniorDesign.Core.csproj">
       <Project>{9F6C41AB-DE80-4AF5-9A20-F54187B783AC}</Project>
@@ -59,7 +67,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Plugin.xml" />
+    <EmbeddedResource Include="Plugin.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

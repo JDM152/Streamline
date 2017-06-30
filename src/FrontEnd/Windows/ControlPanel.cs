@@ -28,12 +28,20 @@ namespace SeniorDesign.FrontEnd.Windows
         }
 
         /// <summary>
-        ///     Method triggered when the "Debug" option is clicked
+        ///     Method triggered when the "Debug" option is clicked in Debug
         /// </summary>
         private void debugToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             // Open the debug control panel
             new TestPanel(Core).Show();
+        }
+
+        /// <summary>
+        ///     Method triggered when the "Plugins" option is clicked in View->Plugins
+        /// </summary>
+        private void pluginsToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            new PluginPanel(Core).ShowDialog();
         }
     }
 }

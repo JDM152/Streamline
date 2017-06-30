@@ -1,4 +1,6 @@
 ﻿using SeniorDesign.Core.Connections;
+using SeniorDesign.Core.Connections.Converter;
+using SeniorDesign.Core.Connections.Pollers;
 using SeniorDesign.Core.Filters;
 using System;
 using System.Collections.Generic;
@@ -18,12 +20,12 @@ namespace SeniorDesign.Core
         /// <summary>
         ///     A list of all of the available nodes (inputs, outputs, and filters)
         /// </summary>
-        internal readonly IList<IConnectable> Nodes = new List<IConnectable>();
+        public readonly IList<IConnectable> Nodes = new List<IConnectable>();
 
         /// <summary>
         ///     The plugins being used by the program
         /// </summary>
-        internal readonly IList<PluginDefinition> Plugins = new List<PluginDefinition>();
+        public readonly IList<PluginDefinition> Plugins = new List<PluginDefinition>();
 
         /// <summary>
         ///     The ID to assign the next new node
@@ -41,14 +43,31 @@ namespace SeniorDesign.Core
             string xmlContents;
             try
             {
-                using (var filestream = assembly.GetFile("Plugin.xml"))
+                // Search for the file
+                var files = assembly.GetManifestResourceNames();
+                string fullName = null;
+                foreach (var file in files)
+                    if (file.EndsWith("Plugin.xml"))
+                    {
+                        fullName = file;
+                        break;
+                    }
+
+                if (string.IsNullOrEmpty(fullName))
+                {
+                    errorStrings.Add("The Plugin.xml file could not be read from the assembly");
+                    return;
+                }
+
+                // Load the contents of the file
+                using (var filestream = assembly.GetManifestResourceStream(fullName))
                     using (var reader = new StreamReader(filestream))
                         xmlContents = reader.ReadToEnd();
             }
-            catch
+            catch (Exception ex)
             {
                 // Assembly does not have 
-                errorStrings.Add("The Plugin.xml file could not be read from the assembly.");
+                errorStrings.Add("The Plugin.xml file could not be read from the assembly : " + ex);
                 return;
             }
 
@@ -74,14 +93,31 @@ namespace SeniorDesign.Core
                 string name, className;
                 Type loadType = null;
 
+                // Ignore comments
+                if (node.NodeType == XmlNodeType.Comment)
+                    continue;
+
                 // Get the 'official' name of the object type
+                if (node.Attributes["name"] == null)
+                {
+                    errorStrings.Add("Unnamed XML node " + node.Name);
+                    continue;
+                }
                 name = node.Attributes["name"].Value;
 
                 // Switch off for some processing based upon the node name
                 switch (node.LocalName)
                 {
-                    case "media":
+                    case "stream":
                         loadType = typeof(Stream);
+                        break;
+
+                    case "poller":
+                        loadType = typeof(PollingMechanism);
+                        break;
+
+                    case "converter":
+                        loadType = typeof(DataConverter);
                         break;
 
                     case "filter":
@@ -104,7 +140,7 @@ namespace SeniorDesign.Core
                     }
 
                     // Ensure that the type exists
-                    var realType = Type.GetType(className, false, false);
+                    var realType = assembly.GetType(className, false, true);
                     if (realType == null)
                     {
                         errorStrings.Add($"The class for {node.LocalName} [{name}], [{className}] could not be found.");
@@ -114,8 +150,16 @@ namespace SeniorDesign.Core
                     // Switch off for some processing based upon the node name
                     switch (node.LocalName)
                     {
-                        case "media":
-                            newPlugin.MediaControllerTypes.Add(name, realType);
+                        case "stream":
+                            newPlugin.StreamTypes.Add(name, realType);
+                            break;
+
+                        case "poller":
+                            newPlugin.PollerTypes.Add(name, realType);
+                            break;
+
+                        case "converter":
+                            newPlugin.DataConverterTypes.Add(name, realType);
                             break;
 
                         case "filter":
