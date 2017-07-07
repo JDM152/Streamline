@@ -51,6 +51,7 @@
     <Compile Include="Connections\Streams\ConstantDataStream.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
+    <Compile Include="Filters\DifferentiatorFilter.cs" />
     <Compile Include="Filters\QuantizerFilter.cs" />
     <Compile Include="Filters\RollingAverageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

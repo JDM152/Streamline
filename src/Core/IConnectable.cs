@@ -51,8 +51,10 @@ namespace SeniorDesign.Core
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>
-        /// <param name="data">The data being pushed from the previous node</param>
-        void AcceptIncomingData(double[][] data);
+        /// <param name="core">The core that is passing the data in</param>
+        /// <param name="data">The data being pushed from the previous node.</param>
+        /// <remarks>If data is not emptied, it will be added onto and passed next cycle</remarks>
+        void AcceptIncomingData(StreamlineCore core, DataPacket data);
 
     }
 }

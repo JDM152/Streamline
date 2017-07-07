@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="output">The output byte array to convert</param>
         /// <returns>A series of bytes representing the encoded data</returns>
-        public virtual byte[] EncodeData(ref double[][] output)
+        public virtual byte[] EncodeData(DataPacket output)
         {
             return null;
         }

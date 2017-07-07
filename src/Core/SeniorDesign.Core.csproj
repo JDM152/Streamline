@@ -47,6 +47,9 @@
     <Compile Include="Connections\DataConnection.cs" />
     <Compile Include="Connections\Pollers\PollingMechanism.cs" />
     <Compile Include="CoreSettings.cs" />
+    <Compile Include="DataPacket.cs" />
+    <Compile Include="Exceptions\InvalidChannelCountException.cs" />
+    <Compile Include="IConnectableMetadata.cs" />
     <Compile Include="StreamlineCore.cs" />
     <Compile Include="Enums\DataConnectionType.cs" />
     <Compile Include="Exceptions\InvalidDataConnectionTypeException.cs" />
