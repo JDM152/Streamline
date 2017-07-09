@@ -1,4 +1,6 @@
-﻿using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Plugins.Util;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,10 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// <summary>
         ///     The number of bytes per number
         /// </summary>
+        [UserConfigurableInteger(
+            Name = "Output Type",
+            Description = "The minimum value in the range (values below will snap to this)."
+        )]
         public int DataSize = 4;
 
         /// <summary>
@@ -73,17 +79,17 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// </summary>
         /// <param name="output">The output byte array to convert</param>
         /// <returns>A series of bytes representing the encoded data</returns>
-        public override byte[] EncodeData(ref double[][] output)
+        public override byte[] EncodeData(DataPacket data)
         {
             
             // Go through and convert every double in the array
             var toReturn = new List<byte>();
-            for (var k = 0; k < output.Length; k++)
-                for (var j = 0; j < output[k].Length; j++)
-                    toReturn.AddRange(ConversionUtil.DoubleToBytes(output[k][j], DataSize, Signed, LittleEndianMode));
+            for (var k = 0; k < data.ChannelCount; k++)
+                for (var j = 0; j < data[k].Count; j++)
+                    toReturn.AddRange(ConversionUtil.DoubleToBytes(data[k][j], DataSize, Signed, LittleEndianMode));
 
             // Empty right off the bat
-            output = null;
+            data.Clear();
 
             return toReturn.ToArray();
         }

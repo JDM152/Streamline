@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\UserConfigurableAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurableBooleanAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableDoubleAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableIntegerAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurableSelectableListAttribute.cs" />
     <Compile Include="Connections\Converters\DataConverter.cs" />
     <Compile Include="Connections\DataConnection.cs" />
     <Compile Include="Connections\Pollers\PollingMechanism.cs" />

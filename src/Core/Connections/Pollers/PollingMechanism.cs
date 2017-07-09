@@ -6,6 +6,20 @@
     public abstract class PollingMechanism
     {
         /// <summary>
+        ///     Creates a new Polling Mechanism working for a specific core
+        /// </summary>
+        /// <param name="core">The core this reports back to</param>
+        public PollingMechanism(StreamlineCore core)
+        {
+            Core = core;
+        }
+
+        /// <summary>
+        ///     The core that this reports to
+        /// </summary>
+        protected StreamlineCore Core;
+
+        /// <summary>
         ///     The data connection that is required to be polled.
         /// </summary>
         public DataConnection Connection;

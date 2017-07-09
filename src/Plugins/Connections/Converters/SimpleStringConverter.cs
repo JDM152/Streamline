@@ -1,4 +1,5 @@
-﻿using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Connections.Converter;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,17 +46,17 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// </summary>
         /// <param name="output">The output byte array to convert</param>
         /// <returns>A series of bytes representing the encoded data</returns>
-        public override byte[] EncodeData(ref double[][] output)
+        public override byte[] EncodeData(DataPacket data)
         {
 
             // Go through and convert every double in the array
             var toReturn = new List<byte>();
-            for (var k = 0; k < output.Length; k++)
-                for (var j = 0; j < output[k].Length; j++)
-                    toReturn.AddRange(StringEncoding.GetBytes(output[k][j] + SeperatorToken));
+            for (var k = 0; k < data.ChannelCount; k++)
+                for (var j = 0; j < data[k].Count; j++)
+                    toReturn.AddRange(StringEncoding.GetBytes(data[k][j] + SeperatorToken));
 
             // Empty right off the bat
-            output = null;
+            data.Clear();
 
             return toReturn.ToArray();
         }

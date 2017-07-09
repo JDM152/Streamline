@@ -1,4 +1,5 @@
-﻿using SeniorDesign.Core.Filters;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Filters;
 
 namespace SeniorDesign.Plugins.Filters
 {
@@ -30,6 +31,7 @@ namespace SeniorDesign.Plugins.Filters
 
         /// <summary>
         ///     The number of output connections this connectable provides.
+        ///     -1 means the number of outputs matches the number of inputs
         /// </summary>
         public override int OutputCount { get { return 1; } }
 
@@ -48,19 +50,10 @@ namespace SeniorDesign.Plugins.Filters
         ///     This is allowed to queue and store as needed.
         /// </summary>
         /// <param name="data">The data being pushed from the previous node</param>
-        public override void AcceptIncomingData(double[][] data)
+        /// <param name="core">The Streamline program this is a part of</param>
+        public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            // Return a 1x1 array with the average
-            var currentData = data[0];
-            var toReturn = new double[1][];
-            toReturn[0] = new double[1];
-            for (var k = 0; k < currentData.Length; k++)
-                toReturn[0][0] += currentData[k];
-            toReturn[0][0] /= currentData.Length;
-
-            // Push to the next node
-            foreach (var connection in NextConnections)
-                connection.AcceptIncomingData(toReturn);
+            
         }
 
     }

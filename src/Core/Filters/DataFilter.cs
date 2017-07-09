@@ -39,6 +39,7 @@ namespace SeniorDesign.Core.Filters
 
         /// <summary>
         ///     The number of output connections this connectable provides.
+        ///     -1 means the number of outputs match the inputs
         /// </summary>
         public abstract int OutputCount { get; }
 
@@ -52,7 +53,8 @@ namespace SeniorDesign.Core.Filters
         ///     This is allowed to queue and store as needed.
         /// </summary>
         /// <param name="data">The data being pushed from the previous node</param>
-        public abstract void AcceptIncomingData(double[][] data);
+        /// <param name="core">The Streamline program this is a part of</param>
+        public abstract void AcceptIncomingData(StreamlineCore core, DataPacket data);
 
         #endregion
 

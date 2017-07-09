@@ -221,8 +221,20 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
+        ///     Passes data from a single connection to all available connections,
+        ///     performing all translations as needed
+        /// </summary>
+        /// <param name="root">The IConnetable giving out the data</param>
+        /// <param name="data">The data being sent</param>
+        public void PassDataToNextConnectable(IConnectable root, double[][] data)
+        {
+            PassDataToNextConnectable(root, new DataPacket(data));
+        }
+
+        /// <summary>
         ///     Passes data from a single connection to all available next connections,
         ///     performing all translations as needed.
+        ///     Note that the data packet passed will not be altered at all.
         /// </summary>
         /// <param name="root">The IConnectable giving out the data</param>
         /// <param name="data">The data being sent</param>

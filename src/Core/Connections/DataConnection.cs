@@ -130,12 +130,7 @@ namespace SeniorDesign.Core.Connections
                 throw new System.Exception("An input cannot accept data from other program nodes.");
 
             // Encode the data
-            if (_leftoverOutputData != null)
-                for (var k = 0; k < _leftoverOutputData.Length; k++)
-                    _leftoverOutputData[k] = _leftoverOutputData[k].Concat(data[k]);
-            else
-                _leftoverOutputData = data;
-            var encodedData = Converter.EncodeData(ref _leftoverOutputData);
+            var encodedData = Converter.EncodeData(data);
 
             // Pass it on to be output
             MediaConnection.Write(encodedData, 0, encodedData.Length);

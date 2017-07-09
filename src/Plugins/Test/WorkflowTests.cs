@@ -26,7 +26,7 @@ namespace SeniorDesign.FrontEnd.Test
             var input = new DataConnection();
             input.MediaConnection = new RandomDataStream();
             input.Converter = new SimpleStreamConverter();
-            input.Poller = new PeriodicPoller();
+            input.Poller = new PeriodicPoller(core);
             core.AddConnectable(input);
 
             // Create the rolling average filter object and connect it

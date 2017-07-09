@@ -146,6 +146,22 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
+        ///     Ensures that a specific number of channels exist.
+        ///     Returns false if over the count
+        /// </summary>
+        /// <param name="count">The number of channels to ensure</param>
+        /// <returns>True if the amount was reached, false if went over</returns>
+        public bool EnsureChannelCount(int count)
+        {
+            if (_data.Count <= count)
+                while (_data.Count < count)
+                    _data.Add(new List<double>());
+            else
+                return false;
+            return true;
+        }
+
+        /// <summary>
         ///     Removes the specified channel from the data set
         /// </summary>
         /// <param name="channel">The index of the channel to remove</param>
@@ -185,12 +201,26 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
+        ///     Gets a single point from the packet.
+        ///     The point retrieved will be removed
+        /// </summary>
+        /// <param name="channel">The channel number to pop fom</param>
+        /// <returns>The data requested</returns>
+        public double Pop(int channel)
+        {
+            var toReturn = _data[channel][0];
+            _data[channel].RemoveAt(0);
+            return toReturn;
+        }
+
+        /// <summary>
         ///     Gets a specified number of points from the packet.
         ///     Positive numbers mean from the beginning.
         ///     Negative numbers mean from the end.
         ///     If not enough points exist, what does exist will return.
         ///     The points retrieved will be removed
         /// </summary>
+        /// <param name="channel">The channel number to pop from</param>
         /// <param name="count">The number of points to retrieve</param>
         /// <returns>The data requested</returns>
         public List<double> PopRange(int channel, int count)
@@ -217,6 +247,52 @@ namespace SeniorDesign.Core
             }
 
             return toReturn;
+        }
+
+        /// <summary>
+        ///     Gets a specified number of points from the packet.
+        ///     Positive numbers mean from the beginning.
+        ///     Negative numbers mean from the end.
+        ///     If not enough points exist, what does exist will return.
+        /// </summary>
+        /// <param name="channel">The channel number to pop from</param>
+        /// <param name="count">The number of points to retrieve</param>
+        /// <returns>The data requested</returns>
+        public List<double> PeekRange(int channel, int count)
+        {
+            var toReturn = new List<double>();
+            var rcount = count;
+
+            // Begin popping off the required values
+            if (count > 0)
+            {
+                // Normal method. Get everything up front
+                rcount = count < toReturn.Count ? toReturn.Count : count;
+                for (var k = 0; k < rcount; k++)
+                    toReturn.Add(_data[channel][k]);
+            }
+            else
+            {
+                // Reverse method. Take from the back
+                rcount = toReturn.Count + count > 0 ? toReturn.Count + count : 0;
+                for (var k = rcount; k < toReturn.Count; k++)
+                    toReturn.Add(_data[channel][k]);
+            }
+
+            return toReturn;
+        }
+
+        /// <summary>
+        ///     Checks to see if all channels have at least min points
+        /// </summary>
+        /// <param name="min">The minimum to check for</param>
+        /// <returns>True if the count exists on all channels</returns>
+        public bool MinCountOnAllChannels(int min = 1)
+        {
+            foreach (var channel in _data)
+                if (channel.Count < min)
+                    return false;
+            return true;
         }
 
     }
