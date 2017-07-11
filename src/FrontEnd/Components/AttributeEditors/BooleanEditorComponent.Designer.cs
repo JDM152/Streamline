@@ -52,7 +52,7 @@
             this.CheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CheckBox.AutoSize = true;
-            this.CheckBox.Location = new System.Drawing.Point(137, 4);
+            this.CheckBox.Location = new System.Drawing.Point(97, 6);
             this.CheckBox.Name = "CheckBox";
             this.CheckBox.Size = new System.Drawing.Size(15, 14);
             this.CheckBox.TabIndex = 2;

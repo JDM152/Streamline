@@ -175,7 +175,7 @@ namespace SeniorDesign.Core
         /// </summary>
         /// <param name="packet">The packet to add data from</param>
         /// <param name="allowCreateChannel">If new channels can be created</param>
-        public void Add(DataPacket packet, bool allowCreateChannel = false)
+        public void Add(DataPacket packet, bool allowCreateChannel = true)
         {
             // Don't allow channel creation normally
             if (packet.ChannelCount != ChannelCount && !allowCreateChannel)

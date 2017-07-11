@@ -247,7 +247,7 @@ namespace SeniorDesign.Core
             foreach (var connection in root.NextConnections)
             {
                 // Use the extra data not previously accepted
-                var mdata = meta.LeftoverData[connection];
+                var mdata = meta.GetLeftoverData(connection);
                 mdata.Add(data);
 
                 // Ensure that the channel count is valid

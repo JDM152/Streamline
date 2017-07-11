@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.AttributeName = new System.Windows.Forms.Label();
             this.UseTip = new System.Windows.Forms.ToolTip(this.components);
-            this.CheckBox = new System.Windows.Forms.CheckBox();
+            this.InputControl = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // AttributeName
@@ -47,27 +47,27 @@
             // 
             this.UseTip.OwnerDraw = true;
             // 
-            // CheckBox
+            // InputControl
             // 
-            this.CheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.InputControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CheckBox.AutoSize = true;
-            this.CheckBox.Location = new System.Drawing.Point(137, 4);
-            this.CheckBox.Name = "CheckBox";
-            this.CheckBox.Size = new System.Drawing.Size(15, 14);
-            this.CheckBox.TabIndex = 2;
-            this.CheckBox.UseVisualStyleBackColor = true;
-            this.CheckBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
+            this.InputControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.InputControl.FormattingEnabled = true;
+            this.InputControl.Location = new System.Drawing.Point(97, 3);
+            this.InputControl.Name = "InputControl";
+            this.InputControl.Size = new System.Drawing.Size(120, 21);
+            this.InputControl.TabIndex = 2;
+            this.InputControl.SelectedIndexChanged += new System.EventHandler(this.InputControl_SelectedIndexChanged);
             // 
-            // BooleanEditorComponent
+            // SelectableListEditorComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.CheckBox);
+            this.Controls.Add(this.InputControl);
             this.Controls.Add(this.AttributeName);
             this.MaximumSize = new System.Drawing.Size(0, 25);
             this.MinimumSize = new System.Drawing.Size(220, 25);
-            this.Name = "BooleanEditorComponent";
+            this.Name = "SelectableListEditorComponent";
             this.Size = new System.Drawing.Size(220, 25);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -77,6 +77,6 @@
         #endregion
         private System.Windows.Forms.Label AttributeName;
         private System.Windows.Forms.ToolTip UseTip;
-        private System.Windows.Forms.CheckBox CheckBox;
+        private System.Windows.Forms.ComboBox InputControl;
     }
 }

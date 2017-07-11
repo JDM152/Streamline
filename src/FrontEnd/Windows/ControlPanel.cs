@@ -43,5 +43,13 @@ namespace SeniorDesign.FrontEnd.Windows
         {
             new PluginPanel(Core).ShowDialog();
         }
+
+        /// <summary>
+        ///     Method triggered when the "Advanced Block Editor" option is clicked in View->Advanced Block Editor
+        /// </summary>
+        private void advancedBlockEditorToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            new AdvancedBlockPanel(Core).ShowDialog();
+        }
     }
 }

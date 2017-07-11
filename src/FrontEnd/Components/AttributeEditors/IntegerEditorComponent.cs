@@ -9,8 +9,28 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
     /// <summary>
     ///     An editor for the User Input Integer components
     /// </summary>
-    public partial class IntegerEditorComponent : AttributeEditorComponent<UserConfigurableIntegerAttribute>
+    public partial class IntegerEditorComponent : UserControl, IAttributeEditorComponent<UserConfigurableIntegerAttribute>
     {
+
+        #region IAttributeEditorComponent
+
+        /// <summary>
+        ///     The field that is being edited
+        /// </summary>
+        public FieldInfo Field { get; protected set; }
+
+        /// <summary>
+        ///     The object that this is editing the component of
+        ///     (Not the field itself, but the object that owns the field)
+        /// </summary>
+        public object Owner { get; protected set; }
+
+        /// <summary>
+        ///     The attribute data for the field being edited
+        /// </summary>
+        public UserConfigurableIntegerAttribute Attribute { get; protected set; }
+
+        #endregion
 
         /// <summary>
         ///     Creates a new editor for the given component of an object
