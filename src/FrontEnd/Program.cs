@@ -19,6 +19,8 @@ namespace SeniorDesign.FrontEnd
             var core = new StreamlineCore();
             var pluginErrors = new List<string>();
             core.LoadPluginsFromAssembly(typeof(RollingAverageFilter).Assembly, pluginErrors);
+            foreach (var line in pluginErrors)
+                Console.WriteLine("Plugin Error : " + line);
 
             // Start the program GUI
             Application.EnableVisualStyles();

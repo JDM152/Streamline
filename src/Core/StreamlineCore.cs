@@ -1,4 +1,7 @@
 ﻿using SeniorDesign.Core.Connections;
+using SeniorDesign.Core.Connections.Converter;
+using SeniorDesign.Core.Connections.Pollers;
+using SeniorDesign.Core.Exceptions;
 using SeniorDesign.Core.Filters;
 using System;
 using System.Collections.Generic;
@@ -16,19 +19,26 @@ namespace SeniorDesign.Core
     public sealed class StreamlineCore
     {
         /// <summary>
-        ///     A list of all of the available nodes (inputs, outputs, and filters)
-        /// </summary>
-        internal readonly IList<IConnectable> Nodes = new List<IConnectable>();
-
-        /// <summary>
         ///     The plugins being used by the program
         /// </summary>
-        internal readonly IList<PluginDefinition> Plugins = new List<PluginDefinition>();
+        public readonly IList<PluginDefinition> Plugins = new List<PluginDefinition>();
+        
+        /// <summary>
+        ///     A list of all of the available nodes (inputs, outputs, and filters)
+        /// </summary>
+        public readonly IList<IConnectable> Nodes = new List<IConnectable>();
 
         /// <summary>
         ///     The ID to assign the next new node
         /// </summary>
         private int _nodeIndex = 1;
+
+        /// <summary>
+        ///     A collection of extra metadata for each IConnectable
+        /// </summary>
+        private readonly IDictionary<IConnectable, IConnectableMetadata> _connectableMetadata = new Dictionary<IConnectable, IConnectableMetadata>();
+
+        #region Plugin Management
 
         /// <summary>
         ///     Loads all of the plugin data from a particular assembly
@@ -41,14 +51,31 @@ namespace SeniorDesign.Core
             string xmlContents;
             try
             {
-                using (var filestream = assembly.GetFile("Plugin.xml"))
+                // Search for the file
+                var files = assembly.GetManifestResourceNames();
+                string fullName = null;
+                foreach (var file in files)
+                    if (file.EndsWith("Plugin.xml"))
+                    {
+                        fullName = file;
+                        break;
+                    }
+
+                if (string.IsNullOrEmpty(fullName))
+                {
+                    errorStrings.Add("The Plugin.xml file could not be read from the assembly");
+                    return;
+                }
+
+                // Load the contents of the file
+                using (var filestream = assembly.GetManifestResourceStream(fullName))
                     using (var reader = new StreamReader(filestream))
                         xmlContents = reader.ReadToEnd();
             }
-            catch
+            catch (Exception ex)
             {
                 // Assembly does not have 
-                errorStrings.Add("The Plugin.xml file could not be read from the assembly.");
+                errorStrings.Add("The Plugin.xml file could not be read from the assembly : " + ex);
                 return;
             }
 
@@ -74,14 +101,31 @@ namespace SeniorDesign.Core
                 string name, className;
                 Type loadType = null;
 
+                // Ignore comments
+                if (node.NodeType == XmlNodeType.Comment)
+                    continue;
+
                 // Get the 'official' name of the object type
+                if (node.Attributes["name"] == null)
+                {
+                    errorStrings.Add("Unnamed XML node " + node.Name);
+                    continue;
+                }
                 name = node.Attributes["name"].Value;
 
                 // Switch off for some processing based upon the node name
                 switch (node.LocalName)
                 {
-                    case "media":
+                    case "stream":
                         loadType = typeof(Stream);
+                        break;
+
+                    case "poller":
+                        loadType = typeof(PollingMechanism);
+                        break;
+
+                    case "converter":
+                        loadType = typeof(DataConverter);
                         break;
 
                     case "filter":
@@ -104,7 +148,7 @@ namespace SeniorDesign.Core
                     }
 
                     // Ensure that the type exists
-                    var realType = Type.GetType(className, false, false);
+                    var realType = assembly.GetType(className, false, true);
                     if (realType == null)
                     {
                         errorStrings.Add($"The class for {node.LocalName} [{name}], [{className}] could not be found.");
@@ -114,8 +158,16 @@ namespace SeniorDesign.Core
                     // Switch off for some processing based upon the node name
                     switch (node.LocalName)
                     {
-                        case "media":
-                            newPlugin.MediaControllerTypes.Add(name, realType);
+                        case "stream":
+                            newPlugin.StreamTypes.Add(name, realType);
+                            break;
+
+                        case "poller":
+                            newPlugin.PollerTypes.Add(name, realType);
+                            break;
+
+                        case "converter":
+                            newPlugin.DataConverterTypes.Add(name, realType);
                             break;
 
                         case "filter":
@@ -133,17 +185,24 @@ namespace SeniorDesign.Core
             Plugins.Add(newPlugin);
         }
 
+        #endregion
+
+        #region Connectable Management
+
         /// <summary>
         ///     Adds a new connection to the currently active ones
         /// </summary>
         /// <param name="obj">The connectable to add</param>
         public void AddConnectable(IConnectable obj)
         {
+            // Register the node and add some metadata
             if (Nodes.Contains(obj))
                 return;
 
             Nodes.Add(obj);
             obj.Id = _nodeIndex++;
+
+            _connectableMetadata.Add(obj, new IConnectableMetadata());
         }
 
         /// <summary>
@@ -152,11 +211,42 @@ namespace SeniorDesign.Core
         /// <param name="obj">The connectable to remove</param>
         public void DeleteConnectable(IConnectable obj)
         {
+            // Unregister the node and metadata
             if (Nodes.Contains(obj))
             {
                 Nodes.Remove(obj);
                 obj.Id = -1;
+                _connectableMetadata.Remove(obj);
             }
         }
+
+        /// <summary>
+        ///     Passes data from a single connection to all available next connections,
+        ///     performing all translations as needed.
+        /// </summary>
+        /// <param name="root">The IConnectable giving out the data</param>
+        /// <param name="data">The data being sent</param>
+        public void PassDataToNextConnectable(IConnectable root, DataPacket data)
+        {
+            // Grab the metadata for the connectable
+            var meta = _connectableMetadata[root];
+
+            // Pass on to each connection available
+            foreach (var connection in root.NextConnections)
+            {
+                // Use the extra data not previously accepted
+                var mdata = meta.LeftoverData[connection];
+                mdata.Add(data);
+
+                // Ensure that the channel count is valid
+                if (connection.InputCount != -1 && data.ChannelCount != connection.InputCount)
+                    throw new InvalidChannelCountException($"[{connection.Name}] expected {connection.InputCount} input channels, but was given {data.ChannelCount} by [{root.Name}]");
+
+                // Accept the incoming data
+                connection.AcceptIncomingData(this, mdata);
+            }
+        }
+
+        #endregion
     }
 }

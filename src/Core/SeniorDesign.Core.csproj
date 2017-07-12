@@ -41,11 +41,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\UserConfigurableAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurableDoubleAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableIntegerAttribute.cs" />
     <Compile Include="Connections\Converters\DataConverter.cs" />
     <Compile Include="Connections\DataConnection.cs" />
     <Compile Include="Connections\Pollers\PollingMechanism.cs" />
     <Compile Include="CoreSettings.cs" />
+    <Compile Include="DataPacket.cs" />
+    <Compile Include="Exceptions\InvalidChannelCountException.cs" />
+    <Compile Include="IConnectableMetadata.cs" />
     <Compile Include="StreamlineCore.cs" />
     <Compile Include="Enums\DataConnectionType.cs" />
     <Compile Include="Exceptions\InvalidDataConnectionTypeException.cs" />

@@ -58,6 +58,12 @@
     <Compile Include="Windows\ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\PluginPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\PluginPanel.Designer.cs">
+      <DependentUpon>PluginPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\TestPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +81,9 @@
     </Compile>
     <EmbeddedResource Include="Windows\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\PluginPanel.resx">
+      <DependentUpon>PluginPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\TestPanel.resx">
       <DependentUpon>TestPanel.cs</DependentUpon>

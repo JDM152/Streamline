@@ -101,15 +101,10 @@ namespace SeniorDesign.Core.Connections
         private byte[] _leftoverInputData;
 
         /// <summary>
-        ///     The data that the encoder was unable to use
-        /// </summary>
-        private double[][] _leftoverOutputData;
-
-        /// <summary>
         ///     Polls the data connection for any new data.
         ///     This is specifically for the Polling Mechanism
         /// </summary>
-        public void Poll()
+        public void Poll(StreamlineCore core)
         {
             // Grab all available bytes, and pass it to the decoder
             var data = MediaConnection.ReadToEnd(CoreSettings.InputBuffer);
@@ -120,8 +115,7 @@ namespace SeniorDesign.Core.Connections
             var decodedData = Converter.DecodeData(ref _leftoverInputData);
 
             // Pass the data on to the next step
-            foreach (var connection in NextConnections)
-                connection.AcceptIncomingData(decodedData);
+            core.PassDataToNextConnectable(this, new DataPacket(decodedData));
         }
 
         /// <summary>
@@ -129,7 +123,7 @@ namespace SeniorDesign.Core.Connections
         ///     If this is an input, it will throw.
         /// </summary>
         /// <param name="data">The data being pushed from the previous node</param>
-        public void AcceptIncomingData(double[][] data)
+        public void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
             // Throw if illegal
             if (!IsOutput)
