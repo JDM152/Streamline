@@ -1,4 +1,6 @@
-﻿using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Plugins.Util;
 using System;
 using System.Collections.Generic;
@@ -17,17 +19,29 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// <summary>
         ///     The number of bytes per number
         /// </summary>
+        [UserConfigurableInteger(
+            Name = "Output Type",
+            Description = "The minimum value in the range (values below will snap to this)."
+        )]
         public int DataSize = 4;
 
         /// <summary>
         ///     If the data should be considered signed or not
         /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Signed Mode",
+            Description = "If the data should be treated as signed numbers rather than unsigned."
+        )]
         public bool Signed = false;
 
         /// <summary>
         ///     If the input data will be treated as Little Endian or Big Endian.
         ///     A conversion will only be done if this does not match the computer's architecture.
         /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Little Endian Mode",
+            Description = "If the data is stored in Little Endian format rather than Big Endian"
+        )]
         public bool LittleEndianMode = BitConverter.IsLittleEndian;
 
         #endregion
@@ -73,17 +87,17 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// </summary>
         /// <param name="output">The output byte array to convert</param>
         /// <returns>A series of bytes representing the encoded data</returns>
-        public override byte[] EncodeData(ref double[][] output)
+        public override byte[] EncodeData(DataPacket data)
         {
             
             // Go through and convert every double in the array
             var toReturn = new List<byte>();
-            for (var k = 0; k < output.Length; k++)
-                for (var j = 0; j < output[k].Length; j++)
-                    toReturn.AddRange(ConversionUtil.DoubleToBytes(output[k][j], DataSize, Signed, LittleEndianMode));
+            for (var k = 0; k < data.ChannelCount; k++)
+                for (var j = 0; j < data[k].Count; j++)
+                    toReturn.AddRange(ConversionUtil.DoubleToBytes(data[k][j], DataSize, Signed, LittleEndianMode));
 
             // Empty right off the bat
-            output = null;
+            data.Clear();
 
             return toReturn.ToArray();
         }
@@ -92,5 +106,6 @@ namespace SeniorDesign.Plugins.Connections.Converters
         ///     The number of output streams this converts from a single byte stream
         /// </summary>
         public override int DecodeDataCount { get { return 1; } }
+
     }
 }

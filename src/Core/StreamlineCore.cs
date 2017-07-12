@@ -202,6 +202,10 @@ namespace SeniorDesign.Core
             Nodes.Add(obj);
             obj.Id = _nodeIndex++;
 
+            // Get a name to call the object if not specified
+            if (string.IsNullOrEmpty(obj.Name))
+                obj.Name = obj.InternalName + " " + obj.Id;
+
             _connectableMetadata.Add(obj, new IConnectableMetadata());
         }
 
@@ -218,11 +222,28 @@ namespace SeniorDesign.Core
                 obj.Id = -1;
                 _connectableMetadata.Remove(obj);
             }
+
+            // Remove the node from all connections
+            foreach (var node in Nodes)
+                if (node.NextConnections.Contains(obj))
+                    node.NextConnections.Remove(obj);
+        }
+
+        /// <summary>
+        ///     Passes data from a single connection to all available connections,
+        ///     performing all translations as needed
+        /// </summary>
+        /// <param name="root">The IConnetable giving out the data</param>
+        /// <param name="data">The data being sent</param>
+        public void PassDataToNextConnectable(IConnectable root, double[][] data)
+        {
+            PassDataToNextConnectable(root, new DataPacket(data));
         }
 
         /// <summary>
         ///     Passes data from a single connection to all available next connections,
         ///     performing all translations as needed.
+        ///     Note that the data packet passed will not be altered at all.
         /// </summary>
         /// <param name="root">The IConnectable giving out the data</param>
         /// <param name="data">The data being sent</param>
@@ -235,7 +256,7 @@ namespace SeniorDesign.Core
             foreach (var connection in root.NextConnections)
             {
                 // Use the extra data not previously accepted
-                var mdata = meta.LeftoverData[connection];
+                var mdata = meta.GetLeftoverData(connection);
                 mdata.Add(data);
 
                 // Ensure that the channel count is valid
@@ -246,6 +267,12 @@ namespace SeniorDesign.Core
                 connection.AcceptIncomingData(this, mdata);
             }
         }
+
+        #endregion
+
+        #region Project Schematic Management
+
+
 
         #endregion
     }

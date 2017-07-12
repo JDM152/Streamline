@@ -1,6 +1,9 @@
-﻿using SeniorDesign.Core.Attributes;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
 using System;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
 {
@@ -35,7 +38,7 @@ namespace SeniorDesign.Plugins.Filters
         [UserConfigurableDouble(
             Name = "Step Size",
             Description = "The size of each step in the range.",
-            Minimum = 0.00000001
+            Minimum = 0.0000001
         )]
         public double StepSize = 10;
 
@@ -50,15 +53,16 @@ namespace SeniorDesign.Plugins.Filters
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
-        public override int InputCount { get { return 1; } }
+        public override int InputCount { get { return -1; } }
 
         /// <summary>
         ///     The number of output connections this connectable provides.
         /// </summary>
-        public override int OutputCount { get { return 1; } }
+        public override int OutputCount { get { return InputCount; } }
 
         /// <summary>
-        ///     The number of samples per field required to use this filter
+        ///     The number of samples per field required to use this filter.
+        ///     You may be given and use more, but will never be given less
         /// </summary>
         public override int InputLength { get { return 1; } }
 
@@ -67,23 +71,64 @@ namespace SeniorDesign.Plugins.Filters
         ///     This is allowed to queue and store as needed.
         /// </summary>
         /// <param name="data">The data being pushed from the previous node</param>
-        public override void AcceptIncomingData(double[][] data)
+        /// <param name="core">The Streamline program this is a part of</param>
+        public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            // Return a 1x1 array with the quantized value
-            var currentData = data[0];
-            var toReturn = new double[1][];
-            toReturn[0] = new double[1];
-            if (currentData[0] < Minimum)
-                toReturn[0][0] = Minimum;
-            else if (currentData[0] > Maximum)
-                toReturn[0][0] = Maximum;
-            else
-                toReturn[0][0] = Math.Floor((currentData[0] - Minimum) / StepSize) * StepSize + Minimum;
+            // Quantize all points in each channel
+            while (data.MinCountOnAllChannels(1))
+            {
+                for (var k = 0; k < data.ChannelCount; k++)
+                {
+                    for (var j = 0; j < data[k].Count; j++)
+                    {
+                        var currentData = data[k][j];
+                        if (currentData < Minimum)
+                            data[k][j] = Minimum;
+                        else if (currentData > Maximum)
+                            data[k][j] = Maximum;
+                        else
+                            data[k][j] = Math.Floor((currentData - Minimum) / StepSize) * StepSize + Minimum;
+                    }
+                }
+            }
+            
 
-            // Push to the next node
-            foreach (var connection in NextConnections)
-                connection.AcceptIncomingData(toReturn);
+            // Push to the next node, and clear the saved data
+            core.PassDataToNextConnectable(this, data);
+            data.Clear();
         }
 
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override List<byte> ToBytes()
+        {
+            // Start constructing the data array
+            var toReturn = base.ToBytes();
+
+            // Add all of the user configurable options
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Minimum));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Maximum));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(StepSize));
+
+            return toReturn;
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(List<byte> data, ref int offset)
+        {
+            // Restore the base first
+            base.Restore(data, ref offset);
+
+            // Restore all of the user configurable options
+            Minimum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
+            Maximum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
+            StepSize = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
+        }
     }
 }

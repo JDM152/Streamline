@@ -50,6 +50,7 @@
     <Compile Include="Connections\Streams\AudioDataStream.cs" />
     <Compile Include="Connections\Streams\ConstantDataStream.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
+    <Compile Include="Enums\EncodingEnum.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
     <Compile Include="Filters\DifferentiatorFilter.cs" />
     <Compile Include="Filters\QuantizerFilter.cs" />

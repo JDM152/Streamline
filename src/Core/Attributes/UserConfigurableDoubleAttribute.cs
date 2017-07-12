@@ -7,13 +7,13 @@
     public class UserConfigurableDoubleAttribute : UserConfigurableAttribute
     {
         /// <summary>
-        ///     The smallest number that the user can enter (Defaults to Min Int)
+        ///     The smallest number that the user can enter (Defaults to Min decimal)
         /// </summary>
-        public double Minimum { get; set; } = double.MinValue;
+        public double Minimum { get; set; } = (double) decimal.MinValue;
 
         /// <summary>
-        ///     The largest number that the user can enter (Defaults to Max Int)
+        ///     The largest number that the user can enter (Defaults to Max decimal)
         /// </summary>
-        public double Maximum { get; set; } = double.MaxValue;
+        public double Maximum { get; set; } = (double) decimal.MaxValue;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SeniorDesign.Core.Attributes;
 using System;
 using System.IO;
 
@@ -15,6 +16,11 @@ namespace SeniorDesign.Plugins.Connections
         /// <summary>
         ///     The number of samples per second during playback
         /// </summary>
+        [UserConfigurableInteger(
+            Name = "Sampling Rate",
+            Description = "The number of samples taken or played per second",
+            Minimum = 1    
+        )]
         public int SamplingRate {
             get { return _samplingRate; }
             set {

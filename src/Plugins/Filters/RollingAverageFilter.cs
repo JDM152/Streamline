@@ -1,5 +1,8 @@
-﻿using SeniorDesign.Core.Attributes;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
 {
@@ -8,7 +11,7 @@ namespace SeniorDesign.Plugins.Filters
     /// </summary>
     public class RollingAverageFilter : DataFilter
     {
-        #region User Parameters
+        #region User Configuration
 
         /// <summary>
         ///     The number of points used in calculating the rolling average
@@ -31,12 +34,13 @@ namespace SeniorDesign.Plugins.Filters
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
-        public override int InputCount { get { return 1; } }
+        public override int InputCount { get { return -1; } }
 
         /// <summary>
         ///     The number of output connections this connectable provides.
+        ///     -1 means the number of outputs matches the number of inputs
         /// </summary>
-        public override int OutputCount { get { return 1; } }
+        public override int OutputCount { get { return -1; } }
 
         /// <summary>
         ///     The number of samples per field required to use this filter
@@ -48,19 +52,61 @@ namespace SeniorDesign.Plugins.Filters
         ///     This is allowed to queue and store as needed.
         /// </summary>
         /// <param name="data">The data being pushed from the previous node</param>
-        public override void AcceptIncomingData(double[][] data)
+        public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            // Return a 1x1 array with the average
-            var currentData = data[0];
-            var toReturn = new double[1][];
-            toReturn[0] = new double[1];
-            for (var k = 0; k < currentData.Length; k++)
-                toReturn[0][0] += currentData[k];
-            toReturn[0][0] /= currentData.Length;
+            // Create the packet to return
+            var toReturn = new DataPacket();
+            toReturn.EnsureChannelCount(data.ChannelCount);
 
-            // Push to the next node
-            foreach (var connection in NextConnections)
-                connection.AcceptIncomingData(toReturn);
+            // Loop through until no data is available
+            while (data.MinCountOnAllChannels(SmoothingFactor))
+            {
+                for (var k = 0; k < data.ChannelCount; k++)
+                {
+                    // Grab the required amount, but only pop off the earliest
+                    var fulldata = data.PeekRange(k, SmoothingFactor);
+                    data.Pop(k);
+
+                    // Calculate the average
+                    var currentData = 0.0;
+                    for (var j = 0; j < fulldata.Count; j++)
+                        currentData += fulldata[j];
+                    toReturn[k].Add(currentData / fulldata.Count);
+                }
+            }
+
+            // Push the data
+            core.PassDataToNextConnectable(this, toReturn);
+
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override List<byte> ToBytes()
+        {
+            // Start constructing the data array
+            var toReturn = base.ToBytes();
+
+            // Add all of the user configurable options
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(SmoothingFactor));
+
+            return toReturn;
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(List<byte> data, ref int offset)
+        {
+            // Restore the base first
+            base.Restore(data, ref offset);
+
+            // Restore all of the user configurable options
+            SmoothingFactor = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
     }

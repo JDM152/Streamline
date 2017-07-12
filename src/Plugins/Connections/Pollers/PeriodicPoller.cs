@@ -1,4 +1,6 @@
-﻿using SeniorDesign.Core.Connections.Pollers;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Pollers;
 using System.Threading;
 
 namespace SeniorDesign.Plugins.Connections.Pollers
@@ -9,10 +11,25 @@ namespace SeniorDesign.Plugins.Connections.Pollers
     public class PeriodicPoller : PollingMechanism
     {
 
+        #region User Configuration
+
         /// <summary>
         ///     The time between polling in ms
         /// </summary>
+        [UserConfigurableInteger(
+            Name = "Polling Time",
+            Description = "The time between polling, in milliseconds",
+            Minimum = 1
+        )]
         public int PollingTime = 100;
+
+        #endregion
+
+        /// <summary>
+        ///     Creates a new Periodic Poller
+        /// </summary>
+        /// <param name="core">The core that this reports back to</param>
+        public PeriodicPoller(StreamlineCore core) : base(core) { }
 
         /// <summary>
         ///     The timer used to trigger the polls
@@ -51,7 +68,7 @@ namespace SeniorDesign.Plugins.Connections.Pollers
                 return;
 
             // Tell the connection to perform a poll
-            Connection.Poll();
+            Connection.Poll(Core);
 
             // Reset the timer as needed
             if ((int) state != PollingTime)
