@@ -202,6 +202,10 @@ namespace SeniorDesign.Core
             Nodes.Add(obj);
             obj.Id = _nodeIndex++;
 
+            // Get a name to call the object if not specified
+            if (string.IsNullOrEmpty(obj.Name))
+                obj.Name = obj.InternalName + " " + obj.Id;
+
             _connectableMetadata.Add(obj, new IConnectableMetadata());
         }
 
@@ -263,6 +267,12 @@ namespace SeniorDesign.Core
                 connection.AcceptIncomingData(this, mdata);
             }
         }
+
+        #endregion
+
+        #region Project Schematic Management
+
+
 
         #endregion
     }

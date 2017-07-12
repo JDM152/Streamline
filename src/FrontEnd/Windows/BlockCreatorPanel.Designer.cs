@@ -35,7 +35,7 @@
             this.loadBlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlockTypeBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.blockViewerComponent1 = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
+            this.BlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
             this.AddBlockButton = new System.Windows.Forms.Button();
             this.CancelCreationButton = new System.Windows.Forms.Button();
             this.MenuStrip.SuspendLayout();
@@ -103,15 +103,15 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Block Type";
             // 
-            // blockViewerComponent1
+            // BlockViewer
             // 
-            this.blockViewerComponent1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.BlockViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.blockViewerComponent1.Location = new System.Drawing.Point(12, 54);
-            this.blockViewerComponent1.Name = "blockViewerComponent1";
-            this.blockViewerComponent1.Size = new System.Drawing.Size(490, 344);
-            this.blockViewerComponent1.TabIndex = 3;
+            this.BlockViewer.Location = new System.Drawing.Point(12, 54);
+            this.BlockViewer.Name = "BlockViewer";
+            this.BlockViewer.Size = new System.Drawing.Size(490, 344);
+            this.BlockViewer.TabIndex = 3;
             // 
             // AddBlockButton
             // 
@@ -122,6 +122,7 @@
             this.AddBlockButton.TabIndex = 4;
             this.AddBlockButton.Text = "Close and Add Block";
             this.AddBlockButton.UseVisualStyleBackColor = true;
+            this.AddBlockButton.Click += new System.EventHandler(this.AddBlockButton_Click);
             // 
             // CancelCreationButton
             // 
@@ -132,6 +133,7 @@
             this.CancelCreationButton.TabIndex = 5;
             this.CancelCreationButton.Text = "Cancel";
             this.CancelCreationButton.UseVisualStyleBackColor = true;
+            this.CancelCreationButton.Click += new System.EventHandler(this.CancelCreationButton_Click);
             // 
             // BlockCreatorPanel
             // 
@@ -140,7 +142,7 @@
             this.ClientSize = new System.Drawing.Size(514, 432);
             this.Controls.Add(this.CancelCreationButton);
             this.Controls.Add(this.AddBlockButton);
-            this.Controls.Add(this.blockViewerComponent1);
+            this.Controls.Add(this.BlockViewer);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BlockTypeBox);
             this.Controls.Add(this.MenuStrip);
@@ -164,7 +166,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadBlockToolStripMenuItem;
         private System.Windows.Forms.ComboBox BlockTypeBox;
         private System.Windows.Forms.Label label1;
-        private Components.Blocks.BlockViewerComponent blockViewerComponent1;
+        private Components.Blocks.BlockViewerComponent BlockViewer;
         private System.Windows.Forms.Button AddBlockButton;
         private System.Windows.Forms.Button CancelCreationButton;
     }

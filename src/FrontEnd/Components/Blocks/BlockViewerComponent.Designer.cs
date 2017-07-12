@@ -74,6 +74,7 @@
             this.BlockName.Name = "BlockName";
             this.BlockName.Size = new System.Drawing.Size(197, 20);
             this.BlockName.TabIndex = 0;
+            this.BlockName.TextChanged += new System.EventHandler(this.BlockName_TextChanged);
             // 
             // AttributeEditorList
             // 

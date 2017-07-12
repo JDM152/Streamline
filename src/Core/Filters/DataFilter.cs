@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using SeniorDesign.Core.Util;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Core.Filters
 {
     /// <summary>
     ///     A single filter that accepts input values, and produces output values.
     /// </summary>
-    public abstract class DataFilter : IConnectable
+    public abstract class DataFilter : IConnectable, IRestorable
     {
 
         #region IConnectable
@@ -59,8 +60,54 @@ namespace SeniorDesign.Core.Filters
         #endregion
 
         /// <summary>
+        ///     Creates a new, empty Data Filter
+        /// </summary>
+        public DataFilter() { }
+
+        /// <summary>
+        ///     Creates a new Data Filter restored from previously saved bytes
+        /// </summary>
+        /// <param name="restore">The bytes to restore from</param>
+        public DataFilter(List<byte> restore, ref int offset)
+        {
+            Restore(restore, ref offset);
+        }
+
+        /// <summary>
         ///     The number of samples per field required to use this filter
         /// </summary>
         public abstract int InputLength { get; }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public virtual List<byte> ToBytes()
+        {
+            var toReturn = new List<byte>();
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
+
+            return toReturn;
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public virtual void Restore(List<byte> data, ref int offset)
+        {
+            Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
+        }
+
+        /// <summary>
+        ///     Gets this object's name
+        /// </summary>
+        /// <returns>The user-given name of the Data Filter</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

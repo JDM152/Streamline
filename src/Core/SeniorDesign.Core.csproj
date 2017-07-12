@@ -53,6 +53,7 @@
     <Compile Include="DataPacket.cs" />
     <Compile Include="Exceptions\InvalidChannelCountException.cs" />
     <Compile Include="IConnectableMetadata.cs" />
+    <Compile Include="IRestorable.cs" />
     <Compile Include="StreamlineCore.cs" />
     <Compile Include="Enums\DataConnectionType.cs" />
     <Compile Include="Exceptions\InvalidDataConnectionTypeException.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="PluginDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
+    <Compile Include="Util\ByteUtil.cs" />
     <Compile Include="Util\NumberUtil.cs" />
     <Compile Include="Util\StreamUtil.cs" />
   </ItemGroup>

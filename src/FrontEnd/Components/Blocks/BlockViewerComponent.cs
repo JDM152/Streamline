@@ -13,10 +13,20 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
     public partial class BlockViewerComponent : UserControl
     {
 
+        #region Display Configuration Parameters
+
+
+        #endregion
+
         /// <summary>
         ///     The component currently being viewed
         /// </summary>
         private IConnectable _selected = null;
+
+        /// <summary>
+        ///     If the updates to the editor fields should be ignored for now
+        /// </summary>
+        private bool _ignoreUpdates = false;
 
         /// <summary>
         ///     Creates a new Block Viewer component
@@ -24,7 +34,10 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         public BlockViewerComponent()
         {
             InitializeComponent();
+
+            _ignoreUpdates = true;
             ListBlockContent();
+            _ignoreUpdates = false;
         }
 
         /// <summary>
@@ -53,7 +66,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
 
                 // Update the data on the top page
                 BlockName.Text = _selected.Name;
-                BlockTypeName.Text = _selected.InternalName + " : ID " + _selected.Id;
+                BlockTypeName.Text = _selected.InternalName;
 
                 // Update the collection of attribute editors on the bottom page
                 AttributeEditorList.Controls.Clear();
@@ -73,6 +86,17 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Method triggered when the name of the block changes
+        /// </summary>
+        void BlockName_TextChanged(object sender, EventArgs e)
+        {
+            if (_selected == null || _ignoreUpdates)
+                return;
+
+            _selected.Name = BlockName.Text;
         }
     }
 }

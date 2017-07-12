@@ -1,6 +1,8 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
 {
@@ -9,7 +11,7 @@ namespace SeniorDesign.Plugins.Filters
     /// </summary>
     public class RollingAverageFilter : DataFilter
     {
-        #region User Parameters
+        #region User Configuration
 
         /// <summary>
         ///     The number of points used in calculating the rolling average
@@ -76,6 +78,35 @@ namespace SeniorDesign.Plugins.Filters
             // Push the data
             core.PassDataToNextConnectable(this, toReturn);
 
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override List<byte> ToBytes()
+        {
+            // Start constructing the data array
+            var toReturn = base.ToBytes();
+
+            // Add all of the user configurable options
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(SmoothingFactor));
+
+            return toReturn;
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(List<byte> data, ref int offset)
+        {
+            // Restore the base first
+            base.Restore(data, ref offset);
+
+            // Restore all of the user configurable options
+            SmoothingFactor = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
     }

@@ -65,7 +65,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
             InputControl.Minimum = Attribute.Minimum;
             InputControl.Maximum = Attribute.Maximum;
 
-            InputControl.Value = (decimal) ((double) Field.GetValue(Owner));
+            InputControl.Value = (decimal) ((int) Field.GetValue(Owner));
         }
 
         /// <summary>

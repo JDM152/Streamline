@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Filters;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
 {

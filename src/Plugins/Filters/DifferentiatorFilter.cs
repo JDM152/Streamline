@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Filters;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
 {
@@ -54,6 +55,27 @@ namespace SeniorDesign.Plugins.Filters
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
             
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override List<byte> ToBytes()
+        {
+            // TODO : Finish filter
+            return base.ToBytes();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(List<byte> data, ref int offset)
+        {
+            // TODO : Finish Filter
+            base.Restore(data, ref offset);
         }
 
     }
