@@ -34,16 +34,23 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         #endregion
 
         /// <summary>
+        ///     If the value should be allowed to update or not
+        /// </summary>
+        private bool _suppressUpdate = false;
+
+        /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
         public DoubleEditorComponent(object owner, FieldInfo field, UserConfigurableDoubleAttribute attribute)
         {
+            _suppressUpdate = true;
             Owner = owner;
             Field = field;
             Attribute = attribute;
 
             InitializeComponent();
             UpdateComponent();
+            _suppressUpdate = false;
         }
 
         /// <summary>
@@ -59,7 +66,8 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
             InputControl.Minimum = NumberUtil.ClampToDecimal(Attribute.Minimum);
             InputControl.Maximum = NumberUtil.ClampToDecimal(Attribute.Maximum);
 
-            InputControl.Value = NumberUtil.ClampToDecimal((double) Field.GetValue(Owner));
+            var realValue = (double) Field.GetValue(Owner);
+            InputControl.Value = NumberUtil.ClampToDecimal(realValue);
         }
 
         /// <summary>
@@ -68,7 +76,8 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         private void InputControl_ValueChanged(object sender, System.EventArgs e)
         {
             // Set real value
-            Field.SetValue(Owner, (double) InputControl.Value);
+            if (!_suppressUpdate)
+                Field.SetValue(Owner, (double) InputControl.Value);
         }
     }
 }

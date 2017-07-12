@@ -43,6 +43,7 @@
     <Compile Include="Attributes\UserConfigurableAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableBooleanAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableDoubleAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurableStringAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableIntegerAttribute.cs" />
     <Compile Include="Attributes\UserConfigurableSelectableListAttribute.cs" />
     <Compile Include="Connections\Converters\DataConverter.cs" />

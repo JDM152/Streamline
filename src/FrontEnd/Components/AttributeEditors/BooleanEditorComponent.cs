@@ -31,18 +31,25 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         public UserConfigurableBooleanAttribute Attribute { get; protected set; }
 
         #endregion
+        
+        /// <summary>
+        ///     If the value should be allowed to update or not
+        /// </summary>
+        private bool _suppressUpdate = false;
 
         /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
         public BooleanEditorComponent(object owner, FieldInfo field, UserConfigurableBooleanAttribute attribute)
         {
+            _suppressUpdate = true;
             Owner = owner;
             Field = field;
             Attribute = attribute;
 
             InitializeComponent();
             UpdateComponent();
+            _suppressUpdate = false;
         }
 
         /// <summary>
@@ -65,7 +72,8 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             // Set real value
-            Field.SetValue(Owner, CheckBox.Checked);
+            if (!_suppressUpdate)
+                Field.SetValue(Owner, CheckBox.Checked);
         }
     }
 }

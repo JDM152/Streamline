@@ -33,16 +33,23 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         #endregion
 
         /// <summary>
+        ///     If the value should be allowed to update or not
+        /// </summary>
+        private bool _suppressUpdate = false;
+
+        /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
         public IntegerEditorComponent(object owner, FieldInfo field, UserConfigurableIntegerAttribute attribute)
         {
+            _suppressUpdate = true;
             Owner = owner;
             Field = field;
             Attribute = attribute;
 
             InitializeComponent();
             UpdateComponent();
+            _suppressUpdate = false;
         }
 
         /// <summary>
@@ -66,6 +73,9 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// </summary>
         private void InputControl_ValueChanged(object sender, System.EventArgs e)
         {
+            if (_suppressUpdate)
+                return;
+
             // Force to Int
             var temp = (int) Math.Floor(InputControl.Value);
             if (temp != InputControl.Value)

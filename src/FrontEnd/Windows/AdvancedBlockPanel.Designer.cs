@@ -31,15 +31,8 @@
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlockList = new System.Windows.Forms.ListBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.AttributeEditorList = new System.Windows.Forms.FlowLayoutPanel();
-            this.BlockName = new System.Windows.Forms.TextBox();
-            this.BlockTypeName = new System.Windows.Forms.Label();
+            this.BlockViewComponent = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
             this.MenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuStrip
@@ -48,7 +41,7 @@
             this.fileToolStripMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(624, 24);
+            this.MenuStrip.Size = new System.Drawing.Size(639, 24);
             this.MenuStrip.TabIndex = 0;
             this.MenuStrip.Text = "menuStrip1";
             // 
@@ -69,73 +62,30 @@
             this.BlockList.TabIndex = 1;
             this.BlockList.SelectedIndexChanged += new System.EventHandler(this.BlockList_SelectedIndexChanged);
             // 
-            // splitContainer1
+            // BlockViewComponent
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.BlockViewComponent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(138, 27);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.BlockTypeName);
-            this.splitContainer1.Panel1.Controls.Add(this.BlockName);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.AttributeEditorList);
-            this.splitContainer1.Size = new System.Drawing.Size(474, 329);
-            this.splitContainer1.SplitterDistance = 164;
-            this.splitContainer1.TabIndex = 2;
-            // 
-            // AttributeEditorList
-            // 
-            this.AttributeEditorList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AttributeEditorList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.AttributeEditorList.Location = new System.Drawing.Point(3, 3);
-            this.AttributeEditorList.Name = "AttributeEditorList";
-            this.AttributeEditorList.Size = new System.Drawing.Size(468, 155);
-            this.AttributeEditorList.TabIndex = 0;
-            // 
-            // BlockName
-            // 
-            this.BlockName.Location = new System.Drawing.Point(3, 3);
-            this.BlockName.Name = "BlockName";
-            this.BlockName.Size = new System.Drawing.Size(197, 20);
-            this.BlockName.TabIndex = 0;
-            // 
-            // BlockTypeName
-            // 
-            this.BlockTypeName.AutoSize = true;
-            this.BlockTypeName.Location = new System.Drawing.Point(3, 26);
-            this.BlockTypeName.Name = "BlockTypeName";
-            this.BlockTypeName.Size = new System.Drawing.Size(101, 13);
-            this.BlockTypeName.TabIndex = 1;
-            this.BlockTypeName.Text = "- Nothing Selected -";
+            this.BlockViewComponent.Location = new System.Drawing.Point(141, 27);
+            this.BlockViewComponent.Name = "BlockViewComponent";
+            this.BlockViewComponent.Size = new System.Drawing.Size(486, 346);
+            this.BlockViewComponent.TabIndex = 2;
             // 
             // AdvancedBlockPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 372);
-            this.Controls.Add(this.splitContainer1);
+            this.ClientSize = new System.Drawing.Size(639, 382);
+            this.Controls.Add(this.BlockViewComponent);
             this.Controls.Add(this.BlockList);
             this.Controls.Add(this.MenuStrip);
             this.MainMenuStrip = this.MenuStrip;
             this.MinimumSize = new System.Drawing.Size(640, 410);
             this.Name = "AdvancedBlockPanel";
-            this.Text = "AdvancedBlockPanel";
+            this.Text = "Block Viewer";
             this.MenuStrip.ResumeLayout(false);
             this.MenuStrip.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,9 +96,6 @@
         private System.Windows.Forms.MenuStrip MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ListBox BlockList;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.FlowLayoutPanel AttributeEditorList;
-        private System.Windows.Forms.Label BlockTypeName;
-        private System.Windows.Forms.TextBox BlockName;
+        private Components.Blocks.BlockViewerComponent BlockViewComponent;
     }
 }

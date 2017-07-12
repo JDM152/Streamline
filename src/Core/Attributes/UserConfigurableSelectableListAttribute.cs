@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SeniorDesign.Core.Attributes
+﻿namespace SeniorDesign.Core.Attributes
 {
     /// <summary>
     ///     An attribute representing a list of object values with strings
@@ -8,8 +6,11 @@ namespace SeniorDesign.Core.Attributes
     public class UserConfigurableSelectableListAttribute : UserConfigurableAttribute
     {
         /// <summary>
-        ///     The name->value pairs that can be selected for the list
+        ///     The name and value pairs that can be selected for the list.
+        ///     Even indecies are the strings that will be displayed,
+        ///     Odd indecies are the objects that correspond to the value.
+        ///     Duplicate string names will cause unexpected behaviour.
         /// </summary>
-        public IDictionary<string, object> Values;
+        public object[] Values;
     }
 }

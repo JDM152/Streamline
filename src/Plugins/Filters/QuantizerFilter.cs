@@ -36,7 +36,7 @@ namespace SeniorDesign.Plugins.Filters
         [UserConfigurableDouble(
             Name = "Step Size",
             Description = "The size of each step in the range.",
-            Minimum = 0.000001
+            Minimum = 0.0000001
         )]
         public double StepSize = 10;
 

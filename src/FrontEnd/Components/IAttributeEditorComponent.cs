@@ -55,6 +55,8 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
                 return typeof(DoubleEditorComponent);
             if (type == typeof(UserConfigurableSelectableListAttribute))
                 return typeof(SelectableListEditorComponent);
+            if (type == typeof(UserConfigurableStringAttribute))
+                return typeof(StringEditorComponent);
 
             // Throw exception if not found
             throw new InvalidOperationException($"An attribute editor has not been defined for the type [{type}] in the GetEditorForAttribute function.");

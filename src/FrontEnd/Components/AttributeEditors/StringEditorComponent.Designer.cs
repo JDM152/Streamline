@@ -1,6 +1,6 @@
 ﻿namespace SeniorDesign.FrontEnd.Components.AttributeEditors
 {
-    partial class DoubleEditorComponent
+    partial class StringEditorComponent
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,23 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.InputControl = new System.Windows.Forms.NumericUpDown();
             this.AttributeName = new System.Windows.Forms.Label();
             this.UseTip = new System.Windows.Forms.ToolTip(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.InputControl)).BeginInit();
+            this.InputText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // InputControl
-            // 
-            this.InputControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.InputControl.DecimalPlaces = 8;
-            this.InputControl.Location = new System.Drawing.Point(97, 3);
-            this.InputControl.Name = "InputControl";
-            this.InputControl.Size = new System.Drawing.Size(120, 20);
-            this.InputControl.TabIndex = 0;
-            this.UseTip.SetToolTip(this.InputControl, "Temp");
-            this.InputControl.ValueChanged += new System.EventHandler(this.InputControl_ValueChanged);
             // 
             // AttributeName
             // 
@@ -60,26 +47,34 @@
             // 
             this.UseTip.OwnerDraw = true;
             // 
-            // DoubleEditorComponent
+            // InputText
+            // 
+            this.InputText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.InputText.Location = new System.Drawing.Point(97, 3);
+            this.InputText.Name = "InputText";
+            this.InputText.Size = new System.Drawing.Size(120, 20);
+            this.InputText.TabIndex = 2;
+            this.InputText.TextChanged += new System.EventHandler(this.InputText_TextChanged);
+            // 
+            // StringEditorComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.InputText);
             this.Controls.Add(this.AttributeName);
-            this.Controls.Add(this.InputControl);
             this.MaximumSize = new System.Drawing.Size(0, 25);
             this.MinimumSize = new System.Drawing.Size(220, 25);
-            this.Name = "DoubleEditorComponent";
+            this.Name = "StringEditorComponent";
             this.Size = new System.Drawing.Size(220, 25);
-            ((System.ComponentModel.ISupportInitialize)(this.InputControl)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.NumericUpDown InputControl;
         private System.Windows.Forms.Label AttributeName;
         private System.Windows.Forms.ToolTip UseTip;
+        private System.Windows.Forms.TextBox InputText;
     }
 }

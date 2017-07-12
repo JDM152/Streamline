@@ -50,6 +50,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\AttributeEditors\StringEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AttributeEditors\StringEditorComponent.Designer.cs">
+      <DependentUpon>StringEditorComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Blocks\BlockViewerComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Blocks\BlockViewerComponent.Designer.cs">
+      <DependentUpon>BlockViewerComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\IAttributeEditorComponent.cs" />
     <Compile Include="Components\AttributeEditors\SelectableListEditorComponent.cs">
       <SubType>UserControl</SubType>
@@ -83,6 +95,12 @@
     <Compile Include="Windows\AdvancedBlockPanel.Designer.cs">
       <DependentUpon>AdvancedBlockPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\BlockCreatorPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\BlockCreatorPanel.Designer.cs">
+      <DependentUpon>BlockCreatorPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ControlPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +119,9 @@
     <Compile Include="Windows\TestPanel.Designer.cs">
       <DependentUpon>TestPanel.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Components\AttributeEditors\StringEditorComponent.resx">
+      <DependentUpon>StringEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\AttributeEditors\SelectableListEditorComponent.resx">
       <DependentUpon>SelectableListEditorComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -113,6 +134,9 @@
     <EmbeddedResource Include="Components\AttributeEditors\IntegerEditorComponent.resx">
       <DependentUpon>IntegerEditorComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\Blocks\BlockViewerComponent.resx">
+      <DependentUpon>BlockViewerComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -124,6 +148,9 @@
     </Compile>
     <EmbeddedResource Include="Windows\AdvancedBlockPanel.resx">
       <DependentUpon>AdvancedBlockPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\BlockCreatorPanel.resx">
+      <DependentUpon>BlockCreatorPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>

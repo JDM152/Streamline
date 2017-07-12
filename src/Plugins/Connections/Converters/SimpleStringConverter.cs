@@ -1,5 +1,7 @@
 ﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Converter;
+using SeniorDesign.Plugins.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,12 +20,31 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// <summary>
         ///     The token that is used to determine where numbers end
         /// </summary>
+        [UserConfigurableString(
+            Name = "Seperator Token",
+            Description = "The token that seperates each value"
+        )]
         public string SeperatorToken = ",";
 
         /// <summary>
         ///     The encoding used in the text (both input and output)
         /// </summary>
-        public Encoding StringEncoding = Encoding.UTF8;
+        [UserConfigurableSelectableList(
+            Name = "String Encoding",
+            Description = "The encoding used when reading/writing strings",
+            Values = new object[] {
+                 "UTF8", EncodingEnum.UTF8,
+                 "ASCII", EncodingEnum.ASCII,
+                 "Unicode", EncodingEnum.Unicode,
+                 "UTF32", EncodingEnum.UTF32,
+            }    
+        )]
+        public EncodingEnum StringEncoding
+        {
+            get { return EncodingEnumUtil.EncodingToEnum(_stringEncoding); }
+            set { _stringEncoding = EncodingEnumUtil.EnumToEncoding(value); }
+        }
+        private Encoding _stringEncoding = Encoding.UTF8;
 
         #endregion
 
@@ -53,7 +74,7 @@ namespace SeniorDesign.Plugins.Connections.Converters
             var toReturn = new List<byte>();
             for (var k = 0; k < data.ChannelCount; k++)
                 for (var j = 0; j < data[k].Count; j++)
-                    toReturn.AddRange(StringEncoding.GetBytes(data[k][j] + SeperatorToken));
+                    toReturn.AddRange(_stringEncoding.GetBytes(data[k][j] + SeperatorToken));
 
             // Empty right off the bat
             data.Clear();

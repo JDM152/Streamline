@@ -39,9 +39,9 @@ namespace SeniorDesign.FrontEnd.Test
             // Create the quantizer filter object and connect it
             var quantizerFilter = new QuantizerFilter();
             input.NextConnections.Add(quantizerFilter);
-            core.AddConnectable(quantizerFilter);
-            quantizerFilter.Maximum = double.MaxValue;
+            quantizerFilter.Maximum = 64000;
             quantizerFilter.StepSize = 100;
+            core.AddConnectable(quantizerFilter);
 
             // Create the console output object and connect it to the filter
             var output = new DataConnection();

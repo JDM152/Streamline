@@ -43,7 +43,7 @@ namespace SeniorDesign.Plugins.Filters
         /// <summary>
         ///     The last return value from this filter
         /// </summary>
-        private double LastValue = 0.0;
+        //private double LastValue = 0.0;
 
         /// <summary>
         ///     Accepts incoming data from a previous connection.

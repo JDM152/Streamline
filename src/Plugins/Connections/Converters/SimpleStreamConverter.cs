@@ -28,12 +28,20 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// <summary>
         ///     If the data should be considered signed or not
         /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Signed Mode",
+            Description = "If the data should be treated as signed numbers rather than unsigned."
+        )]
         public bool Signed = false;
 
         /// <summary>
         ///     If the input data will be treated as Little Endian or Big Endian.
         ///     A conversion will only be done if this does not match the computer's architecture.
         /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Little Endian Mode",
+            Description = "If the data is stored in Little Endian format rather than Big Endian"
+        )]
         public bool LittleEndianMode = BitConverter.IsLittleEndian;
 
         #endregion
@@ -98,5 +106,6 @@ namespace SeniorDesign.Plugins.Connections.Converters
         ///     The number of output streams this converts from a single byte stream
         /// </summary>
         public override int DecodeDataCount { get { return 1; } }
+
     }
 }

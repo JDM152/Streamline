@@ -218,6 +218,11 @@ namespace SeniorDesign.Core
                 obj.Id = -1;
                 _connectableMetadata.Remove(obj);
             }
+
+            // Remove the node from all connections
+            foreach (var node in Nodes)
+                if (node.NextConnections.Contains(obj))
+                    node.NextConnections.Remove(obj);
         }
 
         /// <summary>

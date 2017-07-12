@@ -7,9 +7,9 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
 {
 
     /// <summary>
-    ///     An editor for the User Input Selectable List components
+    ///     An editor for the User Input Integer components
     /// </summary>
-    public partial class SelectableListEditorComponent : UserControl, IAttributeEditorComponent<UserConfigurableSelectableListAttribute>
+    public partial class StringEditorComponent : UserControl, IAttributeEditorComponent<UserConfigurableStringAttribute>
     {
 
         #region IAttributeEditorComponent
@@ -28,7 +28,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     The attribute data for the field being edited
         /// </summary>
-        public UserConfigurableSelectableListAttribute Attribute { get; protected set; }
+        public UserConfigurableStringAttribute Attribute { get; protected set; }
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
-        public SelectableListEditorComponent(object owner, FieldInfo field, UserConfigurableSelectableListAttribute attribute)
+        public StringEditorComponent(object owner, FieldInfo field, UserConfigurableStringAttribute attribute)
         {
             _suppressUpdate = true;
             Owner = owner;
@@ -59,33 +59,24 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         {
             // Set the help text
             AttributeName.Text = Attribute.Name;
-            UseTip.SetToolTip(InputControl, Attribute.Description);
+            UseTip.SetToolTip(InputText, Attribute.Description);
 
-            // Set the contents
-            InputControl.Items.Clear();
-            for (var k = 0; k < Attribute.Values.Length; k+=2)
-                InputControl.Items.Add(Attribute.Values[k]);
+            // Set the max
+            InputText.MaxLength = Attribute.Maximum;
 
-            // Set the default selection
-            InputControl.SelectedIndex = InputControl.Items.IndexOf(Field.GetValue(Owner));
+            InputText.Text = (string) Field.GetValue(Owner);
         }
 
         /// <summary>
-        ///     Method triggered when the selected choice changes
+        ///     Method triggered whenever the input value changes
         /// </summary>
-        private void InputControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void InputText_TextChanged(object sender, EventArgs e)
         {
             if (_suppressUpdate)
                 return;
 
-            // Figure out which was selected, and set the value
-            var name = (string) InputControl.Items[InputControl.SelectedIndex];
-            for (var k = 0; k < Attribute.Values.Length; k += 2)
-                if ((string) Attribute.Values[k] == name)
-                {
-                    Field.SetValue(Owner, Attribute.Values[k+1]);
-                    return;
-                }
+            // Set real value
+            Field.SetValue(Owner, InputText.Text);
         }
     }
 }
