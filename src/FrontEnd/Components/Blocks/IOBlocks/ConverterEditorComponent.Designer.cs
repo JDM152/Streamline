@@ -1,6 +1,6 @@
-﻿namespace SeniorDesign.FrontEnd.Components.Blocks
+﻿namespace SeniorDesign.FrontEnd.Components.Blocks.IOBlocks
 {
-    partial class BlockViewerComponent
+    partial class ConverterEditorComponent
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,7 +30,6 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.BlockTypeName = new System.Windows.Forms.Label();
-            this.BlockName = new System.Windows.Forms.TextBox();
             this.AttributeList = new SeniorDesign.FrontEnd.Components.AttributeListComponent();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -50,31 +49,22 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.BlockTypeName);
-            this.splitContainer1.Panel1.Controls.Add(this.BlockName);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.AttributeList);
-            this.splitContainer1.Size = new System.Drawing.Size(434, 334);
-            this.splitContainer1.SplitterDistance = 167;
-            this.splitContainer1.TabIndex = 4;
+            this.splitContainer1.Size = new System.Drawing.Size(234, 334);
+            this.splitContainer1.SplitterDistance = 88;
+            this.splitContainer1.TabIndex = 5;
             // 
             // BlockTypeName
             // 
             this.BlockTypeName.AutoSize = true;
-            this.BlockTypeName.Location = new System.Drawing.Point(3, 26);
+            this.BlockTypeName.Location = new System.Drawing.Point(3, 0);
             this.BlockTypeName.Name = "BlockTypeName";
             this.BlockTypeName.Size = new System.Drawing.Size(101, 13);
             this.BlockTypeName.TabIndex = 1;
             this.BlockTypeName.Text = "- Nothing Selected -";
-            // 
-            // BlockName
-            // 
-            this.BlockName.Location = new System.Drawing.Point(3, 3);
-            this.BlockName.Name = "BlockName";
-            this.BlockName.Size = new System.Drawing.Size(197, 20);
-            this.BlockName.TabIndex = 0;
-            this.BlockName.TextChanged += new System.EventHandler(this.BlockName_TextChanged);
             // 
             // AttributeList
             // 
@@ -83,16 +73,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AttributeList.Location = new System.Drawing.Point(3, 3);
             this.AttributeList.Name = "AttributeList";
-            this.AttributeList.Size = new System.Drawing.Size(428, 157);
+            this.AttributeList.Size = new System.Drawing.Size(228, 236);
             this.AttributeList.TabIndex = 0;
             // 
-            // BlockViewerComponent
+            // ConverterEditorComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "BlockViewerComponent";
-            this.Size = new System.Drawing.Size(440, 340);
+            this.Name = "ConverterEditorComponent";
+            this.Size = new System.Drawing.Size(240, 340);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -106,7 +96,6 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label BlockTypeName;
-        private System.Windows.Forms.TextBox BlockName;
         private AttributeListComponent AttributeList;
     }
 }

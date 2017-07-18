@@ -47,6 +47,11 @@ namespace SeniorDesign.Plugins.Connections.Converters
         #endregion
 
         /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Numeric Byte Stream Converter"; } }
+
+        /// <summary>
         ///     Decodes an input byte stream into seperate values.
         ///     If input is not emptied or set to null, it will be appended with future data
         /// </summary>

@@ -1,27 +1,19 @@
-﻿using SeniorDesign.Core;
-using SeniorDesign.Core.Attributes;
-using SeniorDesign.FrontEnd.Components.AttributeEditors;
-using System;
-using System.Reflection;
+﻿using SeniorDesign.Core.Connections;
 using System.Windows.Forms;
 
 namespace SeniorDesign.FrontEnd.Components.Blocks
 {
+
     /// <summary>
-    ///     A component used for viewing the data of a given block
+    ///     A component used for viewing and assembling input/output blocks
     /// </summary>
-    public partial class BlockViewerComponent : UserControl
+    public partial class IOBlockViewerComponent : UserControl
     {
-
-        #region Display Configuration Parameters
-
-
-        #endregion
 
         /// <summary>
         ///     The component currently being viewed
         /// </summary>
-        private IConnectable _selected = null;
+        private DataConnection _selected = null;
 
         /// <summary>
         ///     If the updates to the editor fields should be ignored for now
@@ -29,9 +21,9 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         private bool _ignoreUpdates = false;
 
         /// <summary>
-        ///     Creates a new Block Viewer component
+        ///     Creates a new IO Block viewer
         /// </summary>
-        public BlockViewerComponent()
+        public IOBlockViewerComponent()
         {
             InitializeComponent();
 
@@ -44,7 +36,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         ///     Changes the block that is being edited
         /// </summary>
         /// <param name="component">The IConnectable block editing is switching to</param>
-        public void SetViewingComponent(IConnectable component)
+        public void SetViewingComponent(DataConnection component)
         {
             _selected = component;
             ListBlockContent();
@@ -59,7 +51,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
             if (_selected == null)
             {
                 splitContainer1.Hide();
-                AttributeList.SetComponent(null);
+                ConverterEditor.SetViewingComponent(null);
             }
             else
             {
@@ -67,21 +59,34 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
 
                 // Update the data on the top page
                 BlockName.Text = _selected.Name;
-                BlockTypeName.Text = _selected.InternalName;
 
-                AttributeList.SetComponent(_selected);
+                ConverterEditor.SetViewingComponent(_selected.Converter);
             }
         }
 
         /// <summary>
-        ///     Method triggered when the name of the block changes
+        ///     Updates only the contents of the media editor
         /// </summary>
-        void BlockName_TextChanged(object sender, EventArgs e)
+        public void UpdateMediaComponent()
         {
-            if (_selected == null || _ignoreUpdates)
-                return;
+            if (_ignoreUpdates) return;
+        }
 
-            _selected.Name = BlockName.Text;
+        /// <summary>
+        ///     Updates only the contents of the Converter editor
+        /// </summary>
+        public void UpdateConverterComponent()
+        {
+            if (_ignoreUpdates) return;
+            ConverterEditor.SetViewingComponent(_selected.Converter);
+        }
+
+        /// <summary>
+        ///     Updates only the contents of the Poller editor
+        /// </summary>
+        public void UpdatePollerComponent()
+        {
+            if (_ignoreUpdates) return;
         }
     }
 }

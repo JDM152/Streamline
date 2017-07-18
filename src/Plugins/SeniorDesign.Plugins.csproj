@@ -48,6 +48,7 @@
     <Compile Include="Connections\Converters\SimpleStringConverter.cs" />
     <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
     <Compile Include="Connections\Streams\AudioDataStream.cs" />
+    <Compile Include="Connections\Streams\ConsoleDataStream.cs" />
     <Compile Include="Connections\Streams\ConstantDataStream.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Enums\EncodingEnum.cs" />
@@ -69,7 +70,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Plugin.xml" />
+    <EmbeddedResource Include="Plugin.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

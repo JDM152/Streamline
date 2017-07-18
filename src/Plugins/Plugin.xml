@@ -7,6 +7,7 @@
   <stream name="Audio Data" class="SeniorDesign.Plugins.Connections.AudioDataStream"/>
   <stream name="Random Data" class="SeniorDesign.Plugins.Connections.RandomDataStream"/>
   <stream name="Constant Data" class="SeniorDesign.Plugins.Connections.ConstantDataStream"/>
+  <stream name="Console Data" class="SeniorDesign.Plugins.Connections.ConsoleDataStream"/>
 
   <!-- Pollers decide when data is requested from streams -->
   <poller name="Periodic" class="SeniorDesign.Plugins.Connections.Pollers.PeriodicPoller"/>

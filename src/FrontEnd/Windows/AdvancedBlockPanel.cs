@@ -84,7 +84,7 @@ namespace SeniorDesign.FrontEnd.Windows
         private void AddIOButton_Click(object sender, System.EventArgs e)
         {
             // Show the Add IO Panel
-            // TODO
+            new IOBlockCreatorPanel(_core).ShowDialog();
 
             // Refresh the listings
             ListBlocks();

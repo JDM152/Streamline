@@ -84,7 +84,6 @@ namespace SeniorDesign.Core.Connections
                 _poller = value;
                 if (_poller != null) {
                     _poller.Connection = this;
-                    _poller.Enable();
                 }
             }
         }
@@ -99,6 +98,16 @@ namespace SeniorDesign.Core.Connections
         ///     The data that the decoder was unable to use
         /// </summary>
         private byte[] _leftoverInputData;
+
+        /// <summary>
+        ///     Enables or disables Polling
+        /// </summary>
+        /// <param name="status">True to enable, false to disable</param>
+        public void EnablePolling(bool status = true)
+        {
+            if (status) _poller.Enable();
+            else _poller.Disable();
+        }
 
         /// <summary>
         ///     Polls the data connection for any new data.

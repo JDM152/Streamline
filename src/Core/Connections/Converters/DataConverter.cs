@@ -8,6 +8,11 @@
     public abstract class DataConverter
     {
         /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public abstract string InternalName { get; }
+
+        /// <summary>
         ///     Decodes an input byte stream into seperate values.
         ///     If input is not emptied, it will be appended to the next round.
         /// </summary>
