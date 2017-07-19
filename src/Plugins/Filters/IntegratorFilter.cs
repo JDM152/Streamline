@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace SeniorDesign.Plugins.Filters
 {
     /// <summary>
-    ///     A data filter that performs differentiation on a stream
+    ///     A data filter that performs integration on a stream
     /// </summary>
-    public class DifferentiatorFilter : DataFilter
+    public class IntegratorFilter : DataFilter
     {
 
         #region User Configuration
@@ -20,7 +20,7 @@ namespace SeniorDesign.Plugins.Filters
             Name = "Sampling Period",
             Description = "The weight given to the difference between points"
         )]
-        public double SamplingPeriod { get { return 2.0 / _samplingPeriod; } set { _samplingPeriod = 2.0 / value; } }
+        public double SamplingPeriod { get { return _samplingPeriod * 2.0; } set { _samplingPeriod = value / 2.0; } }
         private double _samplingPeriod = 1.0;
 
         #endregion
@@ -28,7 +28,7 @@ namespace SeniorDesign.Plugins.Filters
         /// <summary>
         ///     A name for this particular object type
         /// </summary>
-        public override string InternalName { get { return "Differentiator Filter"; } }
+        public override string InternalName { get { return "Integrator Filter"; } }
 
         /// <summary>
         ///     The number of input connections this connectable accepts.
@@ -67,7 +67,7 @@ namespace SeniorDesign.Plugins.Filters
             while (data[0].Count >= 2)
             {
                 // Calculate the new point
-                var nd = _samplingPeriod * data[0][1] - _samplingPeriod * data[0][0] - LastOutput;
+                var nd = _samplingPeriod * data[0][1] + _samplingPeriod * data[0][0] + LastOutput;
                 LastOutput = nd;
                 toReturn[0].Add(nd);
 

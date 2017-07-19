@@ -20,5 +20,7 @@
   <filter name="Additive" class="SeniorDesign.Plugins.Filters.AdditionFilter"/>
   <filter name="Quantizer" class="SeniorDesign.Plugins.Filters.QuantizerFilter"/>
   <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
+  <filter name="Differentiator" class="SeniorDesign.Plugins.Filters.DifferentiatorFilter"/>
+  <filter name="Integrator" class="SeniorDesign.Plugins.Filters.IntegratorFilter"/>
   
 </plugin>

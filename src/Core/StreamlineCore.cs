@@ -273,7 +273,41 @@ namespace SeniorDesign.Core
 
         #region Project Schematic Management
 
+        /// <summary>
+        ///     Saves core settings to a file
+        /// </summary>
+        /// <param name="filename">The file to save the core settings to</param>
+        public void SaveCoreSettings(string filename)
+        {
 
+        }
+
+        /// <summary>
+        ///     Loads core settings from a specified file
+        /// </summary>
+        /// <param name="filename">The file containing the core settings</param>
+        public void LoadCoreSettings(string filename)
+        {
+
+        }
+
+        /// <summary>
+        ///     Saves the schematic for the current project to a file
+        /// </summary>
+        /// <param name="filename">The file to save the schematic to</param>
+        public void SaveProjectSchematic(string filename)
+        {
+
+        }
+
+        /// <summary>
+        ///     Loads the schematic from a specified file as the current schematic
+        /// </summary>
+        /// <param name="filename">The file to load the schematic from</param>
+        public void LoadProjectSchematic(string filename)
+        {
+
+        }
 
         #endregion
     }
