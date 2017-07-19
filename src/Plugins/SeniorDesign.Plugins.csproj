@@ -53,7 +53,11 @@
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Enums\EncodingEnum.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
+    <Compile Include="Filters\StopBandFilter.cs" />
+    <Compile Include="Filters\IntegratorFilter.cs" />
     <Compile Include="Filters\DifferentiatorFilter.cs" />
+    <Compile Include="Filters\HighPassFilter.cs" />
+    <Compile Include="Filters\LowPassFilter.cs" />
     <Compile Include="Filters\QuantizerFilter.cs" />
     <Compile Include="Filters\RollingAverageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

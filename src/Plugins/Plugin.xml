@@ -22,5 +22,8 @@
   <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
   <filter name="Differentiator" class="SeniorDesign.Plugins.Filters.DifferentiatorFilter"/>
   <filter name="Integrator" class="SeniorDesign.Plugins.Filters.IntegratorFilter"/>
+  <filter name="Low-Pass" class="SeniorDesign.Plugins.Filters.LowPassFilter"/>
+  <filter name="High-Pass" class="SeniorDesign.Plugins.Filters.HighPassFilter"/>
+  <filter name="Stop-Band" class="SeniorDesign.Plugins.Filters.StopBandFilter"/>
   
 </plugin>

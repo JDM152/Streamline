@@ -18,7 +18,8 @@ namespace SeniorDesign.Plugins.Filters
         /// </summary>
         [UserConfigurableDouble(
             Name = "Sampling Period",
-            Description = "The weight given to the difference between points"
+            Description = "The weight given to the difference between points",
+            Minimum = 0.00000001
         )]
         public double SamplingPeriod { get { return _samplingPeriod * 2.0; } set { _samplingPeriod = value / 2.0; } }
         private double _samplingPeriod = 1.0;
