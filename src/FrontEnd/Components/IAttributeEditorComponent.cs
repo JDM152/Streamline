@@ -1,6 +1,5 @@
 ﻿using SeniorDesign.Core.Attributes;
 using System;
-using System.Reflection;
 
 namespace SeniorDesign.FrontEnd.Components.AttributeEditors
 {
@@ -12,7 +11,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     The field that is being edited
         /// </summary>
-        FieldInfo Field { get; }
+        WrappedAttributeInfo Field { get; }
 
         /// <summary>
         ///     The object that this is editing the component of

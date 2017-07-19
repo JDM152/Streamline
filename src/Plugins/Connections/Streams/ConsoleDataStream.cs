@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Streams;
+using System;
 using System.IO;
 
 namespace SeniorDesign.Plugins.Connections
@@ -7,8 +9,14 @@ namespace SeniorDesign.Plugins.Connections
     ///     A wrapper for a Data Connection where constant data is fed
     ///     back into the console
     /// </summary>
-    public class ConsoleDataStream : Stream
+    [MetadataDataStream(AllowAsInput = false, AllowAsOutput = true)]
+    public class ConsoleDataStream : DataStream
     {
+
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Console Stream"; } }
 
         /// <summary>
         ///     Checks if this stream can be read from

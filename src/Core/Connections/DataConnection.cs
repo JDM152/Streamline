@@ -1,5 +1,7 @@
-﻿using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
+using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Util;
 using SeniorDesign.Plugins.Util;
 using System.Collections.Generic;
@@ -17,6 +19,10 @@ namespace SeniorDesign.Core.Connections
         /// <summary>
         ///     If this data connection is currently active or not
         /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Enabled",
+            Description = "If the data connection is currently polling for data"
+        )]
         public bool Enabled
         {
             get { return _enabled; }
@@ -62,7 +68,7 @@ namespace SeniorDesign.Core.Connections
         /// <summary>
         ///     The physical connection that can send and recieve data
         /// </summary>
-        public Stream MediaConnection;
+        public DataStream MediaConnection;
 
         /// <summary>
         ///     The pipe to change the way the byte input and output is decoded and encoded
@@ -143,6 +149,24 @@ namespace SeniorDesign.Core.Connections
 
             // Pass it on to be output
             MediaConnection.Write(encodedData, 0, encodedData.Length);
+        }
+
+        /// <summary>
+        ///     Checks to see if this Data Connection is functional
+        /// </summary>
+        /// <returns>True if the state is valid, False if not</returns>
+        public bool ValidateState()
+        {
+            return (MediaConnection != null && Poller != null && Converter != null);
+        }
+
+        /// <summary>
+        ///     Gets the name of this particular object
+        /// </summary>
+        /// <returns>The object's name as given by the user</returns>
+        public override string ToString()
+        {
+            return Name;
         }
 
     }

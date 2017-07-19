@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Streams;
+using System;
 using System.IO;
 
 namespace SeniorDesign.Plugins.Connections
@@ -7,13 +9,18 @@ namespace SeniorDesign.Plugins.Connections
     ///     A dummy type of Data Connection where constant data is fed
     ///     as a byte stream.
     /// </summary>
-    public class ConstantDataStream : Stream
+    [MetadataDataStream(AllowAsInput = true, AllowAsOutput = false)]
+    public class ConstantDataStream : DataStream
     {
         #region User Config
 
         /// <summary>
         ///     The value that this stream outputs
         /// </summary>
+        [UserConfigurableDouble(
+            Name = "Value",
+            Description = "The value the stream will output"
+        )]
         public double Value {
             get { return _value; }
             set
@@ -27,6 +34,11 @@ namespace SeniorDesign.Plugins.Connections
         private byte[] _valueBytes = BitConverter.GetBytes(0.0);
 
         #endregion
+
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Constant Stream"; } }
 
         /// <summary>
         ///     Checks if this stream can be read from

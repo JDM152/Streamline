@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Streams;
 using System;
 using System.IO;
 
@@ -9,7 +10,8 @@ namespace SeniorDesign.Plugins.Connections
     ///     A Data Connection that allows audio output.
     ///     Input is in a seperate stream.
     /// </summary>
-    public class AudioDataStream : Stream
+    [MetadataDataStream(AllowAsInput = false, AllowAsOutput = true)]
+    public class AudioDataStream : DataStream
     {
         #region User Config
 
@@ -32,6 +34,11 @@ namespace SeniorDesign.Plugins.Connections
         private int _samplingRate = 4410;
 
         #endregion
+
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Audio Stream"; } }
 
         /// <summary>
         ///     The sound player that will be piped to

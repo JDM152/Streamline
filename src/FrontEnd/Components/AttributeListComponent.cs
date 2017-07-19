@@ -57,7 +57,23 @@ namespace SeniorDesign.FrontEnd.Components
 
                     // Create the editor for the attribute, and add it in
                     var editorType = AttributeEditorHelper.GetEditorForAttribute(configAttrib);
-                    var editor = (UserControl) Activator.CreateInstance(editorType, _owner, field, configAttrib);
+                    var editor = (UserControl) Activator.CreateInstance(editorType, _owner, new WrappedAttributeInfo(field), configAttrib);
+                    AttributeEditorList.Controls.Add(editor);
+                }
+            }
+
+            foreach (var prop in _owner.GetType().GetProperties())
+            {
+                foreach (var attribute in prop.GetCustomAttributes())
+                {
+
+                    var configAttrib = attribute as UserConfigurableAttribute;
+                    if (configAttrib == null)
+                        continue;
+
+                    // Create the editor for the attribute, and add it in
+                    var editorType = AttributeEditorHelper.GetEditorForAttribute(configAttrib);
+                    var editor = (UserControl) Activator.CreateInstance(editorType, _owner, new WrappedAttributeInfo(prop), configAttrib);
                     AttributeEditorList.Controls.Add(editor);
                 }
             }

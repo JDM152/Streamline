@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core.Connections;
 using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
+using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Exceptions;
 using SeniorDesign.Core.Filters;
 using System;
@@ -117,7 +118,7 @@ namespace SeniorDesign.Core
                 switch (node.LocalName)
                 {
                     case "stream":
-                        loadType = typeof(Stream);
+                        loadType = typeof(DataStream);
                         break;
 
                     case "poller":

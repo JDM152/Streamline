@@ -17,7 +17,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     The field that is being edited
         /// </summary>
-        public FieldInfo Field { get; protected set; }
+        public WrappedAttributeInfo Field { get; protected set; }
 
         /// <summary>
         ///     The object that this is editing the component of
@@ -40,7 +40,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
-        public StringEditorComponent(object owner, FieldInfo field, UserConfigurableStringAttribute attribute)
+        public StringEditorComponent(object owner, WrappedAttributeInfo field, UserConfigurableStringAttribute attribute)
         {
             _suppressUpdate = true;
             Owner = owner;

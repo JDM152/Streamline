@@ -6,6 +6,11 @@
     public abstract class PollingMechanism
     {
         /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public abstract string InternalName { get; }
+
+        /// <summary>
         ///     Creates a new Polling Mechanism working for a specific core
         /// </summary>
         /// <param name="core">The core this reports back to</param>

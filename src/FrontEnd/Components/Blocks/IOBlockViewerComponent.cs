@@ -70,6 +70,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         public void UpdateMediaComponent()
         {
             if (_ignoreUpdates) return;
+            StreamEditor.SetViewingComponent(_selected.MediaConnection);
         }
 
         /// <summary>
@@ -87,6 +88,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         public void UpdatePollerComponent()
         {
             if (_ignoreUpdates) return;
+            PollerEditor.SetViewingComponent(_selected.Poller);
         }
     }
 }
