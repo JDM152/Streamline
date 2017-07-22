@@ -58,11 +58,20 @@ namespace SeniorDesign.FrontEnd.Windows
         private void BlockList_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             if (BlockList.SelectedIndex < 0 || !_componentMapping.ContainsKey(BlockList.SelectedIndex))
+            {
+                _selected = null;
+                BlockViewComponent.SetViewingComponent(null);
+                ConnectionEditor.SetViewingComponent(_core, null);
                 return;
+            }
 
             // List information about the selected block
             _selected = _componentMapping[BlockList.SelectedIndex];
             BlockViewComponent.SetViewingComponent(_selected);
+
+            // Update the connection connector
+            ConnectionEditor.SetViewingComponent(_core, _selected);
+
         }
 
         /// <summary>

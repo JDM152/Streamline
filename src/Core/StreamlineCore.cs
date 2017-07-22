@@ -231,6 +231,100 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
+        ///     Attempts to connect two connectable components.
+        ///     This ensures compatibility, and sets some metadata.
+        /// </summary>
+        /// <param name="original">The component that is the source</param>
+        /// <param name="toAdd">The component to connect to the original</param>
+        /// <returns>True if the connection was able to be made</returns>
+        public bool ConnectConnectables(IConnectable original, IConnectable toAdd)
+        {
+            // Ensure the connection is legal
+            if (!CanConnectConnectables(original, toAdd))
+                return false;
+
+            // Make the connection
+            original.NextConnections.Add(toAdd);
+            _connectableMetadata[toAdd].IncomingConnections.Add(original);
+            return true;
+        }
+
+        /// <summary>
+        ///     Checks to see if two components can connect.
+        /// </summary>
+        /// <param name="original">The component that is the source</param>
+        /// <param name="toAdd">THe component to connect to the original</param>
+        /// <returns>If the connection is legal</returns>
+        public bool CanConnectConnectables(IConnectable original, IConnectable toAdd)
+        {
+            // Skip if already connected
+            if (original.NextConnections.Contains(toAdd))
+                return false;
+
+            // Skip check if arbitrary input
+            if (toAdd.InputCount != -1)
+            {
+                // Ensure that number of channels match
+                if (toAdd.InputCount != original.OutputCount)
+                    return false;
+
+                // Ensure that nothing else is connected
+                if (_connectableMetadata[toAdd].IncomingConnections.Count >= toAdd.InputCount)
+                    return false;
+            }
+
+            // Can connect
+            return true;
+        }
+
+        /// <summary>
+        ///     Attempts to disconnect two connectable components.
+        ///     This ensures compatibility, and sets some metadata
+        /// </summary>
+        /// <param name="original">The component that is the root</param>
+        /// <param name="toRemove">The component that is connected</param>
+        /// <returns>True if the component was able to be removed</returns>
+        public bool DisconnectConnectables(IConnectable original, IConnectable toRemove)
+        {
+
+            // Ensure that the two are actually connected
+            if (!original.NextConnections.Contains(toRemove))
+                return false;
+
+            // Remove the connection
+            original.NextConnections.Remove(toRemove);
+            _connectableMetadata[toRemove].IncomingConnections.Remove(original);
+            return true;
+        }
+
+        /// <summary>
+        ///     Gets a list of all the available connections for a particular block
+        /// </summary>
+        /// <param name="original">The block to get all of the available connections for</param>
+        /// <returns>A list of potential connections</returns>
+        public List<IConnectable> GetPotentialConnections(IConnectable original)
+        {
+            // Start with all available nodes
+            var toReturn = new List<IConnectable>();
+            toReturn.AddRange(Nodes);
+
+            // Remove this node and all of the connections that it already has
+            toReturn.Remove(original);
+            foreach (var node in original.NextConnections)
+                toReturn.Remove(node);
+
+            // Remove all of the nodes that cannot accept more connections
+            var toRemove = new List<IConnectable>();
+            foreach (var node in toReturn)
+                if (!CanConnectConnectables(original, node))
+                    toRemove.Add(node);
+            foreach (var node in toRemove)
+                toRemove.Remove(node);
+
+            return toReturn;
+        }
+
+        /// <summary>
         ///     Passes data from a single connection to all available connections,
         ///     performing all translations as needed
         /// </summary>
