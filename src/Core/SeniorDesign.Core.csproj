@@ -55,6 +55,7 @@
     <Compile Include="CoreSettings.cs" />
     <Compile Include="DataPacket.cs" />
     <Compile Include="Exceptions\InvalidChannelCountException.cs" />
+    <Compile Include="Exceptions\InvalidSchematicException.cs" />
     <Compile Include="IConnectableMetadata.cs" />
     <Compile Include="IRestorable.cs" />
     <Compile Include="StreamlineCore.cs" />

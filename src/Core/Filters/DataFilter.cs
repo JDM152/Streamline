@@ -68,7 +68,7 @@ namespace SeniorDesign.Core.Filters
         ///     Creates a new Data Filter restored from previously saved bytes
         /// </summary>
         /// <param name="restore">The bytes to restore from</param>
-        public DataFilter(List<byte> restore, ref int offset)
+        public DataFilter(byte[] restore, ref int offset)
         {
             Restore(restore, ref offset);
         }
@@ -82,13 +82,14 @@ namespace SeniorDesign.Core.Filters
         ///     Converts this object into a byte array representation
         /// </summary>
         /// <returns>This object as a restoreable byte array</returns>
-        public virtual List<byte> ToBytes()
+        public virtual byte[] ToBytes()
         {
             var toReturn = new List<byte>();
 
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Id));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
 
-            return toReturn;
+            return toReturn.ToArray();
         }
 
         /// <summary>
@@ -96,8 +97,9 @@ namespace SeniorDesign.Core.Filters
         /// </summary>
         /// <param name="data">The data to restore from</param>
         /// <param name="offset">The offset into the data to start</param>
-        public virtual void Restore(List<byte> data, ref int offset)
+        public virtual void Restore(byte[] data, ref int offset)
         {
+            Id = ByteUtil.GetIntFromSizedArray(data, ref offset);
             Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
         }
 

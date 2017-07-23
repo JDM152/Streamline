@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
 using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
@@ -84,10 +85,13 @@ namespace SeniorDesign.Plugins.Filters
         ///     Converts this object into a byte array representation
         /// </summary>
         /// <returns>This object as a restoreable byte array</returns>
-        public override List<byte> ToBytes()
+        public override byte[] ToBytes()
         {
-            // TODO : Finish filter
-            return base.ToBytes();
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(_samplingPeriod));
+
+            return toReturn.ToArray();
         }
 
         /// <summary>
@@ -95,10 +99,11 @@ namespace SeniorDesign.Plugins.Filters
         /// </summary>
         /// <param name="data">The data to restore from</param>
         /// <param name="offset">The offset into the data to start</param>
-        public override void Restore(List<byte> data, ref int offset)
+        public override void Restore(byte[] data, ref int offset)
         {
-            // TODO : Finish Filter
             base.Restore(data, ref offset);
+
+            _samplingPeriod = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
 
     }

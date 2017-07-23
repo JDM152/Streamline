@@ -1,9 +1,9 @@
-﻿using SeniorDesign.Core.Connections;
-using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
 using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Exceptions;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -216,18 +216,22 @@ namespace SeniorDesign.Core
         /// <param name="obj">The connectable to remove</param>
         public void DeleteConnectable(IConnectable obj)
         {
+            if (!Nodes.Contains(obj))
+                return;
+
+            var mdata = _connectableMetadata[obj];
+
             // Unregister the node and metadata
-            if (Nodes.Contains(obj))
-            {
-                Nodes.Remove(obj);
-                obj.Id = -1;
-                _connectableMetadata.Remove(obj);
-            }
+            Nodes.Remove(obj);
+            obj.Id = -1;
+            _connectableMetadata.Remove(obj);
 
             // Remove the node from all connections
             foreach (var node in Nodes)
-                if (node.NextConnections.Contains(obj))
-                    node.NextConnections.Remove(obj);
+            {
+                node.NextConnections.Remove(obj);
+                _connectableMetadata[node].IncomingConnections.Remove(obj);
+            }
         }
 
         /// <summary>
@@ -391,15 +395,98 @@ namespace SeniorDesign.Core
         /// <param name="filename">The file to save the schematic to</param>
         public void SaveProjectSchematic(string filename)
         {
+            using (var toSave = File.OpenWrite(filename))
+            {
 
+                // Save each of the nodes in the project
+                foreach (var node in Nodes)
+                {
+                    // Only save anything if the node is restorable
+                    var restorable = node as IRestorable;
+                    if (restorable == null) continue;
+
+                    // Write out that this is a node, and the byte contents of the object
+                    var cont = restorable.ToBytes();
+                    var contType = ByteUtil.GetSizedArrayRepresentation(node.GetType().AssemblyQualifiedName);
+                    toSave.WriteByte(0x01);
+                    toSave.Write(contType, 0, contType.Length);
+                    toSave.Write(cont, 0, cont.Length);
+                }
+
+                // Go through again and save the list of connections for every single node
+                foreach (var node in Nodes)
+                {
+                    // Only save anything if the node is restorable
+                    var restorable = node as IRestorable;
+                    if (restorable == null) continue;
+
+                    // Write out that this is a connection, and the connected nodes
+                    var nodeId = ByteUtil.GetSizedArrayRepresentation(node.Id);
+                    var nodeSize = ByteUtil.GetSizedArrayRepresentation(node.NextConnections.Count);
+                    toSave.WriteByte(0x02);
+                    toSave.Write(nodeId, 0, nodeId.Length);
+                    toSave.Write(nodeSize, 0, nodeSize.Length);
+                    foreach (var connection in node.NextConnections)
+                    {
+                        var con = ByteUtil.GetSizedArrayRepresentation(connection.Id);
+                        toSave.Write(con, 0, con.Length);
+                    }
+                }
+
+            }
         }
 
         /// <summary>
-        ///     Loads the schematic from a specified file as the current schematic
+        ///     Loads the schematic from a specified file as the current schematic.
         /// </summary>
         /// <param name="filename">The file to load the schematic from</param>
         public void LoadProjectSchematic(string filename)
         {
+            ClearProjectSchematic();
+            var nodeMapping = new Dictionary<int, IConnectable>();
+
+            var data = File.ReadAllBytes(filename);
+            int pos = 0;
+
+            // Read each byte for instructions
+            while (pos < data.Length)
+            {
+                switch (data[pos++])
+                {
+                    case 0x01: // Node definition
+                        var stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        var type = Type.GetType(stype, true, true);
+                        var cobj = (IConnectable) Activator.CreateInstance(type);
+                        var robj = cobj as IRestorable;
+                        robj.Restore(data, ref pos);
+                        nodeMapping.Add(cobj.Id, cobj);
+                        Nodes.Add(cobj);
+                        if (cobj.Id >= _nodeIndex)
+                            _nodeIndex = cobj.Id + 1;
+                        break;
+
+                    case 0x02: // Connection
+                        var nodeId = ByteUtil.GetIntFromSizedArray(data, ref pos);
+                        var nodeSize = ByteUtil.GetIntFromSizedArray(data, ref pos);
+                        var parentNode = nodeMapping[nodeId];
+                        for (var k = 0; k < nodeSize; k++)
+                            ConnectConnectables(parentNode, nodeMapping[nodeId]);
+                        break;
+
+                    default: // Unknown
+                        throw new InvalidSchematicException($"The schematic file {filename} is corrupted, and cannot be loaded.");
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Clears everything from the project
+        /// </summary>
+        public void ClearProjectSchematic()
+        {
+            var nodeList = new List<IConnectable>(Nodes);
+            foreach (var node in nodeList)
+                DeleteConnectable(node);
 
         }
 

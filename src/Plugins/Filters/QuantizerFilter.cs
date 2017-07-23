@@ -102,17 +102,17 @@ namespace SeniorDesign.Plugins.Filters
         ///     Converts this object into a byte array representation
         /// </summary>
         /// <returns>This object as a restoreable byte array</returns>
-        public override List<byte> ToBytes()
+        public override byte[] ToBytes()
         {
             // Start constructing the data array
-            var toReturn = base.ToBytes();
+            var toReturn = new List<byte>(base.ToBytes());
 
             // Add all of the user configurable options
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Minimum));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Maximum));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(StepSize));
 
-            return toReturn;
+            return toReturn.ToArray();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace SeniorDesign.Plugins.Filters
         /// </summary>
         /// <param name="data">The data to restore from</param>
         /// <param name="offset">The offset into the data to start</param>
-        public override void Restore(List<byte> data, ref int offset)
+        public override void Restore(byte[] data, ref int offset)
         {
             // Restore the base first
             base.Restore(data, ref offset);
