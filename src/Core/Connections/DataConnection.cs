@@ -59,7 +59,14 @@ namespace SeniorDesign.Core.Connections
         ///     The number of output connections this connectable provides.
         ///     This is decided by the converter
         /// </summary>
-        public int OutputCount { get { return Converter.DecodeDataCount; } }
+        public int OutputCount { get {
+                if (!IsOutput) return 0;
+
+                if (Converter == null)
+                    return MediaConnection.DirectOutputCount;
+                else
+                    return Converter.DecodeDataCount;
+            } }
 
         /// <summary>
         ///     The physical connection that can send and recieve data
@@ -157,16 +164,25 @@ namespace SeniorDesign.Core.Connections
         /// </summary>
         public void Poll(StreamlineCore core)
         {
-            // Grab all available bytes, and pass it to the decoder
-            var data = MediaConnection.ReadToEnd(CoreSettings.InputBuffer);
-            if (_leftoverInputData != null)
-                _leftoverInputData = _leftoverInputData.Concat(data);
+            // Check if we can read directly
+            if (Converter == null && MediaConnection.CanReadDirect)
+            {
+                // Read a data packet directly from the connection
+                core.PassDataToNextConnectable(this, MediaConnection.ReadDirect(CoreSettings.InputBuffer));
+            }
             else
-                _leftoverInputData = data;
-            var decodedData = Converter.DecodeData(ref _leftoverInputData);
+            {
+                // Grab all available bytes, and pass it to the decoder
+                var data = MediaConnection.ReadToEnd(CoreSettings.InputBuffer);
+                if (_leftoverInputData != null)
+                    _leftoverInputData = _leftoverInputData.Concat(data);
+                else
+                    _leftoverInputData = data;
+                var decodedData = Converter.DecodeData(ref _leftoverInputData);
 
-            // Pass the data on to the next step
-            core.PassDataToNextConnectable(this, new DataPacket(decodedData));
+                // Pass the data on to the next step
+                core.PassDataToNextConnectable(this, new DataPacket(decodedData));
+            }
         }
 
         /// <summary>
@@ -187,11 +203,20 @@ namespace SeniorDesign.Core.Connections
                 return;
             }
 
-            // Encode the data
-            var encodedData = Converter.EncodeData(data);
+            // Check if the data can be written directly
+            if (Converter == null && MediaConnection.CanWriteDirect)
+            {
+                // Send the data directly
+                MediaConnection.WriteDirect(data);
+            }
+            else
+            {
+                // Encode the data
+                var encodedData = Converter.EncodeData(data);
 
-            // Pass it on to be output
-            MediaConnection.Write(encodedData, 0, encodedData.Length);
+                // Pass it on to be output
+                MediaConnection.Write(encodedData, 0, encodedData.Length);
+            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -53,6 +54,42 @@ namespace SeniorDesign.Core.Connections.Streams
         ///     If this Data Stream can use a generic converter
         /// </summary>
         public bool UsesGenericConverters { get { return GetType().GetCustomAttribute<MetadataDataStreamAttribute>().GenericConverter; } }
+
+        /// <summary>
+        ///     If this type of data stream supports ReadDirect.
+        ///     Note that this will only apply if the Converter has not been specified
+        /// </summary>
+        public virtual bool CanReadDirect { get { return false; } }
+
+        /// <summary>
+        ///     How many output channels are available when reading directly
+        /// </summary>
+        public virtual int DirectOutputCount { get { return 0; } }
+
+        /// <summary>
+        ///     Reads directly from the stream, ignoring the Converter
+        /// </summary>
+        /// <param name="count">The number of points to poll</param>
+        /// <returns>The data packet with at most count data points added</returns>
+        public virtual DataPacket ReadDirect(int count)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        ///     If this type of data stream supports WriteDirect.
+        ///     Note that this will only apply if the Converter has not been specified
+        /// </summary>
+        public virtual bool CanWriteDirect { get { return false; } }
+
+        /// <summary>
+        ///     Writes directly from the stream, ignoring the Converter
+        /// </summary>
+        /// <param name="data">The data to write to the stream</param>
+        public virtual void WriteDirect(DataPacket data)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <summary>
         ///     Gets the metadata for this particular data stream

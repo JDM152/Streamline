@@ -177,6 +177,10 @@ namespace SeniorDesign.Core
         /// <param name="allowCreateChannel">If new channels can be created</param>
         public void Add(DataPacket packet, bool allowCreateChannel = true)
         {
+            // Ignore if empty
+            if (packet == null)
+                return;
+
             // Don't allow channel creation normally
             if (packet.ChannelCount != ChannelCount && !allowCreateChannel)
                 throw new System.Exception("Data Packets with different channel counts attempted to merge when forbidden to do so.");

@@ -33,6 +33,15 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         }
 
         /// <summary>
+        ///     Method triggered when the Block Name input changes
+        /// </summary>
+        private void BlockName_TextChanged(object sender, System.EventArgs e)
+        {
+            if (_ignoreUpdates) return;
+            _selected.Name = BlockName.Text;
+        }
+
+        /// <summary>
         ///     Changes the block that is being edited
         /// </summary>
         /// <param name="component">The IConnectable block editing is switching to</param>
@@ -117,5 +126,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
             if (_ignoreUpdates) return;
             PollerEditor.SetViewingComponent(_selected.Poller);
         }
+
+        
     }
 }

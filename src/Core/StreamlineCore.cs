@@ -358,9 +358,13 @@ namespace SeniorDesign.Core
                 var mdata = meta.GetLeftoverData(connection);
                 mdata.Add(data);
 
+                // Do nothing if no data
+                if (mdata.ChannelCount == 0)
+                    return;
+
                 // Ensure that the channel count is valid
-                if (connection.InputCount != -1 && data.ChannelCount != connection.InputCount)
-                    throw new InvalidChannelCountException($"[{connection.Name}] expected {connection.InputCount} input channels, but was given {data.ChannelCount} by [{root.Name}]");
+                if (connection.InputCount != -1 && mdata.ChannelCount != connection.InputCount)
+                    throw new InvalidChannelCountException($"[{connection.Name}] expected {connection.InputCount} input channels, but was given {mdata.ChannelCount} by [{root.Name}]");
 
                 // Accept the incoming data
                 connection.AcceptIncomingData(this, mdata);

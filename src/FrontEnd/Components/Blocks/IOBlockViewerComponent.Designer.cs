@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
             this.BlockName = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.label1 = new System.Windows.Forms.Label();
             this.StreamEditor = new SeniorDesign.FrontEnd.Components.Blocks.IOBlocks.StreamEditorComponent();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.PollerEditor = new SeniorDesign.FrontEnd.Components.Blocks.IOBlocks.PollerEditorComponent();
             this.ConverterEditor = new SeniorDesign.FrontEnd.Components.Blocks.IOBlocks.ConverterEditorComponent();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -69,6 +69,15 @@
             this.splitContainer1.SplitterDistance = 73;
             this.splitContainer1.TabIndex = 0;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Name";
+            // 
             // BlockName
             // 
             this.BlockName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -77,6 +86,7 @@
             this.BlockName.Name = "BlockName";
             this.BlockName.Size = new System.Drawing.Size(274, 20);
             this.BlockName.TabIndex = 1;
+            this.BlockName.TextChanged += new System.EventHandler(this.BlockName_TextChanged);
             // 
             // splitContainer2
             // 
@@ -95,6 +105,18 @@
             this.splitContainer2.SplitterDistance = 129;
             this.splitContainer2.TabIndex = 1;
             // 
+            // StreamEditor
+            // 
+            this.StreamEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.StreamEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.StreamEditor.Location = new System.Drawing.Point(0, 0);
+            this.StreamEditor.Margin = new System.Windows.Forms.Padding(0);
+            this.StreamEditor.Name = "StreamEditor";
+            this.StreamEditor.Size = new System.Drawing.Size(129, 298);
+            this.StreamEditor.TabIndex = 0;
+            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -111,27 +133,6 @@
             this.splitContainer3.Size = new System.Drawing.Size(277, 298);
             this.splitContainer3.SplitterDistance = 130;
             this.splitContainer3.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Name";
-            // 
-            // StreamEditor
-            // 
-            this.StreamEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.StreamEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.StreamEditor.Location = new System.Drawing.Point(0, 0);
-            this.StreamEditor.Margin = new System.Windows.Forms.Padding(0);
-            this.StreamEditor.Name = "StreamEditor";
-            this.StreamEditor.Size = new System.Drawing.Size(129, 298);
-            this.StreamEditor.TabIndex = 0;
             // 
             // PollerEditor
             // 
