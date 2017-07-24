@@ -66,6 +66,19 @@ namespace SeniorDesign.Core.Util
         }
 
         /// <summary>
+        ///     Gets an array of bytes that represent a double
+        ///     This can be retrieved using GetIntFromSizedArray.
+        ///     This is always Little Endian
+        /// </summary>
+        /// <param name="data">The data to get the representation for</param>
+        /// <returns>A list of bytes for the representation</returns>
+        public static byte[] GetSizedArrayRepresentation(bool data)
+        {
+            // Convert to bytes
+            return new byte[] { (byte) (data ? 0x01 : 0x00) };
+        }
+
+        /// <summary>
         ///     Gets a string from sized array data given by GetSizedArrayRepresentation
         /// </summary>
         /// <param name="data">The data to read from</param>
@@ -115,6 +128,17 @@ namespace SeniorDesign.Core.Util
             var d = data.Subarray(offset, 8);
             offset += 8;
             return BitConverter.ToDouble(d.ToArray(), 0);
+        }
+
+        /// <summary>
+        ///     Gets a boolean from a sized array data given by GetSizedArrayRepresentation
+        /// </summary>
+        /// <param name="data">The data to read from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        /// <returns>The original boolean</returns>
+        public static bool GetBoolFromSizedArray(byte[] data, ref int offset)
+        {
+            return data[offset++] == 1;
         }
     }
 }

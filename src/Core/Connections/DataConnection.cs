@@ -257,6 +257,7 @@ namespace SeniorDesign.Core.Connections
 
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Id));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(IsOutput));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionX));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionY));
 
@@ -272,6 +273,7 @@ namespace SeniorDesign.Core.Connections
         {
             Id = ByteUtil.GetIntFromSizedArray(data, ref offset);
             Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
+            IsOutput = ByteUtil.GetBoolFromSizedArray(data, ref offset);
             PositionX = ByteUtil.GetIntFromSizedArray(data, ref offset);
             PositionY = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }

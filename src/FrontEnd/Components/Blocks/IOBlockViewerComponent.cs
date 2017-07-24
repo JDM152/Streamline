@@ -80,32 +80,36 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         {
             if (_ignoreUpdates) return;
             StreamEditor.SetViewingComponent(_selected.MediaConnection);
-            
-            if (_selected.MediaConnection != null)
+
+            // Show by default if no media connection
+            if (_selected.MediaConnection == null)
             {
+                ConverterEditor.Show();
+                PollerEditor.Show();
+                return;
+            }
 
-                // Change if converters are allowed to be changed
-                if (!_selected.MediaConnection.UsesGenericConverters)
-                {
+            // Change if converters are allowed to be changed
+            if (!_selected.MediaConnection.UsesGenericConverters)
+            {
                     
-                    ConverterEditor.ClearChoice();
-                    ConverterEditor.Hide();
-                }
-                else
-                {
-                    ConverterEditor.Show();
-                }
+                ConverterEditor.ClearChoice();
+                ConverterEditor.Hide();
+            }
+            else
+            {
+                ConverterEditor.Show();
+            }
 
-                // Change if pollers are allowed to be changed
-                if (!_selected.MediaConnection.UsesGenericPollers)
-                {
-                    PollerEditor.ClearChoice();
-                    PollerEditor.Hide();
-                }
-                else
-                {
-                    PollerEditor.Show();
-                }
+            // Change if pollers are allowed to be changed
+            if (!_selected.MediaConnection.UsesGenericPollers)
+            {
+                PollerEditor.ClearChoice();
+                PollerEditor.Hide();
+            }
+            else
+            {
+                PollerEditor.Show();
             }
         }
 

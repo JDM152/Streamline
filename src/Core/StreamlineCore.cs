@@ -324,7 +324,7 @@ namespace SeniorDesign.Core
                 if (!CanConnectConnectables(original, node))
                     toRemove.Add(node);
             foreach (var node in toRemove)
-                Nodes.Remove(node);
+                toReturn.Remove(node);
 
             return toReturn;
         }
@@ -400,6 +400,8 @@ namespace SeniorDesign.Core
         /// <param name="filename">The file to save the schematic to</param>
         public void SaveProjectSchematic(string filename)
         {
+            if (File.Exists(filename))
+                File.Delete(filename);
             using (var toSave = File.OpenWrite(filename))
             {
 
@@ -459,6 +461,7 @@ namespace SeniorDesign.Core
                     // Only save anything if the node is restorable
                     var restorable = node as IRestorable;
                     if (restorable == null) continue;
+                    if (node.NextConnections.Count <= 0) continue;
 
                     // Write out that this is a connection, and the connected nodes
                     var nodeId = ByteUtil.GetSizedArrayRepresentation(node.Id);
@@ -506,7 +509,7 @@ namespace SeniorDesign.Core
                         var robj = cobj as IRestorable;
                         robj.Restore(data, ref pos);
                         nodeMapping.Add(cobj.Id, cobj);
-                        Nodes.Add(cobj);
+                        AddConnectable(cobj);
                         if (cobj.Id >= _nodeIndex)
                             _nodeIndex = cobj.Id + 1;
 
@@ -519,7 +522,10 @@ namespace SeniorDesign.Core
                         var nodeSize = ByteUtil.GetIntFromSizedArray(data, ref pos);
                         var parentNode = nodeMapping[nodeId];
                         for (var k = 0; k < nodeSize; k++)
+                        {
+                            nodeId = ByteUtil.GetIntFromSizedArray(data, ref pos);
                             ConnectConnectables(parentNode, nodeMapping[nodeId]);
+                        }
                         break;
 
                     case 0x03: // DataConnection->MediaConnection

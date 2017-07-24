@@ -132,9 +132,12 @@ namespace SeniorDesign.FrontEnd.Windows
             else
                 _current.Poller = null;
 
-            IOBlockViewer.UpdateMediaComponent();
+            UpdateTypeBoxVisibility();
+
             IOBlockViewer.UpdateConverterComponent();
             IOBlockViewer.UpdatePollerComponent();
+
+
 
             _ignoreUpdate = false;
         }
@@ -218,7 +221,26 @@ namespace SeniorDesign.FrontEnd.Windows
 
             // Start creating the skeleton, and display it
             _current.MediaConnection = (DataStream) Activator.CreateInstance(type);
+
+            UpdateTypeBoxVisibility();
+        }
+
+        /// <summary>
+        ///     Updates each of the type boxes to change if they are visible or not
+        /// </summary>
+        private void UpdateTypeBoxVisibility()
+        {
             IOBlockViewer.UpdateMediaComponent();
+
+            // Make everything visible if no chance of collision
+            if (_current.MediaConnection == null)
+            {
+                PollerTypeBox.Show();
+                PollerTypeLabel.Show();
+                ConverterTypeBox.Show();
+                ConverterTypeLabel.Show();
+                return;
+            }
 
             // Disable the Poller if non-applicable
             if (!_current.MediaConnection.UsesGenericPollers)

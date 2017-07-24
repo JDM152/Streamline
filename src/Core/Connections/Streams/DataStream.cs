@@ -40,7 +40,7 @@ namespace SeniorDesign.Core.Connections.Streams
         public virtual bool VerifyConverter(DataConverter converter)
         {
             // Don't allow if the converter is built-in
-            if (!UsesGenericConverters)
+            if (!UsesGenericConverters && converter != null)
                 return false;
 
             return true;

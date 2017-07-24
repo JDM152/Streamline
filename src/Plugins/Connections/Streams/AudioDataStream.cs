@@ -32,7 +32,7 @@ namespace SeniorDesign.Plugins.Connections
                 ResetWaveFormat();
                 }
             }
-        private int _samplingRate = 4410;
+        private int _samplingRate = 44100;
 
         #endregion
 
