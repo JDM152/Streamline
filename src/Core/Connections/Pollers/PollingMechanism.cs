@@ -3,7 +3,7 @@
     /// <summary>
     ///     An object that keeps track of how to poll data from an input/push data to an output
     /// </summary>
-    public abstract class PollingMechanism
+    public abstract class PollingMechanism : IRestorable
     {
         /// <summary>
         ///     A name for this particular object type
@@ -39,5 +39,24 @@
         ///     Disables the polling mechanism 
         /// </summary>
         public abstract void Disable();
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public virtual byte[] ToBytes()
+        {
+            return new byte[0];
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public virtual void Restore(byte[] data, ref int offset)
+        {
+
+        }
     }
 }

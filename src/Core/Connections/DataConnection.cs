@@ -13,7 +13,7 @@ namespace SeniorDesign.Core.Connections
     ///     This is technically a container for the media type, 
     ///     the decoding, and the push/pull controllers.
     /// </summary>
-    public class DataConnection : IConnectable
+    public class DataConnection : IConnectable, IRestorable
     {
         /// <summary>
         ///     If this data connection is currently active or not
@@ -48,6 +48,16 @@ namespace SeniorDesign.Core.Connections
         ///     from the others.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        ///     The X position of this module in the block editor
+        /// </summary>
+        public int PositionX { get; set; }
+
+        /// <summary>
+        ///     The Y position of this module in the block editor
+        /// </summary>
+        public int PositionY { get; set; }
 
         /// <summary>
         ///     The number of input connections this connectable accepts.
@@ -235,6 +245,35 @@ namespace SeniorDesign.Core.Connections
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public virtual byte[] ToBytes()
+        {
+            var toReturn = new List<byte>();
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Id));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionX));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionY));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public virtual void Restore(byte[] data, ref int offset)
+        {
+            Id = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
+            PositionX = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            PositionY = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
         /// <summary>

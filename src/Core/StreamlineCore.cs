@@ -1,4 +1,5 @@
-﻿using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core.Connections;
+using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
 using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Exceptions;
@@ -415,6 +416,41 @@ namespace SeniorDesign.Core
                     toSave.WriteByte(0x01);
                     toSave.Write(contType, 0, contType.Length);
                     toSave.Write(cont, 0, cont.Length);
+
+                    // Append additional data for specialized types
+                    var dc = node as DataConnection;
+                    if (dc != null)
+                    {
+                        // Add the media connection only if it exists
+                        if (dc.MediaConnection != null)
+                        {
+                            cont = dc.MediaConnection.ToBytes();
+                            contType = ByteUtil.GetSizedArrayRepresentation(dc.MediaConnection.GetType().AssemblyQualifiedName);
+                            toSave.WriteByte(0x03);
+                            toSave.Write(contType, 0, contType.Length);
+                            toSave.Write(cont, 0, cont.Length);
+                        }
+
+                        // Add the poller only if it exists
+                        if (dc.Poller != null)
+                        {
+                            cont = dc.Poller.ToBytes();
+                            contType = ByteUtil.GetSizedArrayRepresentation(dc.Poller.GetType().AssemblyQualifiedName);
+                            toSave.WriteByte(0x04);
+                            toSave.Write(contType, 0, contType.Length);
+                            toSave.Write(cont, 0, cont.Length);
+                        }
+
+                        // Add the converter only if it exists
+                        if (dc.Converter != null)
+                        {
+                            cont = dc.Converter.ToBytes();
+                            contType = ByteUtil.GetSizedArrayRepresentation(dc.Converter.GetType().AssemblyQualifiedName);
+                            toSave.WriteByte(0x05);
+                            toSave.Write(contType, 0, contType.Length);
+                            toSave.Write(cont, 0, cont.Length);
+                        }
+                    }
                 }
 
                 // Go through again and save the list of connections for every single node
@@ -448,9 +484,15 @@ namespace SeniorDesign.Core
         {
             ClearProjectSchematic();
             var nodeMapping = new Dictionary<int, IConnectable>();
+            IConnectable lastConnectable = null;
+            DataConnection lastDataConnection = null;
 
             var data = File.ReadAllBytes(filename);
             int pos = 0;
+            string stype;
+            Type type;
+
+            var errorStr = $"The schematic file {filename} is corrupted, and cannot be loaded.";
 
             // Read each byte for instructions
             while (pos < data.Length)
@@ -458,8 +500,8 @@ namespace SeniorDesign.Core
                 switch (data[pos++])
                 {
                     case 0x01: // Node definition
-                        var stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
-                        var type = Type.GetType(stype, true, true);
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
                         var cobj = (IConnectable) Activator.CreateInstance(type);
                         var robj = cobj as IRestorable;
                         robj.Restore(data, ref pos);
@@ -467,6 +509,9 @@ namespace SeniorDesign.Core
                         Nodes.Add(cobj);
                         if (cobj.Id >= _nodeIndex)
                             _nodeIndex = cobj.Id + 1;
+
+                        lastConnectable = cobj;
+                        lastDataConnection = cobj as DataConnection;
                         break;
 
                     case 0x02: // Connection
@@ -477,8 +522,41 @@ namespace SeniorDesign.Core
                             ConnectConnectables(parentNode, nodeMapping[nodeId]);
                         break;
 
+                    case 0x03: // DataConnection->MediaConnection
+                        if (lastDataConnection == null)
+                            throw new InvalidSchematicException(errorStr);
+
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var mobj = (DataStream) Activator.CreateInstance(type);
+                        lastDataConnection.MediaConnection = mobj;
+
+                        break;
+
+                    case 0x04: // DataConnection->Poller
+                        if (lastDataConnection == null)
+                            throw new InvalidSchematicException(errorStr);
+
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var pobj = (PollingMechanism) Activator.CreateInstance(type, this);
+                        lastDataConnection.Poller = pobj;
+
+                        break;
+
+                    case 0x05: // DataConnection->Converter
+                        if (lastDataConnection == null)
+                            throw new InvalidSchematicException(errorStr);
+
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var cvobj = (DataConverter) Activator.CreateInstance(type);
+                        lastDataConnection.Converter = cvobj;
+
+                        break;
+
                     default: // Unknown
-                        throw new InvalidSchematicException($"The schematic file {filename} is corrupted, and cannot be loaded.");
+                        throw new InvalidSchematicException(errorStr);
                 }
             }
         }

@@ -10,7 +10,7 @@ namespace SeniorDesign.Core.Connections.Streams
     /// <summary>
     ///     A stream specialized for use with Streamline
     /// </summary>
-    public abstract class DataStream : Stream
+    public abstract class DataStream : Stream, IRestorable
     {
 
         /// <summary>
@@ -98,6 +98,25 @@ namespace SeniorDesign.Core.Connections.Streams
         public static MetadataDataStreamAttribute GetMetadata()
         {
             return MethodBase.GetCurrentMethod().DeclaringType.GetCustomAttribute<MetadataDataStreamAttribute>();
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public virtual byte[] ToBytes()
+        {
+            return new byte[0];
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public virtual void Restore(byte[] data, ref int offset)
+        {
+
         }
     }
 }

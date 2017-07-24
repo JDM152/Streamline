@@ -33,6 +33,16 @@ namespace SeniorDesign.Core.Filters
         public string Name { get; set; }
 
         /// <summary>
+        ///     The X position of this module in the block editor
+        /// </summary>
+        public int PositionX { get; set; }
+
+        /// <summary>
+        ///     The Y position of this module in the block editor
+        /// </summary>
+        public int PositionY { get; set; }
+
+        /// <summary>
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
@@ -88,6 +98,8 @@ namespace SeniorDesign.Core.Filters
 
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Id));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionX));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionY));
 
             return toReturn.ToArray();
         }
@@ -101,6 +113,8 @@ namespace SeniorDesign.Core.Filters
         {
             Id = ByteUtil.GetIntFromSizedArray(data, ref offset);
             Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
+            PositionX = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            PositionY = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
         /// <summary>
