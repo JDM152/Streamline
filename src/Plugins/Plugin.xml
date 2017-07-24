@@ -4,7 +4,8 @@
 <plugin name="Default Plugins" description="The default plugins included with Streamline">
   
   <!-- Streams are the raw IO ports, such as a websocket or Bluetooth -->
-  <stream name="Audio Data" class="SeniorDesign.Plugins.Connections.AudioDataStream"/>
+  <stream name="Audio Output" class="SeniorDesign.Plugins.Connections.AudioDataStream"/>
+  <stream name="Audio File" class="SeniorDesign.Plugins.Connections.AudioFileStream"/>
   <stream name="Random Data" class="SeniorDesign.Plugins.Connections.RandomDataStream"/>
   <stream name="Constant Data" class="SeniorDesign.Plugins.Connections.ConstantDataStream"/>
   <stream name="Console Data" class="SeniorDesign.Plugins.Connections.ConsoleDataStream"/>

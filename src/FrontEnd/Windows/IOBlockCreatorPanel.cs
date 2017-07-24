@@ -210,15 +210,41 @@ namespace SeniorDesign.FrontEnd.Windows
                 } catch { }
             _current.MediaConnection = null;
 
-            // Ensure that the type is a Stream
+            // Ensure that the type is a Data Stream
             if (MediaTypeBox.SelectedItem == null) return;
             var type = _typeMappingMedia[(string) MediaTypeBox.SelectedItem];
-            if (type == null || !typeof(Stream).IsAssignableFrom(type))
+            if (type == null || !typeof(DataStream).IsAssignableFrom(type))
                 throw new Exception("Invalid object type! Not a Data Stream!");
 
             // Start creating the skeleton, and display it
             _current.MediaConnection = (DataStream) Activator.CreateInstance(type);
             IOBlockViewer.UpdateMediaComponent();
+
+            // Disable the Poller if non-applicable
+            if (!_current.MediaConnection.UsesGenericPollers)
+            {
+                PollerTypeBox.Hide();
+                PollerTypeBox.SelectedIndex = -1;
+                PollerTypeLabel.Hide();
+            }
+            else
+            {
+                PollerTypeBox.Show();
+                PollerTypeLabel.Show();
+            }
+
+            // Disable the Converter if non-applicable
+            if (!_current.MediaConnection.UsesGenericConverters)
+            {
+                ConverterTypeBox.Hide();
+                ConverterTypeBox.SelectedIndex = -1;
+                ConverterTypeLabel.Hide();
+            }
+            else
+            {
+                ConverterTypeBox.Show();
+                ConverterTypeLabel.Show();
+            }
         }
 
         /// <summary>

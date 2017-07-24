@@ -30,7 +30,7 @@
         {
             this.CancelCreationButton = new System.Windows.Forms.Button();
             this.AddBlockButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.MediaTypeLabel = new System.Windows.Forms.Label();
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveBlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,9 +38,9 @@
             this.loadBlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MediaTypeBox = new System.Windows.Forms.ComboBox();
             this.PollerTypeBox = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.PollerTypeLabel = new System.Windows.Forms.Label();
             this.ConverterTypeBox = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.ConverterTypeLabel = new System.Windows.Forms.Label();
             this.InputOutputBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.IOBlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.IOBlockViewerComponent();
@@ -69,14 +69,14 @@
             this.AddBlockButton.UseVisualStyleBackColor = true;
             this.AddBlockButton.Click += new System.EventHandler(this.AddBlockButton_Click);
             // 
-            // label1
+            // MediaTypeLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 57);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Media Type";
+            this.MediaTypeLabel.AutoSize = true;
+            this.MediaTypeLabel.Location = new System.Drawing.Point(12, 57);
+            this.MediaTypeLabel.Name = "MediaTypeLabel";
+            this.MediaTypeLabel.Size = new System.Drawing.Size(63, 13);
+            this.MediaTypeLabel.TabIndex = 9;
+            this.MediaTypeLabel.Text = "Media Type";
             // 
             // MenuStrip
             // 
@@ -140,14 +140,14 @@
             this.PollerTypeBox.TabIndex = 13;
             this.PollerTypeBox.SelectedIndexChanged += new System.EventHandler(this.PollerTypeBox_SelectedIndexChanged);
             // 
-            // label2
+            // PollerTypeLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 84);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Poller Type";
+            this.PollerTypeLabel.AutoSize = true;
+            this.PollerTypeLabel.Location = new System.Drawing.Point(12, 84);
+            this.PollerTypeLabel.Name = "PollerTypeLabel";
+            this.PollerTypeLabel.Size = new System.Drawing.Size(60, 13);
+            this.PollerTypeLabel.TabIndex = 14;
+            this.PollerTypeLabel.Text = "Poller Type";
             // 
             // ConverterTypeBox
             // 
@@ -161,14 +161,14 @@
             this.ConverterTypeBox.TabIndex = 15;
             this.ConverterTypeBox.SelectedIndexChanged += new System.EventHandler(this.ConverterTypeBox_SelectedIndexChanged);
             // 
-            // label3
+            // ConverterTypeLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 111);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(80, 13);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Converter Type";
+            this.ConverterTypeLabel.AutoSize = true;
+            this.ConverterTypeLabel.Location = new System.Drawing.Point(12, 111);
+            this.ConverterTypeLabel.Name = "ConverterTypeLabel";
+            this.ConverterTypeLabel.Size = new System.Drawing.Size(80, 13);
+            this.ConverterTypeLabel.TabIndex = 16;
+            this.ConverterTypeLabel.Text = "Converter Type";
             // 
             // InputOutputBox
             // 
@@ -212,14 +212,14 @@
             this.ClientSize = new System.Drawing.Size(784, 442);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.InputOutputBox);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.ConverterTypeLabel);
             this.Controls.Add(this.ConverterTypeBox);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.PollerTypeLabel);
             this.Controls.Add(this.PollerTypeBox);
             this.Controls.Add(this.MediaTypeBox);
             this.Controls.Add(this.CancelCreationButton);
             this.Controls.Add(this.AddBlockButton);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.MediaTypeLabel);
             this.Controls.Add(this.MenuStrip);
             this.Controls.Add(this.IOBlockViewer);
             this.MinimumSize = new System.Drawing.Size(640, 480);
@@ -237,7 +237,7 @@
         private Components.Blocks.IOBlockViewerComponent IOBlockViewer;
         private System.Windows.Forms.Button CancelCreationButton;
         private System.Windows.Forms.Button AddBlockButton;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label MediaTypeLabel;
         private System.Windows.Forms.MenuStrip MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveBlockToolStripMenuItem;
@@ -245,9 +245,9 @@
         private System.Windows.Forms.ToolStripMenuItem loadBlockToolStripMenuItem;
         private System.Windows.Forms.ComboBox MediaTypeBox;
         private System.Windows.Forms.ComboBox PollerTypeBox;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label PollerTypeLabel;
         private System.Windows.Forms.ComboBox ConverterTypeBox;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label ConverterTypeLabel;
         private System.Windows.Forms.ComboBox InputOutputBox;
         private System.Windows.Forms.Label label4;
     }

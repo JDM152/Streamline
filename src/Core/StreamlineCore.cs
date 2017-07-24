@@ -323,7 +323,7 @@ namespace SeniorDesign.Core
                 if (!CanConnectConnectables(original, node))
                     toRemove.Add(node);
             foreach (var node in toRemove)
-                toRemove.Remove(node);
+                Nodes.Remove(node);
 
             return toReturn;
         }

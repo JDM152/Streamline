@@ -45,6 +45,7 @@
     <Compile Include="Attributes\UserConfigurable\UserConfigurableAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableBooleanAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableDoubleAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableFileAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableStringAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableIntegerAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableSelectableListAttribute.cs" />

@@ -1,15 +1,11 @@
-﻿namespace SeniorDesign.Core.Attributes
+﻿using System;
+
+namespace SeniorDesign.Core.Attributes
 {
     /// <summary>
-    ///     An attribute representing an editable String, with several options
-    ///     for bounds.
+    ///     An attribute used to designate additional data that can be attached to certain Streamline classes
     /// </summary>
-    public class UserConfigurableStringAttribute : UserConfigurableAttribute
+    public abstract class MetadataAttribute : Attribute
     {
-
-        /// <summary>
-        ///     The largest number of characters that the user can enter (Defaults to 64)
-        /// </summary>
-        public int Maximum { get; set; } = 64;
     }
 }

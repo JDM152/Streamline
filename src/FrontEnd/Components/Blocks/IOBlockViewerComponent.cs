@@ -71,6 +71,33 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         {
             if (_ignoreUpdates) return;
             StreamEditor.SetViewingComponent(_selected.MediaConnection);
+            
+            if (_selected.MediaConnection != null)
+            {
+
+                // Change if converters are allowed to be changed
+                if (!_selected.MediaConnection.UsesGenericConverters)
+                {
+                    
+                    ConverterEditor.ClearChoice();
+                    ConverterEditor.Hide();
+                }
+                else
+                {
+                    ConverterEditor.Show();
+                }
+
+                // Change if pollers are allowed to be changed
+                if (!_selected.MediaConnection.UsesGenericPollers)
+                {
+                    PollerEditor.ClearChoice();
+                    PollerEditor.Hide();
+                }
+                else
+                {
+                    PollerEditor.Show();
+                }
+            }
         }
 
         /// <summary>

@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\AttributeEditors\FileEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AttributeEditors\FileEditorComponent.Designer.cs">
+      <DependentUpon>FileEditorComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\AttributeEditors\StringEditorComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -162,6 +168,9 @@
     <Compile Include="Windows\TestPanel.Designer.cs">
       <DependentUpon>TestPanel.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Components\AttributeEditors\FileEditorComponent.resx">
+      <DependentUpon>FileEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\AttributeEditors\StringEditorComponent.resx">
       <DependentUpon>StringEditorComponent.cs</DependentUpon>
     </EmbeddedResource>

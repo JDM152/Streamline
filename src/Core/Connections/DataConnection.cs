@@ -5,7 +5,6 @@ using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Util;
 using SeniorDesign.Plugins.Util;
 using System.Collections.Generic;
-using System.IO;
 
 namespace SeniorDesign.Core.Connections
 {
@@ -28,10 +27,7 @@ namespace SeniorDesign.Core.Connections
             get { return _enabled; }
             set {
                 _enabled = value;
-                if (_enabled)
-                    _poller.Enable();
-                else
-                    _poller.Disable();
+                EnablePolling(value);
             }
         }
         private bool _enabled;
@@ -68,17 +64,47 @@ namespace SeniorDesign.Core.Connections
         /// <summary>
         ///     The physical connection that can send and recieve data
         /// </summary>
-        public DataStream MediaConnection;
+        public DataStream MediaConnection
+        {
+            get { return _mediaConnection; }
+            set
+            {
+                // Disable the poller before changing, to be safe
+                if (_poller != null) _poller.Disable();
+
+                _mediaConnection = value;
+
+                if (_mediaConnection != null)
+                {
+                    // Remove the converter if no longer legal
+                    if (_converter != null && !_mediaConnection.VerifyConverter(_converter))
+                        _converter = null;
+
+                    // Remove the poller if no longer legal
+                    if (_poller != null && !_mediaConnection.VerifyPoller(_poller))
+                        _poller = null;
+                }
+
+            }
+        }
+        private DataStream _mediaConnection;
 
         /// <summary>
         ///     The pipe to change the way the byte input and output is decoded and encoded
         /// </summary>
-        public DataConverter Converter;
+        public DataConverter Converter
+        {
+            get { return _converter; }
+            set
+            {
+                // Raise an error if the converter is forbidden
+                if (MediaConnection != null && !MediaConnection.VerifyConverter(value))
+                    throw new System.Exception($"A generic converter was passed to a DataStream {MediaConnection.InternalName} while the DataStream provides its own converter."); ;
 
-        /// <summary>
-        ///     The next connections in the connectable graph
-        /// </summary>
-        public IList<IConnectable> NextConnections { get; protected set; } = new List<IConnectable>();
+                _converter = value;
+            }
+        }
+        private DataConverter _converter;
 
         /// <summary>
         ///     The mechanism that polls for the data
@@ -87,6 +113,10 @@ namespace SeniorDesign.Core.Connections
             get { return _poller; }
             set
             {
+                // Raise an error if the poller is forbidden
+                if (MediaConnection != null && !MediaConnection.VerifyPoller(value))
+                    throw new System.Exception($"A generic poller was passed to a DataStream {MediaConnection.InternalName} while the DataStream provides its own poller."); ;
+
                 _poller = value;
                 if (_poller != null) {
                     _poller.Connection = this;
@@ -94,6 +124,11 @@ namespace SeniorDesign.Core.Connections
             }
         }
         private PollingMechanism _poller;
+
+        /// <summary>
+        ///     The next connections in the connectable graph
+        /// </summary>
+        public IList<IConnectable> NextConnections { get; protected set; } = new List<IConnectable>();
 
         /// <summary>
         ///     True if this connection is an output, false if it is an input
@@ -111,6 +146,7 @@ namespace SeniorDesign.Core.Connections
         /// <param name="status">True to enable, false to disable</param>
         public void EnablePolling(bool status = true)
         {
+            if (_poller == null) return;
             if (status) _poller.Enable();
             else _poller.Disable();
         }
@@ -144,6 +180,13 @@ namespace SeniorDesign.Core.Connections
             if (!IsOutput)
                 throw new System.Exception("An input cannot accept data from other program nodes.");
 
+            // Don't accept anything if not enabled
+            if (!Enabled)
+            {
+                data.Clear();
+                return;
+            }
+
             // Encode the data
             var encodedData = Converter.EncodeData(data);
 
@@ -157,7 +200,16 @@ namespace SeniorDesign.Core.Connections
         /// <returns>True if the state is valid, False if not</returns>
         public bool ValidateState()
         {
-            return (MediaConnection != null && Poller != null && Converter != null);
+            if (MediaConnection == null)
+                return false;
+
+            if (Poller == null && MediaConnection.UsesGenericPollers)
+                return false;
+
+            if (Converter == null && MediaConnection.UsesGenericConverters)
+                return false;
+
+            return true;
         }
 
         /// <summary>

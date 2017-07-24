@@ -53,5 +53,14 @@ namespace SeniorDesign.FrontEnd.Components.Blocks.IOBlocks
                 AttributeList.SetComponent(_selected);
             }
         }
+
+        /// <summary>
+        ///     Clears the selected component
+        /// </summary>
+        public void ClearChoice()
+        {
+            _selected = null;
+            ListBlockContent();
+        }
     }
 }
