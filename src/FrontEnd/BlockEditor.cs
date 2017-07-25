@@ -101,19 +101,24 @@ namespace SeniorDesign.FrontEnd
             if(currentSelect.objectType == ObjectType.Line)
             {
                 DisconnectBlocks(currentSelect.ID, currentSelect.ID2);
+                currentSelect = new IDstruct(ObjectType.Null, -1, -1);
             }
             else if(currentSelect.objectType == ObjectType.Block)
             {
                 DeleteBlock(currentSelect.ID);
+                currentSelect = new IDstruct(ObjectType.Null, -1, -1);
             }
             else if(currentSelect.objectType == ObjectType.Input)
             {
                 input = null;
+                currentSelect = new IDstruct(ObjectType.Null, -1, -1);
             }
             else if(currentSelect.objectType == ObjectType.Ouput)
             {
                 output = null;
+                currentSelect = new IDstruct(ObjectType.Null, -1, -1);
             }
+            
         }
         public void drag(int Id, Point newPosition)
         {
