@@ -206,8 +206,12 @@ namespace SeniorDesign.FrontEnd
             
         }
         public void ConnectBlocks(int aid, int bid)
-        {
-            if (aid == input.Id)
+        {   
+            if(aid == output.Id && bid == input.Id)
+            {
+                ConnectBlocks(bid, aid);
+            }
+            else if (aid == input.Id)
             {
                 foreach (DataFilter tempFilter in filterList)
                 {

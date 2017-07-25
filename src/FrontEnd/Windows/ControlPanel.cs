@@ -215,6 +215,8 @@ namespace SeniorDesign.FrontEnd.Windows
             {
                 temp.PositionX = 150;
                 temp.PositionY = 100;
+                temp.IsOutput = false;
+                temp.Id = 0;
                 blockEditor.UpdateBlockPosition(temp);
                 step++;
             }
@@ -223,6 +225,7 @@ namespace SeniorDesign.FrontEnd.Windows
                 wala.PositionX = 350;
                 wala.PositionY = 100;
                 wala.IsOutput = true;
+                wala.Id = 1;
                 blockEditor.UpdateBlockPosition(wala);
                 step++;
             }
