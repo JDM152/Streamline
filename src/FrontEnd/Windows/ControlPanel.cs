@@ -185,5 +185,12 @@ namespace SeniorDesign.FrontEnd.Windows
             Form temp = new Graph();
             temp.Show();
         }
+
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+            //Filter
+            //blockEditor.CreatBlock()();
+            
+        }
     }
 }

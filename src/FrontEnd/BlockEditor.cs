@@ -38,14 +38,14 @@ namespace SeniorDesign.FrontEnd
             filterList = new List<DataFilter>();
             foreach (IConnectable temp in core.Nodes)
             {
-                DataFilter tempFitler = (DataFilter)temp;
+                DataFilter tempFitler = temp as DataFilter;
                 if ( tempFitler != null)
                 {
                     filterList.Add(tempFitler);
                 }
                 else
                 {
-                    DataConnection tempConnection = (DataConnection)temp;
+                    DataConnection tempConnection = temp as DataConnection;
                     if(tempConnection.IsOutput == false)
                     {
                         input = tempConnection;
@@ -120,14 +120,14 @@ namespace SeniorDesign.FrontEnd
 
         public void CreatBlock(IConnectable temp)
         {
-            DataFilter tempFitler = (DataFilter)temp;
+            DataFilter tempFitler = temp as DataFilter;
             if (tempFitler != null)
             {
                 filterList.Add(tempFitler);
             }
             else
             {
-                DataConnection tempConnection = (DataConnection)temp;
+                DataConnection tempConnection = temp as DataConnection;
                 if (tempConnection.IsOutput == false)
                 {
                     input = tempConnection;
@@ -140,7 +140,7 @@ namespace SeniorDesign.FrontEnd
         }
         public void UpdateBlockPosition(IConnectable temp)
         {
-            DataFilter tempFitler = (DataFilter)temp;
+            DataFilter tempFitler = temp as DataFilter;
             if (tempFitler != null)
             {
                 foreach (DataFilter tempFilter in filterList)
@@ -154,7 +154,7 @@ namespace SeniorDesign.FrontEnd
             }
             else
             {
-                DataConnection tempConnection = (DataConnection)temp;
+                DataConnection tempConnection = temp as DataConnection;
                 if (tempConnection.IsOutput == false)
                 {
                     input.PositionX = tempConnection.PositionX;
@@ -181,7 +181,7 @@ namespace SeniorDesign.FrontEnd
             }
             else
             {
-                DataConnection tempConnection = (DataConnection)A;
+                DataConnection tempConnection = A as DataConnection;
                 if (tempConnection.IsOutput == false)
                 {
                     A.NextConnections.Add(B);
@@ -235,7 +235,7 @@ namespace SeniorDesign.FrontEnd
         }
         public void DisconnectBlocks(IConnectable A, IConnectable B)
         {
-            DataFilter tempFitler = (DataFilter)A;
+            DataFilter tempFitler = A as DataFilter;
             if (tempFitler != null)
             {
                 foreach (DataFilter tempFilter in filterList)
@@ -248,7 +248,7 @@ namespace SeniorDesign.FrontEnd
             }
             else
             {
-                DataConnection tempConnection = (DataConnection)A;
+                DataConnection tempConnection = A as DataConnection;
                 if (tempConnection.IsOutput == false)
                 {
                     A.NextConnections.Remove(B);
@@ -291,7 +291,7 @@ namespace SeniorDesign.FrontEnd
         }
         public void DeleteBlock(IConnectable temp)
         {
-            DataFilter tempFitler = (DataFilter)temp;
+            DataFilter tempFitler = temp as DataFilter;
             if (tempFitler != null)
             {
                 for(int i = 0; i< filterList.Count; i++)
@@ -304,7 +304,7 @@ namespace SeniorDesign.FrontEnd
             }
             else
             {
-                DataConnection tempConnection = (DataConnection)temp;
+                DataConnection tempConnection = temp as DataConnection;
                 if (tempConnection.IsOutput == false)
                 {
                     input = null;
@@ -317,7 +317,7 @@ namespace SeniorDesign.FrontEnd
         }
         public void SetName(IConnectable temp, String name)
         {
-            DataFilter tempFitler = (DataFilter)temp;
+            DataFilter tempFitler = temp as DataFilter;
             if (tempFitler != null)
             {
                 foreach (DataFilter tempFilter in filterList)
@@ -331,7 +331,7 @@ namespace SeniorDesign.FrontEnd
             }
             else
             {
-                DataConnection tempConnection = (DataConnection)temp;
+                DataConnection tempConnection = temp as DataConnection;
                 if (tempConnection.IsOutput == false)
                 {
                     input.Name = name;
