@@ -187,8 +187,7 @@ namespace SeniorDesign.FrontEnd
                     A.NextConnections.Add(B);
                 }
             }
-            //core TO DO
-            core.ConnectConnectables(A, B);
+            
         }
         public void ConnectBlocks(int aid, int bid)
         {
@@ -232,6 +231,7 @@ namespace SeniorDesign.FrontEnd
                  }
                 filterList[temp1].NextConnections.Add(filterList[temp2]);
             }
+            //core to do
         }
         public void DisconnectBlocks(IConnectable A, IConnectable B)
         {

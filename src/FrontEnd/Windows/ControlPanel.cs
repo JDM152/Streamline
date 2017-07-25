@@ -181,6 +181,7 @@ namespace SeniorDesign.FrontEnd.Windows
 
         private void grapherToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
+            //example
             Form temp = new Graph();
             temp.Show();
         }

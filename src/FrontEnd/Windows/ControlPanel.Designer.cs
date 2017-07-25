@@ -40,12 +40,13 @@
             this.advancedBlockEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grapherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveSchematicDialog = new System.Windows.Forms.SaveFileDialog();
             this.OpenSchematicDialog = new System.Windows.Forms.OpenFileDialog();
             this.glControl2 = new OpenTK.GLControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.grapherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -140,6 +141,13 @@
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
             // 
+            // grapherToolStripMenuItem
+            // 
+            this.grapherToolStripMenuItem.Name = "grapherToolStripMenuItem";
+            this.grapherToolStripMenuItem.Size = new System.Drawing.Size(87, 29);
+            this.grapherToolStripMenuItem.Text = "Grapher";
+            this.grapherToolStripMenuItem.Click += new System.EventHandler(this.grapherToolStripMenuItem_Click);
+            // 
             // SaveSchematicDialog
             // 
             this.SaveSchematicDialog.DefaultExt = "schematic";
@@ -179,18 +187,21 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // grapherToolStripMenuItem
+            // button1
             // 
-            this.grapherToolStripMenuItem.Name = "grapherToolStripMenuItem";
-            this.grapherToolStripMenuItem.Size = new System.Drawing.Size(87, 29);
-            this.grapherToolStripMenuItem.Text = "Grapher";
-            this.grapherToolStripMenuItem.Click += new System.EventHandler(this.grapherToolStripMenuItem_Click);
+            this.button1.Location = new System.Drawing.Point(978, 569);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(194, 73);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Testing_button";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1207, 680);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.glControl2);
             this.Controls.Add(this.MenuStrip);
@@ -225,5 +236,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripMenuItem grapherToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
     }
 }
