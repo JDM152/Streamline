@@ -188,8 +188,6 @@ namespace SeniorDesign.FrontEnd.Windows
 
         private void button1_Click(object sender, System.EventArgs e)
         {
-            //Filter
-            //blockEditor.CreatBlock()();
             
         }
     }
