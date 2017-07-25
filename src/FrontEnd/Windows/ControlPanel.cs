@@ -1,6 +1,8 @@
 ﻿using SeniorDesign.Core;
 using System.Drawing;
 using System.Windows.Forms;
+using SeniorDesign.Core.Connections;
+using SeniorDesign.Core.Filters;
 
 namespace SeniorDesign.FrontEnd.Windows
 {
@@ -170,7 +172,8 @@ namespace SeniorDesign.FrontEnd.Windows
         {
             if (e.KeyCode == Keys.Delete)
             {
-                blockEditor.handleDelete(); 
+                blockEditor.handleDelete();
+                textBox1.Text = "del";
             }
         }
 
@@ -185,10 +188,33 @@ namespace SeniorDesign.FrontEnd.Windows
             Form temp = new Graph();
             temp.Show();
         }
-
+        int step = 0;
         private void button1_Click(object sender, System.EventArgs e)
         {
-            
+            if (step == 0)
+            {
+                var temp = new DataConnection();
+                temp.PositionX = 100;
+                temp.PositionY = 100;
+                temp.IsOutput = false;
+                temp.Id = 0;
+                blockEditor.CreatBlock(temp as IConnectable);
+                step++;
+            }
+            else if (step == 1)
+            {
+                var temp = new DataConnection();
+                temp.PositionX = 300;
+                temp.PositionY = 100;
+                temp.IsOutput = true;
+                temp.Id = 1;
+                blockEditor.CreatBlock(temp as IConnectable);
+                step++;
+            }
+            else if (step == 2)
+            {
+                //var temp = new 
+            }
         }
     }
 }

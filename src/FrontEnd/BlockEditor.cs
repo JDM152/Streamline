@@ -104,6 +104,14 @@ namespace SeniorDesign.FrontEnd
             {
                 DeleteBlock(currentSelect.ID);
             }
+            else if(currentSelect.objectType == ObjectType.Input)
+            {
+                input = null;
+            }
+            else if(currentSelect.objectType == ObjectType.Ouput)
+            {
+                output = null;
+            }
         }
         public void drag(int Id, Point newPosition)
         {
@@ -379,7 +387,7 @@ namespace SeniorDesign.FrontEnd
             {
                 return new IDstruct(ObjectType.Ouput, output.Id, -1);
             }
-            return new IDstruct(ObjectType.Null, -1, -1);
+            return new IDstruct(ObjectType.Null, output.Id, -1);
 
         }
         // left must be smaller
