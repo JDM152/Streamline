@@ -1,5 +1,7 @@
 ﻿using NAudio.Wave;
+using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Streams;
 using System;
 using System.IO;
 
@@ -9,7 +11,8 @@ namespace SeniorDesign.Plugins.Connections
     ///     A Data Connection that allows audio output.
     ///     Input is in a seperate stream.
     /// </summary>
-    public class AudioDataStream : Stream
+    [MetadataDataStream(AllowAsInput = false, AllowAsOutput = true, GenericConverter = false, GenericPoller = false)]
+    public class AudioDataStream : DataStream
     {
         #region User Config
 
@@ -29,9 +32,14 @@ namespace SeniorDesign.Plugins.Connections
                 ResetWaveFormat();
                 }
             }
-        private int _samplingRate = 4410;
+        private int _samplingRate = 44100;
 
         #endregion
+
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Audio Stream"; } }
 
         /// <summary>
         ///     The sound player that will be piped to
@@ -59,7 +67,7 @@ namespace SeniorDesign.Plugins.Connections
         public AudioDataStream()
         {
             // Create the memory stream to store the audio data in
-            Memory = new MemoryStream(SamplingRate * 10);
+            Memory = new MemoryStream(SamplingRate * 2);
 
             // Create the audio player using Floating point format
             ResetWaveFormat();
@@ -81,7 +89,6 @@ namespace SeniorDesign.Plugins.Connections
             Format = WaveFormat.CreateIeeeFloatWaveFormat(SamplingRate, 1);
             SourceStream = new RawSourceWaveStream(Memory, Format);
             Player.Init(SourceStream);
-            Player.Play();
         }
 
         /// <summary>
@@ -171,5 +178,41 @@ namespace SeniorDesign.Plugins.Connections
             // Write to the memory buffer
             Memory.Write(buffer, offset, count);
         }
+
+        /// <summary>
+        ///     If this type of data stream supports WriteDirect.
+        ///     Note that this will only apply if the Converter has not been specified
+        /// </summary>
+        public override bool CanWriteDirect { get { return true; } }
+
+        /// <summary>
+        ///     Writes directly from the stream, ignoring the Converter
+        /// </summary>
+        /// <param name="data">The data to write to the stream</param>
+        public override void WriteDirect(DataPacket data)
+        {
+            lock (_lock)
+            {
+                // Add every available point
+                while (data[0].Count > 0)
+                {
+                    var d = BitConverter.GetBytes((float) data.Pop(0));
+                    Memory.Write(d, 0, d.Length);
+                }
+
+                // Swap out the buffers and play if we have enough for a sample
+                if (Memory.Position >= _samplingRate)
+                {
+                    Memory.Position = 0;
+                    Player.Play();
+                    Memory.Position = 0;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     A lock used to prevent multiple writes at the same time
+        /// </summary>
+        private object _lock = new object();
     }
 }

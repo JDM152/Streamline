@@ -43,7 +43,6 @@
             this.InputControl.Name = "InputControl";
             this.InputControl.Size = new System.Drawing.Size(120, 20);
             this.InputControl.TabIndex = 0;
-            this.InputControl.ThousandsSeparator = true;
             this.InputControl.ValueChanged += new System.EventHandler(this.InputControl_ValueChanged);
             // 
             // AttributeName

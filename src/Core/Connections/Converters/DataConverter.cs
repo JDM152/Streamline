@@ -5,8 +5,13 @@
     ///     into usable data. This class is allowed to have state for data input
     ///     that is multi-packet.
     /// </summary>
-    public abstract class DataConverter
+    public abstract class DataConverter : IRestorable
     {
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public abstract string InternalName { get; }
+
         /// <summary>
         ///     Decodes an input byte stream into seperate values.
         ///     If input is not emptied, it will be appended to the next round.
@@ -34,5 +39,23 @@
         /// </summary>
         public virtual int DecodeDataCount { get; }
 
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public virtual byte[] ToBytes()
+        {
+            return new byte[0];
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public virtual void Restore(byte[] data, ref int offset)
+        {
+            
+        }
     }
 }

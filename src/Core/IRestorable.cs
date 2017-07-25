@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SeniorDesign.Core
+﻿namespace SeniorDesign.Core
 {
     /// <summary>
     ///     An object that can be saved and loaded.
@@ -14,12 +12,12 @@ namespace SeniorDesign.Core
         ///     Converts this object into a byte array representation
         /// </summary>
         /// <returns>This object as a restoreable byte array</returns>
-        List<byte> ToBytes();
+        byte[] ToBytes();
 
         /// <summary>
         ///     Restores the state of this object from the data of ToBytes()
         /// </summary>
         /// <param name="data">The data to restore from</param>
-        void Restore(List<byte> data, ref int offset);
+        void Restore(byte[] data, ref int offset);
     }
 }

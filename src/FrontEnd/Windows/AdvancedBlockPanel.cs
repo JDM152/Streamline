@@ -21,11 +21,6 @@ namespace SeniorDesign.FrontEnd.Windows
         private IConnectable _selected;
 
         /// <summary>
-        ///     Mapping between index and component in the editor list
-        /// </summary>
-        private Dictionary<int, IConnectable> _componentMapping = new Dictionary<int, IConnectable>();
-
-        /// <summary>
         ///     Creates a new Advanced Block panel with a given core
         /// </summary>
         /// <param name="core">The Streamline core this operates under</param>
@@ -44,12 +39,8 @@ namespace SeniorDesign.FrontEnd.Windows
         public void ListBlocks()
         {
             BlockList.Items.Clear();
-            _componentMapping.Clear();
             foreach (var block in _core.Nodes)
-            {
                 BlockList.Items.Add(block);
-                _componentMapping.Add(BlockList.Items.IndexOf(block), block);
-            }
         }
 
         /// <summary>
@@ -57,12 +48,21 @@ namespace SeniorDesign.FrontEnd.Windows
         /// </summary>
         private void BlockList_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            if (BlockList.SelectedIndex < 0 || !_componentMapping.ContainsKey(BlockList.SelectedIndex))
+            if (BlockList.SelectedIndex < 0)
+            {
+                _selected = null;
+                BlockViewComponent.SetViewingComponent(null);
+                ConnectionEditor.SetViewingComponent(_core, null);
                 return;
+            }
 
             // List information about the selected block
-            _selected = _componentMapping[BlockList.SelectedIndex];
+            _selected = (IConnectable) BlockList.SelectedItem;
             BlockViewComponent.SetViewingComponent(_selected);
+
+            // Update the connection connector
+            ConnectionEditor.SetViewingComponent(_core, _selected);
+
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace SeniorDesign.FrontEnd.Windows
         private void AddIOButton_Click(object sender, System.EventArgs e)
         {
             // Show the Add IO Panel
-            // TODO
+            new IOBlockCreatorPanel(_core).ShowDialog();
 
             // Refresh the listings
             ListBlocks();

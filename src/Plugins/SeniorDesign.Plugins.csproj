@@ -48,11 +48,17 @@
     <Compile Include="Connections\Converters\SimpleStringConverter.cs" />
     <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
     <Compile Include="Connections\Streams\AudioDataStream.cs" />
+    <Compile Include="Connections\Streams\AudioFileStream.cs" />
+    <Compile Include="Connections\Streams\ConsoleDataStream.cs" />
     <Compile Include="Connections\Streams\ConstantDataStream.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Enums\EncodingEnum.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
+    <Compile Include="Filters\StopBandFilter.cs" />
+    <Compile Include="Filters\IntegratorFilter.cs" />
     <Compile Include="Filters\DifferentiatorFilter.cs" />
+    <Compile Include="Filters\HighPassFilter.cs" />
+    <Compile Include="Filters\LowPassFilter.cs" />
     <Compile Include="Filters\QuantizerFilter.cs" />
     <Compile Include="Filters\RollingAverageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,7 +75,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Plugin.xml" />
+    <EmbeddedResource Include="Plugin.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -46,7 +46,7 @@ namespace SeniorDesign.FrontEnd.Test
             // Create the console output object and connect it to the filter
             var output = new DataConnection();
             output.IsOutput = true;
-            output.MediaConnection = Console.OpenStandardOutput();
+            output.MediaConnection = new ConsoleDataStream();
             output.Converter = new SimpleStringConverter();
             output.Poller = null;
             //rollingAverageFilter.NextConnections.Add(output);

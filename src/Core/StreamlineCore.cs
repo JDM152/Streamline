@@ -1,8 +1,10 @@
 ﻿using SeniorDesign.Core.Connections;
 using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
+using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Exceptions;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -117,7 +119,7 @@ namespace SeniorDesign.Core
                 switch (node.LocalName)
                 {
                     case "stream":
-                        loadType = typeof(Stream);
+                        loadType = typeof(DataStream);
                         break;
 
                     case "poller":
@@ -215,18 +217,116 @@ namespace SeniorDesign.Core
         /// <param name="obj">The connectable to remove</param>
         public void DeleteConnectable(IConnectable obj)
         {
+            if (!Nodes.Contains(obj))
+                return;
+
+            var mdata = _connectableMetadata[obj];
+
             // Unregister the node and metadata
-            if (Nodes.Contains(obj))
-            {
-                Nodes.Remove(obj);
-                obj.Id = -1;
-                _connectableMetadata.Remove(obj);
-            }
+            Nodes.Remove(obj);
+            obj.Id = -1;
+            _connectableMetadata.Remove(obj);
 
             // Remove the node from all connections
             foreach (var node in Nodes)
-                if (node.NextConnections.Contains(obj))
-                    node.NextConnections.Remove(obj);
+            {
+                node.NextConnections.Remove(obj);
+                _connectableMetadata[node].IncomingConnections.Remove(obj);
+            }
+        }
+
+        /// <summary>
+        ///     Attempts to connect two connectable components.
+        ///     This ensures compatibility, and sets some metadata.
+        /// </summary>
+        /// <param name="original">The component that is the source</param>
+        /// <param name="toAdd">The component to connect to the original</param>
+        /// <returns>True if the connection was able to be made</returns>
+        public bool ConnectConnectables(IConnectable original, IConnectable toAdd)
+        {
+            // Ensure the connection is legal
+            if (!CanConnectConnectables(original, toAdd))
+                return false;
+
+            // Make the connection
+            original.NextConnections.Add(toAdd);
+            _connectableMetadata[toAdd].IncomingConnections.Add(original);
+            return true;
+        }
+
+        /// <summary>
+        ///     Checks to see if two components can connect.
+        /// </summary>
+        /// <param name="original">The component that is the source</param>
+        /// <param name="toAdd">THe component to connect to the original</param>
+        /// <returns>If the connection is legal</returns>
+        public bool CanConnectConnectables(IConnectable original, IConnectable toAdd)
+        {
+            // Skip if already connected
+            if (original.NextConnections.Contains(toAdd))
+                return false;
+
+            // Skip check if arbitrary input
+            if (toAdd.InputCount != -1)
+            {
+                // Ensure that number of channels match
+                if (toAdd.InputCount != original.OutputCount)
+                    return false;
+
+                // Ensure that nothing else is connected
+                if (_connectableMetadata[toAdd].IncomingConnections.Count >= toAdd.InputCount)
+                    return false;
+            }
+
+            // Can connect
+            return true;
+        }
+
+        /// <summary>
+        ///     Attempts to disconnect two connectable components.
+        ///     This ensures compatibility, and sets some metadata
+        /// </summary>
+        /// <param name="original">The component that is the root</param>
+        /// <param name="toRemove">The component that is connected</param>
+        /// <returns>True if the component was able to be removed</returns>
+        public bool DisconnectConnectables(IConnectable original, IConnectable toRemove)
+        {
+
+            // Ensure that the two are actually connected
+            if (!original.NextConnections.Contains(toRemove))
+                return false;
+
+            // Remove the connection
+            original.NextConnections.Remove(toRemove);
+            _connectableMetadata[toRemove].IncomingConnections.Remove(original);
+            return true;
+        }
+
+        /// <summary>
+        ///     Gets a list of all the available connections for a particular block
+        /// </summary>
+        /// <param name="original">The block to get all of the available connections for</param>
+        /// <returns>A list of potential connections</returns>
+        public List<IConnectable> GetPotentialConnections(IConnectable original)
+        {
+            // Start with all available nodes
+            var toReturn = new List<IConnectable>();
+            toReturn.AddRange(Nodes);
+
+            // Remove this node and all of the connections that it already has
+            toReturn.Remove(original);
+            foreach (var node in original.NextConnections)
+                toReturn.Remove(node);
+
+            // Remove all of the nodes that cannot accept more connections
+            var toRemove = new List<IConnectable>();
+            foreach (var node in toReturn)
+                if (!CanConnectConnectables(original, node))
+                    toRemove.Add(node);
+            foreach (var node in toRemove)
+                toReturn.Remove(node);
+
+            return toReturn;
         }
 
         /// <summary>
@@ -259,9 +359,13 @@ namespace SeniorDesign.Core
                 var mdata = meta.GetLeftoverData(connection);
                 mdata.Add(data);
 
+                // Do nothing if no data
+                if (mdata.ChannelCount == 0)
+                    return;
+
                 // Ensure that the channel count is valid
-                if (connection.InputCount != -1 && data.ChannelCount != connection.InputCount)
-                    throw new InvalidChannelCountException($"[{connection.Name}] expected {connection.InputCount} input channels, but was given {data.ChannelCount} by [{root.Name}]");
+                if (connection.InputCount != -1 && mdata.ChannelCount != connection.InputCount)
+                    throw new InvalidChannelCountException($"[{connection.Name}] expected {connection.InputCount} input channels, but was given {mdata.ChannelCount} by [{root.Name}]");
 
                 // Accept the incoming data
                 connection.AcceptIncomingData(this, mdata);
@@ -272,7 +376,207 @@ namespace SeniorDesign.Core
 
         #region Project Schematic Management
 
+        /// <summary>
+        ///     Saves core settings to a file
+        /// </summary>
+        /// <param name="filename">The file to save the core settings to</param>
+        public void SaveCoreSettings(string filename)
+        {
 
+        }
+
+        /// <summary>
+        ///     Loads core settings from a specified file
+        /// </summary>
+        /// <param name="filename">The file containing the core settings</param>
+        public void LoadCoreSettings(string filename)
+        {
+
+        }
+
+        /// <summary>
+        ///     Saves the schematic for the current project to a file
+        /// </summary>
+        /// <param name="filename">The file to save the schematic to</param>
+        public void SaveProjectSchematic(string filename)
+        {
+            if (File.Exists(filename))
+                File.Delete(filename);
+            using (var toSave = File.OpenWrite(filename))
+            {
+
+                // Save each of the nodes in the project
+                foreach (var node in Nodes)
+                {
+                    // Only save anything if the node is restorable
+                    var restorable = node as IRestorable;
+                    if (restorable == null) continue;
+
+                    // Write out that this is a node, and the byte contents of the object
+                    var cont = restorable.ToBytes();
+                    var contType = ByteUtil.GetSizedArrayRepresentation(node.GetType().AssemblyQualifiedName);
+                    toSave.WriteByte(0x01);
+                    toSave.Write(contType, 0, contType.Length);
+                    toSave.Write(cont, 0, cont.Length);
+
+                    // Append additional data for specialized types
+                    var dc = node as DataConnection;
+                    if (dc != null)
+                    {
+                        // Add the media connection only if it exists
+                        if (dc.MediaConnection != null)
+                        {
+                            cont = dc.MediaConnection.ToBytes();
+                            contType = ByteUtil.GetSizedArrayRepresentation(dc.MediaConnection.GetType().AssemblyQualifiedName);
+                            toSave.WriteByte(0x03);
+                            toSave.Write(contType, 0, contType.Length);
+                            toSave.Write(cont, 0, cont.Length);
+                        }
+
+                        // Add the poller only if it exists
+                        if (dc.Poller != null)
+                        {
+                            cont = dc.Poller.ToBytes();
+                            contType = ByteUtil.GetSizedArrayRepresentation(dc.Poller.GetType().AssemblyQualifiedName);
+                            toSave.WriteByte(0x04);
+                            toSave.Write(contType, 0, contType.Length);
+                            toSave.Write(cont, 0, cont.Length);
+                        }
+
+                        // Add the converter only if it exists
+                        if (dc.Converter != null)
+                        {
+                            cont = dc.Converter.ToBytes();
+                            contType = ByteUtil.GetSizedArrayRepresentation(dc.Converter.GetType().AssemblyQualifiedName);
+                            toSave.WriteByte(0x05);
+                            toSave.Write(contType, 0, contType.Length);
+                            toSave.Write(cont, 0, cont.Length);
+                        }
+                    }
+                }
+
+                // Go through again and save the list of connections for every single node
+                foreach (var node in Nodes)
+                {
+                    // Only save anything if the node is restorable
+                    var restorable = node as IRestorable;
+                    if (restorable == null) continue;
+                    if (node.NextConnections.Count <= 0) continue;
+
+                    // Write out that this is a connection, and the connected nodes
+                    var nodeId = ByteUtil.GetSizedArrayRepresentation(node.Id);
+                    var nodeSize = ByteUtil.GetSizedArrayRepresentation(node.NextConnections.Count);
+                    toSave.WriteByte(0x02);
+                    toSave.Write(nodeId, 0, nodeId.Length);
+                    toSave.Write(nodeSize, 0, nodeSize.Length);
+                    foreach (var connection in node.NextConnections)
+                    {
+                        var con = ByteUtil.GetSizedArrayRepresentation(connection.Id);
+                        toSave.Write(con, 0, con.Length);
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        ///     Loads the schematic from a specified file as the current schematic.
+        /// </summary>
+        /// <param name="filename">The file to load the schematic from</param>
+        public void LoadProjectSchematic(string filename)
+        {
+            ClearProjectSchematic();
+            var nodeMapping = new Dictionary<int, IConnectable>();
+            IConnectable lastConnectable = null;
+            DataConnection lastDataConnection = null;
+
+            var data = File.ReadAllBytes(filename);
+            int pos = 0;
+            string stype;
+            Type type;
+
+            var errorStr = $"The schematic file {filename} is corrupted, and cannot be loaded.";
+
+            // Read each byte for instructions
+            while (pos < data.Length)
+            {
+                switch (data[pos++])
+                {
+                    case 0x01: // Node definition
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var cobj = (IConnectable) Activator.CreateInstance(type);
+                        var robj = cobj as IRestorable;
+                        robj.Restore(data, ref pos);
+                        nodeMapping.Add(cobj.Id, cobj);
+                        AddConnectable(cobj);
+                        if (cobj.Id >= _nodeIndex)
+                            _nodeIndex = cobj.Id + 1;
+
+                        lastConnectable = cobj;
+                        lastDataConnection = cobj as DataConnection;
+                        break;
+
+                    case 0x02: // Connection
+                        var nodeId = ByteUtil.GetIntFromSizedArray(data, ref pos);
+                        var nodeSize = ByteUtil.GetIntFromSizedArray(data, ref pos);
+                        var parentNode = nodeMapping[nodeId];
+                        for (var k = 0; k < nodeSize; k++)
+                        {
+                            nodeId = ByteUtil.GetIntFromSizedArray(data, ref pos);
+                            ConnectConnectables(parentNode, nodeMapping[nodeId]);
+                        }
+                        break;
+
+                    case 0x03: // DataConnection->MediaConnection
+                        if (lastDataConnection == null)
+                            throw new InvalidSchematicException(errorStr);
+
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var mobj = (DataStream) Activator.CreateInstance(type);
+                        lastDataConnection.MediaConnection = mobj;
+
+                        break;
+
+                    case 0x04: // DataConnection->Poller
+                        if (lastDataConnection == null)
+                            throw new InvalidSchematicException(errorStr);
+
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var pobj = (PollingMechanism) Activator.CreateInstance(type, this);
+                        lastDataConnection.Poller = pobj;
+
+                        break;
+
+                    case 0x05: // DataConnection->Converter
+                        if (lastDataConnection == null)
+                            throw new InvalidSchematicException(errorStr);
+
+                        stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
+                        type = Type.GetType(stype, true, true);
+                        var cvobj = (DataConverter) Activator.CreateInstance(type);
+                        lastDataConnection.Converter = cvobj;
+
+                        break;
+
+                    default: // Unknown
+                        throw new InvalidSchematicException(errorStr);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Clears everything from the project
+        /// </summary>
+        public void ClearProjectSchematic()
+        {
+            var nodeList = new List<IConnectable>(Nodes);
+            foreach (var node in nodeList)
+                DeleteConnectable(node);
+
+        }
 
         #endregion
     }

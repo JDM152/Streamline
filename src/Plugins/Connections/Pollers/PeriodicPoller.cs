@@ -26,6 +26,11 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         #endregion
 
         /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Periodic Poller"; } }
+
+        /// <summary>
         ///     Creates a new Periodic Poller
         /// </summary>
         /// <param name="core">The core that this reports back to</param>

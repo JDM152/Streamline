@@ -1,5 +1,7 @@
 ﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
 using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
@@ -13,9 +15,15 @@ namespace SeniorDesign.Plugins.Filters
         #region User Configuration
 
         /// <summary>
-        ///     The 
+        ///     The period for a single 
         /// </summary>
-        public int SamplingPeriod { get; set; }
+        [UserConfigurableDouble(
+            Name = "Sampling Period",
+            Description = "The weight given to the difference between points",
+            Minimum = 0.00000001
+        )]
+        public double SamplingPeriod { get { return 2.0 / _samplingPeriod; } set { _samplingPeriod = 2.0 / value; } }
+        private double _samplingPeriod = 1.0;
 
         #endregion
 
@@ -42,9 +50,9 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return 2; } }
 
         /// <summary>
-        ///     The last return value from this filter
+        ///     The last output data, used in future calculations
         /// </summary>
-        //private double LastValue = 0.0;
+        private double LastOutput = 0.0;
 
         /// <summary>
         ///     Accepts incoming data from a previous connection.
@@ -54,17 +62,36 @@ namespace SeniorDesign.Plugins.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            
+            // Return a new packet with the sum
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
+
+            while (data[0].Count >= 2)
+            {
+                // Calculate the new point
+                var nd = _samplingPeriod * data[0][1] - _samplingPeriod * data[0][0] - LastOutput;
+                LastOutput = nd;
+                toReturn[0].Add(nd);
+
+                // Remove the oldest data point
+                data.Pop(0);
+            }
+
+            // Push to the next node
+            core.PassDataToNextConnectable(this, toReturn);
         }
 
         /// <summary>
         ///     Converts this object into a byte array representation
         /// </summary>
         /// <returns>This object as a restoreable byte array</returns>
-        public override List<byte> ToBytes()
+        public override byte[] ToBytes()
         {
-            // TODO : Finish filter
-            return base.ToBytes();
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(_samplingPeriod));
+
+            return toReturn.ToArray();
         }
 
         /// <summary>
@@ -72,10 +99,11 @@ namespace SeniorDesign.Plugins.Filters
         /// </summary>
         /// <param name="data">The data to restore from</param>
         /// <param name="offset">The offset into the data to start</param>
-        public override void Restore(List<byte> data, ref int offset)
+        public override void Restore(byte[] data, ref int offset)
         {
-            // TODO : Finish Filter
             base.Restore(data, ref offset);
+
+            _samplingPeriod = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
 
     }

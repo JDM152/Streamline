@@ -26,6 +26,16 @@ namespace SeniorDesign.Core
         string InternalName { get; }
 
         /// <summary>
+        ///     The X position of this module in the block editor
+        /// </summary>
+        int PositionX { get; set; }
+
+        /// <summary>
+        ///     The Y position of this module in the block editor
+        /// </summary>
+        int PositionY { get; set; }
+
+        /// <summary>
         ///     The name given to this object by the user to differentiate it
         ///     from the others.
         /// </summary>

@@ -4,9 +4,11 @@
 <plugin name="Default Plugins" description="The default plugins included with Streamline">
   
   <!-- Streams are the raw IO ports, such as a websocket or Bluetooth -->
-  <stream name="Audio Data" class="SeniorDesign.Plugins.Connections.AudioDataStream"/>
+  <stream name="Audio Output" class="SeniorDesign.Plugins.Connections.AudioDataStream"/>
+  <stream name="Audio File" class="SeniorDesign.Plugins.Connections.AudioFileStream"/>
   <stream name="Random Data" class="SeniorDesign.Plugins.Connections.RandomDataStream"/>
   <stream name="Constant Data" class="SeniorDesign.Plugins.Connections.ConstantDataStream"/>
+  <stream name="Console Data" class="SeniorDesign.Plugins.Connections.ConsoleDataStream"/>
 
   <!-- Pollers decide when data is requested from streams -->
   <poller name="Periodic" class="SeniorDesign.Plugins.Connections.Pollers.PeriodicPoller"/>
@@ -19,5 +21,10 @@
   <filter name="Additive" class="SeniorDesign.Plugins.Filters.AdditionFilter"/>
   <filter name="Quantizer" class="SeniorDesign.Plugins.Filters.QuantizerFilter"/>
   <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
+  <filter name="Differentiator" class="SeniorDesign.Plugins.Filters.DifferentiatorFilter"/>
+  <filter name="Integrator" class="SeniorDesign.Plugins.Filters.IntegratorFilter"/>
+  <filter name="Low-Pass" class="SeniorDesign.Plugins.Filters.LowPassFilter"/>
+  <filter name="High-Pass" class="SeniorDesign.Plugins.Filters.HighPassFilter"/>
+  <filter name="Stop-Band" class="SeniorDesign.Plugins.Filters.StopBandFilter"/>
   
 </plugin>
