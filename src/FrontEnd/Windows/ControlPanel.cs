@@ -147,7 +147,7 @@ namespace SeniorDesign.FrontEnd.Windows
         {
             if (e.Button == MouseButtons.Left)
             {
-                blockEditor.updateUpMouse();
+                blockEditor.updateDownMouse();
             }
             else
             {
@@ -205,7 +205,7 @@ namespace SeniorDesign.FrontEnd.Windows
             else if (step == 1)
             {
                 wala.PositionX = 300;
-                wala.PositionY = 100;
+                wala.PositionY = 100;//why it will reset to 0?
                 wala.IsOutput = true;
                 wala.Id = 1;
                 blockEditor.CreatBlock(wala as IConnectable);
@@ -224,6 +224,25 @@ namespace SeniorDesign.FrontEnd.Windows
                 wala.PositionY = 100;
                 wala.IsOutput = true;
                 blockEditor.UpdateBlockPosition(wala);
+                step++;
+            }
+            else if (step == 4)
+            {
+
+                temp.PositionX = 150;
+                temp.PositionY = 100;
+                temp.IsOutput = false;
+                temp.Id = 0;
+                blockEditor.DeleteBlock(temp);
+                step++;
+            }
+            else if(step == 5)
+            {
+                temp.PositionX = 150;
+                temp.PositionY = 100;
+                temp.IsOutput = false;
+                temp.Id = 0;
+                blockEditor.CreatBlock(temp);
             }
         }
 

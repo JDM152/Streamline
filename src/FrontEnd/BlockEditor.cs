@@ -98,7 +98,6 @@ namespace SeniorDesign.FrontEnd
         {
             ObjectType temp = (currentSelect.objectType);
             int temp2 = currentSelect.ID;
-            throw new Exception(temp.ToString() +" " + temp2.ToString());
             if(currentSelect.objectType == ObjectType.Line)
             {
                 DisconnectBlocks(currentSelect.ID, currentSelect.ID2);
