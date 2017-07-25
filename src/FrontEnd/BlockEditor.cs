@@ -30,6 +30,9 @@ namespace SeniorDesign.FrontEnd
         private IDstruct currentSelect;
         private Point mouse;
 
+        //temp
+        private int a = 0;
+
 
         public BlockEditor(GLControl glControl, StreamlineCore core)
         {
@@ -75,6 +78,11 @@ namespace SeniorDesign.FrontEnd
             downPoint = mouse;
             lastSelect = currentSelect;
             currentSelect = getObject();
+            a++;
+            if(a == 5)
+            {
+               // throw new Exception(currentSelect.objectType.ToString() + " " + currentSelect.ID.ToString() + " " + currentSelect.ID2.ToString() );
+            }
         }
         public void handleMouseClick()
         {
@@ -277,21 +285,36 @@ namespace SeniorDesign.FrontEnd
         }
         public void DisconnectBlocks(int aid, int bid)
         {
-
-            int temp1 = -1;
-            int temp2 = -1;
-            for (int i = 0; i < filterList.Count; i++)
+            if(aid == input.Id)
             {
-                if (filterList[i].Id == aid)
+                
+                for( int i = 0; i < input.NextConnections.Count; i++)
                 {
-                    temp1 = i;
-                }
-                else if (filterList[i].Id == bid)
-                {
-                    temp2 = i;
+                    if(input.NextConnections[i].Id == bid)
+                    {
+                        input.NextConnections.RemoveAt(i);
+                        return;
+                    }
                 }
             }
-            filterList[temp1].NextConnections.Remove(filterList[temp2]);
+            else
+            {
+                int temp1 = -1;
+                int temp2 = -1;
+                for (int i = 0; i < filterList.Count; i++)
+                {
+                    if (filterList[i].Id == aid)
+                    {
+                        temp1 = i;
+                    }
+                    else if (filterList[i].Id == bid)
+                    {
+                        temp2 = i;
+                    }
+                }
+                filterList[temp1].NextConnections.Remove(filterList[temp2]);
+            }
+            
 
             //to do core
         }
@@ -364,18 +387,23 @@ namespace SeniorDesign.FrontEnd
         }
         public IDstruct getObject()
         {
+            //line
             foreach (DataFilter tempFilter in filterList)
             {
                 foreach (IConnectable next in tempFilter.NextConnections)
                 {
+                    
                     bool contact = false;
-                    if(tempFilter.PositionX < next.PositionX)
+                    //actual port position
+                    Point tempFilterPoint = new Point(tempFilter.PositionX + width, tempFilter.PositionY + height / 2);
+                    Point nextPortPoint = new Point(next.PositionX, next.PositionY + height / 2);
+                    if(tempFilterPoint.X < nextPortPoint.X)
                     {
-                       contact = isOnLine(new Point(tempFilter.PositionX, tempFilter.PositionY), new Point(next.PositionX, next.PositionY), downPoint);
+                       contact = isOnLine(tempFilterPoint, nextPortPoint, downPoint);
                     }
                     else
                     {
-                        contact = isOnLine(new Point(next.PositionX, next.PositionY), new Point(tempFilter.PositionX, tempFilter.PositionY), downPoint);
+                        contact = isOnLine(nextPortPoint, tempFilterPoint, downPoint);
                     }
                     if(contact)
                     {
@@ -383,6 +411,25 @@ namespace SeniorDesign.FrontEnd
                     }
                 }
             }
+            foreach(IConnectable next in input.NextConnections)
+            {
+                bool contact = false;
+                Point inputPortPoint = new Point(input.PositionX + width, input.PositionY + height / 2);
+                Point nextPortPoint = new Point(next.PositionX, next.PositionY + height / 2);
+                if (inputPortPoint.X < nextPortPoint.X)
+                {
+                    contact = isOnLine(inputPortPoint, nextPortPoint, downPoint);
+                }
+                else
+                {
+                    contact = isOnLine(nextPortPoint, inputPortPoint, downPoint);
+                }
+                if (contact)
+                {
+                    return new IDstruct(ObjectType.Line, input.Id, next.Id);
+                }
+            }
+            //block
             foreach (DataFilter tempFilter in filterList)
             {
                 bool contact = isInsideBlock(new Point(tempFilter.PositionX, tempFilter.PositionY), downPoint);
@@ -411,11 +458,11 @@ namespace SeniorDesign.FrontEnd
         }
         public bool isOnLine(Point start, Point end, Point mouse)
         {
-            if (mouse.X > end.X || mouse.X < start.X)
+            if (mouse.X < start.X || mouse.X > end.X)
             {
                 return false;
             }
-            float AllowDif = 3.0f;
+            float AllowDif = 2.0f;
             float slope = (end.Y - start.Y)/ (end.X - start.X);
             float expectedY = (mouse.X - start.X) * slope + start.Y;
             if ( Math.Abs(expectedY - mouse.Y) <= AllowDif)

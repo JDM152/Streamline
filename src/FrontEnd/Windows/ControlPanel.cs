@@ -245,6 +245,7 @@ namespace SeniorDesign.FrontEnd.Windows
                 temp.PositionY = 100;
                 temp.IsOutput = false;
                 temp.Id = 0;
+                wala.Id = 1;
                 blockEditor.CreatBlock(temp);
             }
         }
