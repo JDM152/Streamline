@@ -191,9 +191,10 @@ namespace SeniorDesign.FrontEnd.Windows
         int step = 0;
         private void button1_Click(object sender, System.EventArgs e)
         {
+            var temp = new DataConnection();
+            var wala = new DataConnection();
             if (step == 0)
             {
-                var temp = new DataConnection();
                 temp.PositionX = 100;
                 temp.PositionY = 100;
                 temp.IsOutput = false;
@@ -203,18 +204,32 @@ namespace SeniorDesign.FrontEnd.Windows
             }
             else if (step == 1)
             {
-                var temp = new DataConnection();
-                temp.PositionX = 300;
-                temp.PositionY = 100;
-                temp.IsOutput = true;
-                temp.Id = 1;
-                blockEditor.CreatBlock(temp as IConnectable);
+                wala.PositionX = 300;
+                wala.PositionY = 100;
+                wala.IsOutput = true;
+                wala.Id = 1;
+                blockEditor.CreatBlock(wala as IConnectable);
                 step++;
             }
             else if (step == 2)
             {
-                //var temp = new 
+                temp.PositionX = 150;
+                temp.PositionY = 100;
+                blockEditor.UpdateBlockPosition(temp);
+                step++;
             }
+            else if (step == 3)
+            {
+                wala.PositionX = 350;
+                wala.PositionY = 100;
+                wala.IsOutput = true;
+                blockEditor.UpdateBlockPosition(wala);
+            }
+        }
+
+        private void ControlPanel_Load_1(object sender, System.EventArgs e)
+        {
+
         }
     }
 }

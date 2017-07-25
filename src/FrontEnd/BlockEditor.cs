@@ -96,6 +96,9 @@ namespace SeniorDesign.FrontEnd
         }
         public void handleDelete()
         {
+            ObjectType temp = (currentSelect.objectType);
+            int temp2 = currentSelect.ID;
+            throw new Exception(temp.ToString() +" " + temp2.ToString());
             if(currentSelect.objectType == ObjectType.Line)
             {
                 DisconnectBlocks(currentSelect.ID, currentSelect.ID2);
@@ -163,13 +166,14 @@ namespace SeniorDesign.FrontEnd
             else
             {
                 DataConnection tempConnection = temp as DataConnection;
+                
                 if (tempConnection.IsOutput == false)
                 {
-                    input.PositionX = tempConnection.PositionX;
+                    input = tempConnection;
                 }
                 else
                 {
-                    output.PositionY = tempConnection.PositionY;
+                    output = tempConnection;
                 }
             }
         }
@@ -457,10 +461,26 @@ namespace SeniorDesign.FrontEnd
                         GL.Begin(PrimitiveType.Lines);
                         GL.Color4(0.0f, 0.0f, 0.0f, 1.0f);
                         GL.Vertex3(tempFilter.PositionX + width, tempFilter.PositionY + 0.5 * height, 0.0f);
-                        GL.Vertex3(next.PositionX, tempFilter.PositionY + 0.5 * height, 0.0f);
+                        GL.Vertex3(next.PositionX, next.PositionY + 0.5 * height, 0.0f);
                         GL.End();
                         GL.PopMatrix();
                     }
+                }
+               
+            }
+            if (input != null)
+            {
+                foreach (IConnectable next in input.NextConnections)
+                {
+                    GL.PushMatrix();
+                    GL.MatrixMode(MatrixMode.Modelview);
+                    GL.LoadIdentity();
+                    GL.Begin(PrimitiveType.Lines);
+                    GL.Color4(0.0f, 0.0f, 0.0f, 1.0f);
+                    GL.Vertex3(input.PositionX + width, input.PositionY + 0.5 * height, 0.0f);
+                    GL.Vertex3(next.PositionX, next.PositionY + 0.5 * height, 0.0f);
+                    GL.End();
+                    GL.PopMatrix();
                 }
             }
         }
