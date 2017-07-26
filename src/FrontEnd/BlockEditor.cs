@@ -519,7 +519,7 @@ namespace SeniorDesign.FrontEnd
                 return false;
             }
             float AllowDif = 4.0f;
-            float slope = (end.Y - start.Y)/ (end.X - start.X);
+            float slope = (float)(end.Y - start.Y)/ (end.X - start.X);
             float expectedY = (mouse.X - start.X) * slope + start.Y;
             if ( Math.Abs(expectedY - mouse.Y) <= AllowDif)
             {

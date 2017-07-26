@@ -191,8 +191,10 @@ namespace SeniorDesign.FrontEnd.Windows
         int step = 0;
         private void button1_Click(object sender, System.EventArgs e)
         {
-            var temp = new DataConnection();
-            var wala = new DataConnection();
+            DataConnection temp = new DataConnection();
+            DataConnection wala = new DataConnection();
+            
+           
             temp.PositionX = 100;
             temp.PositionY = 100;
             temp.IsOutput = false;
