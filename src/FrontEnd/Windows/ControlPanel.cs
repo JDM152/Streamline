@@ -193,66 +193,35 @@ namespace SeniorDesign.FrontEnd.Windows
         {
             var temp = new DataConnection();
             var wala = new DataConnection();
+            temp.PositionX = 100;
+            temp.PositionY = 100;
+            temp.IsOutput = false;
+            temp.Id = 1;
+            wala.PositionX = 300;
+            wala.PositionY = 100;
+            wala.IsOutput = true;
+            wala.Id = 0;
+
             if (step == 0)
             {
-                temp.PositionX = 100;
-                temp.PositionY = 100;
-                temp.IsOutput = false;
-                temp.Id = 0;
                 blockEditor.CreatBlock(temp as IConnectable);
                 step++;
             }
             else if (step == 1)
             {
-                wala.PositionX = 300;
-                wala.PositionY = 100;//why it will reset to 0?
-                wala.IsOutput = true;
-                wala.Id = 1;
                 blockEditor.CreatBlock(wala as IConnectable);
                 step++;
             }
             else if (step == 2)
             {
                 temp.PositionX = 150;
-                temp.PositionY = 100;
-                temp.IsOutput = false;
-                temp.Id = 0;
                 blockEditor.UpdateBlockPosition(temp);
                 step++;
             }
-            else if (step == 3)
+            else if(step == 3)
             {
-                wala.PositionX = 350;
-                wala.PositionY = 100;
-                wala.IsOutput = true;
-                wala.Id = 1;
-                blockEditor.UpdateBlockPosition(wala);
-                step++;
+                blockEditor.ConnectBlocks(temp, wala);
             }
-            else if (step == 4)
-            {
-
-                temp.PositionX = 150;
-                temp.PositionY = 100;
-                temp.IsOutput = false;
-                temp.Id = 0;
-                blockEditor.DeleteBlock(temp);
-                step++;
-            }
-            else if(step == 5)
-            {
-                temp.PositionX = 150;
-                temp.PositionY = 100;
-                temp.IsOutput = false;
-                temp.Id = 0;
-                wala.Id = 1;
-                blockEditor.CreatBlock(temp);
-            }
-        }
-
-        private void ControlPanel_Load_1(object sender, System.EventArgs e)
-        {
-
         }
     }
 }
