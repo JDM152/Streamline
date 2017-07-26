@@ -60,7 +60,7 @@ namespace SeniorDesign.FrontEnd
         }
         public void reset()
         {
-            currentSelect = new IDstruct(ObjectType.Ouput, null, null);
+            currentSelect = new IDstruct(ObjectType.Output, null, null);
         }
         public void updateMouse(Point mouse)
         {
@@ -79,8 +79,9 @@ namespace SeniorDesign.FrontEnd
         }
         public void handleMouseClick()
         {
-            if (currentSelect.objectType != ObjectType.Null || 
-                currentSelect.objectType != ObjectType.Line || 
+            if (currentSelect.objectType == ObjectType.Input ||
+                currentSelect.objectType == ObjectType.Output ||
+                currentSelect.objectType == ObjectType.Block ||
                 getObject(upPoint).objectType == ObjectType.Null)
             {
                 if (upPoint != downPoint)
@@ -88,22 +89,17 @@ namespace SeniorDesign.FrontEnd
                     drag(currentSelect.A, upPoint);
                 }
             }
-            else if (currentSelect.objectType != ObjectType.Null && currentSelect.objectType != ObjectType.Line
-                && lastSelect.objectType != ObjectType.Null && lastSelect.objectType != ObjectType.Line)
+            else if (currentSelect.objectType != ObjectType.Null && lastSelect.objectType != ObjectType.Null && currentSelect.A.Id != lastSelect.A.Id)
             {
-                if (currentSelect.A.Id != lastSelect.A.Id)
+                if (lastSelect.objectType == ObjectType.InputPort && currentSelect.objectType == ObjectType.OutputPort)
                 {
-                    if (lastSelect.A.Id == output.Id)
-                    {
-                        ConnectBlocks(currentSelect.A, lastSelect.A, true);
-                    }
-                    else
-                    {
-                        ConnectBlocks(lastSelect.A, currentSelect.A, true);
-                    }
+                    ConnectBlocks(currentSelect.A, lastSelect.A, true);
+                }
+                else if (lastSelect.objectType == ObjectType.OutputPort && currentSelect.objectType == ObjectType.InputPort)
+                {
+                    ConnectBlocks(lastSelect.A, currentSelect.A, true);
                 }
             }
-
         }
         public void handleDelete()
         {
@@ -125,7 +121,7 @@ namespace SeniorDesign.FrontEnd
                 //call back
                 currentSelect = new IDstruct(ObjectType.Null, null, null);
             }
-            else if(currentSelect.objectType == ObjectType.Ouput)
+            else if(currentSelect.objectType == ObjectType.Output)
             {
                 output = null;
                 //call back
@@ -432,6 +428,36 @@ namespace SeniorDesign.FrontEnd
                     }
                 }
             }
+            //port
+            for(int i = 0; i < filterList.Count; i++)
+            {
+                ObjectType returnType = isInsidePort(filterList[i], mouse);
+                if(returnType == ObjectType.InputPort)
+                {
+                    return new IDstruct(ObjectType.InputPort, filterList[i], null);
+                }
+                else if(returnType == ObjectType.Output)
+                {
+                    return new IDstruct(ObjectType.OutputPort, filterList[i], null);
+                }
+            }
+            if (input != null)
+            {
+                ObjectType returnType = isInsidePort(input, mouse);
+                //input must outputing
+                if (returnType == ObjectType.OutputPort)
+                {
+                    return new IDstruct(ObjectType.OutputPort, input, null);
+                }
+            }
+            if (output != null)
+            {
+                ObjectType returnType = isInsidePort(output, mouse);
+                if (returnType == ObjectType.InputPort)
+                {
+                    return new IDstruct(ObjectType.InputPort, output, null);
+                }
+            }
             //block
             foreach (DataFilter tempFilter in filterList)
             {
@@ -452,11 +478,31 @@ namespace SeniorDesign.FrontEnd
             {
                 if (isInsideBlock(new Point(output.PositionX, output.PositionY), mouse))
                 {
-                    return new IDstruct(ObjectType.Ouput, output, null);
+                    return new IDstruct(ObjectType.Output, output, null);
                 }
             }
             return new IDstruct(ObjectType.Null, null, null);
 
+        }
+        public ObjectType isInsidePort(IConnectable A, Point mouse)
+        {
+            float allowedDif = 10.0f;
+            Point inputPort = new Point(A.PositionX, A.PositionY + height / 2);
+            Point outputPort = new Point(A.PositionX + width, A.PositionY + height / 2);
+
+            float difX = Math.Abs(inputPort.X - mouse.X);
+            float difY = Math.Abs(inputPort.Y - mouse.Y);
+            if(difX <= allowedDif && difY <= allowedDif)
+            {
+                return ObjectType.InputPort;
+            }
+            difX = Math.Abs(outputPort.X - mouse.X);
+            difY = Math.Abs(outputPort.Y - mouse.Y);
+            if (difX <= allowedDif && difY <= allowedDif)
+            {
+                return ObjectType.OutputPort;
+            }
+            return ObjectType.Null;
         }
         // left must be smaller
         public bool isInsideBlock(Point block, Point mouse)

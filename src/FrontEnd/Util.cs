@@ -7,8 +7,10 @@ namespace SeniorDesign.FrontEnd
         Null,
         Line,
         Block,
+        InputPort,
+        OutputPort,
         Input,
-        Ouput,
+        Output,
     };
     public struct IDstruct
     {
