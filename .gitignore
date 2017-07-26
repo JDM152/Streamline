@@ -18,3 +18,6 @@ ehthumbs.db
 # Folder config file
 Desktop.ini
 
+# Allow the resources folder in
+!resources/OpenTK/OpenTK.GLControl.dll
+!resources/OpenTK/OpenTK.dll

@@ -33,9 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\resources\OpenTK\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\..\resources\OpenTK\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,6 +72,19 @@
     <Compile Include="Components\AttributeListComponent.Designer.cs">
       <DependentUpon>AttributeListComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\BlockEditor\BlockEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\BlockEditor\BlockEditorComponent.Designer.cs">
+      <DependentUpon>BlockEditorComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\BlockEditor\Drawable\DrawableConnector.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableFilter.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableIConnectable.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableInputOutput.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableLine.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableObject.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawablePort.cs" />
     <Compile Include="Components\Blocks\BlockViewerComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -201,6 +217,9 @@
     <EmbeddedResource Include="Components\AttributeListComponent.resx">
       <DependentUpon>AttributeListComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\BlockEditor\BlockEditorComponent.resx">
+      <DependentUpon>BlockEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\Blocks\BlockViewerComponent.resx">
       <DependentUpon>BlockViewerComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -252,8 +271,6 @@
     <EmbeddedResource Include="Windows\TestPanel.resx">
       <DependentUpon>TestPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

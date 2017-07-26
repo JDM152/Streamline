@@ -118,5 +118,28 @@ namespace SeniorDesign.FrontEnd.Windows
 
         #endregion
 
+        /// <summary>
+        ///     Method triggered when the user presses the "Add Filter" button
+        /// </summary>
+        private void AddFilterButton_Click(object sender, System.EventArgs e)
+        {
+            // Show the Add Block Panel
+            var panel = new BlockCreatorPanel(Core);
+            panel.ShowDialog();
+
+            BlockSchematic.CreateBlock(panel.CreatedComponent);
+        }
+
+        /// <summary>
+        ///     Method triggered when the user presses the "Add Input/Output" button
+        /// </summary>
+        private void AddIOButton_Click(object sender, System.EventArgs e)
+        {
+            // Show the Add IO Panel
+            var panel = new IOBlockCreatorPanel(Core);
+            panel.ShowDialog();
+
+            BlockSchematic.CreateBlock(panel.CreatedComponent);
+        }
     }
 }
