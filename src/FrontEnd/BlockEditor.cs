@@ -75,24 +75,25 @@ namespace SeniorDesign.FrontEnd
         {
             downPoint = mouse;
             lastSelect = currentSelect;
-            currentSelect = getObject();
+            currentSelect = getObject(downPoint);
         }
         public void handleMouseClick()
         {
-            if (currentSelect.objectType == ObjectType.Block)
+            if (currentSelect.objectType != ObjectType.Null || 
+                currentSelect.objectType != ObjectType.Line || 
+                getObject(upPoint).objectType == ObjectType.Null)
             {
                 if (upPoint != downPoint)
                 {
-                    //Call back Core
                     drag(currentSelect.A, upPoint);
                 }
             }
-            else if (currentSelect.objectType !=  ObjectType.Null && currentSelect.objectType != ObjectType.Line 
+            else if (currentSelect.objectType != ObjectType.Null && currentSelect.objectType != ObjectType.Line
                 && lastSelect.objectType != ObjectType.Null && lastSelect.objectType != ObjectType.Line)
             {
                 if (currentSelect.A.Id != lastSelect.A.Id)
                 {
-                    if(lastSelect.A.Id == output.Id)
+                    if (lastSelect.A.Id == output.Id)
                     {
                         ConnectBlocks(currentSelect.A, lastSelect.A, true);
                     }
@@ -102,6 +103,7 @@ namespace SeniorDesign.FrontEnd
                     }
                 }
             }
+
         }
         public void handleDelete()
         {
@@ -133,15 +135,34 @@ namespace SeniorDesign.FrontEnd
         }
         public void drag(IConnectable A, Point newPosition)
         {
-            foreach (DataFilter tempFilter in filterList)
+            if(input != null && input.Id == A.Id)
             {
-                if (tempFilter.Id == A.Id)
+                input.PositionX = newPosition.X;
+                input.PositionY = newPosition.Y;
+                //to do core    
+            }
+            else if (output != null && output.Id == A.Id)
+            {
+                output.PositionX = newPosition.X;
+                output.PositionY = newPosition.Y;
+                //to do core  
+            }
+            else
+            {
+                if(filterList != null)
                 {
-                    tempFilter.PositionX = newPosition.X;
-                    tempFilter.PositionY = newPosition.Y;
+                    for (int i = 0; i < filterList.Count; i++)
+                    {
+                        if (filterList[i].Id == A.Id)
+                        {
+                            filterList[i].PositionX = newPosition.X;
+                            filterList[i].PositionY = newPosition.Y;
+                            //to do core
+                            return;
+                        }
+                    }
                 }
             }
-            //TO DO CORE
         }
 
         public void CreatBlock(IConnectable temp)
@@ -164,31 +185,39 @@ namespace SeniorDesign.FrontEnd
                 }
             }
         }
-        public void UpdateBlockPosition(IConnectable temp)
+        public void UpdateBlockPosition(IConnectable A, bool callback = false)
         {
-            DataFilter tempFitler = temp as DataFilter;
-            if (tempFitler != null)
+            if(input != null && input.Id == A.Id)
             {
-                foreach (DataFilter tempFilter in filterList)
+                input.PositionX = A.PositionX;
+                input.PositionY = A.PositionY;
+                if(callback)
                 {
-                    if(tempFitler.Id == temp.Id)
-                    {
-                        tempFilter.PositionX = temp.PositionX;
-                        tempFilter.PositionY = temp.PositionY;
-                    }
+                    //to do core    
+                }
+            }
+            else if (output != null && output.Id == A.Id)
+            {
+                output.PositionX = A.PositionX;
+                output.PositionY = A.PositionY;
+                if (callback)
+                {
+                    //to do core    
                 }
             }
             else
             {
-                DataConnection tempConnection = temp as DataConnection;
-                
-                if (tempConnection.IsOutput == false)
+                for (int i = 0; i < filterList.Count; i++)
                 {
-                    input = tempConnection;
-                }
-                else
-                {
-                    output = tempConnection;
+                    if (filterList[i].Id == A.Id)
+                    {
+                        filterList[i].PositionX = A.PositionX;
+                        filterList[i].PositionY = A.PositionY;
+                        if (callback)
+                        {
+                            //to do core    
+                        }
+                    }
                 }
             }
         }
@@ -198,6 +227,10 @@ namespace SeniorDesign.FrontEnd
             if (input != null && output != null && A.Id == input.Id && B.Id == output.Id )
             {
                 input.NextConnections.Add(output);
+                if (callback)
+                {
+                    //to do core
+                }
             }
             //input block
             else if (input != null && A.Id == input.Id && (output == null || output.Id != B.Id) )
@@ -248,6 +281,10 @@ namespace SeniorDesign.FrontEnd
                     }
                 }
                 filterList[left].NextConnections.Add(filterList[right]);
+                if (callback)
+                {
+                    //to do core
+                }
             }
         }
         public void DisconnectBlocks(IConnectable A, IConnectable B, bool callback = false)
@@ -326,34 +363,29 @@ namespace SeniorDesign.FrontEnd
                 //CORE CALL BACK
             }
         }
-        public void SetName(IConnectable temp, String name)
+        public void SetName(IConnectable A, String name)
         {
-            DataFilter tempFitler = temp as DataFilter;
-            if (tempFitler != null)
+            if(input != null && input.Id == A.Id)
             {
-                foreach (DataFilter tempFilter in filterList)
+                input.Name = name;
+            }
+            else if (output != null && output.Id == A.Id)
+            {
+                output.Name = name;
+            }
+            else
+            {
+                for (int i = 0; i < filterList.Count; i++)
                 {
-                    if (tempFitler.Id == temp.Id)
+                    if (filterList[i].Id == A.Id)
                     {
-                        tempFilter.Name = name;
+                        filterList[i].Name = name;
                         return;
                     }
                 }
             }
-            else
-            {
-                DataConnection tempConnection = temp as DataConnection;
-                if (tempConnection.IsOutput == false)
-                {
-                    input.Name = name;
-                }
-                else
-                {
-                    output.Name = name;
-                }
-            }
         }
-        public IDstruct getObject()
+        public IDstruct getObject(Point mouse)
         {
             //line
             foreach (DataFilter tempFilter in filterList)
@@ -367,11 +399,11 @@ namespace SeniorDesign.FrontEnd
                     Point nextPortPoint = new Point(next.PositionX, next.PositionY + height / 2);
                     if(tempFilterPoint.X < nextPortPoint.X)
                     {
-                       contact = isOnLine(tempFilterPoint, nextPortPoint, downPoint);
+                       contact = isOnLine(tempFilterPoint, nextPortPoint, mouse);
                     }
                     else
                     {
-                        contact = isOnLine(nextPortPoint, tempFilterPoint, downPoint);
+                        contact = isOnLine(nextPortPoint, tempFilterPoint, mouse);
                     }
                     if(contact)
                     {
@@ -388,11 +420,11 @@ namespace SeniorDesign.FrontEnd
                     Point nextPortPoint = new Point(next.PositionX, next.PositionY + height / 2);
                     if (inputPortPoint.X < nextPortPoint.X)
                     {
-                        contact = isOnLine(inputPortPoint, nextPortPoint, downPoint);
+                        contact = isOnLine(inputPortPoint, nextPortPoint, mouse);
                     }
                     else
                     {
-                        contact = isOnLine(nextPortPoint, inputPortPoint, downPoint);
+                        contact = isOnLine(nextPortPoint, inputPortPoint, mouse);
                     }
                     if (contact)
                     {
@@ -403,7 +435,7 @@ namespace SeniorDesign.FrontEnd
             //block
             foreach (DataFilter tempFilter in filterList)
             {
-                bool contact = isInsideBlock(new Point(tempFilter.PositionX, tempFilter.PositionY), downPoint);
+                bool contact = isInsideBlock(new Point(tempFilter.PositionX, tempFilter.PositionY), mouse);
                 if(contact)
                 {
                     return new IDstruct(ObjectType.Block, tempFilter, null);
@@ -411,14 +443,14 @@ namespace SeniorDesign.FrontEnd
             }
             if(input != null)
             {
-                if (isInsideBlock(new Point(input.PositionX, input.PositionY), downPoint))
+                if (isInsideBlock(new Point(input.PositionX, input.PositionY), mouse))
                 {
                     return new IDstruct(ObjectType.Input, input, null);
                 }
             }
             if(output != null)
             {
-                if (isInsideBlock(new Point(output.PositionX, output.PositionY), downPoint))
+                if (isInsideBlock(new Point(output.PositionX, output.PositionY), mouse))
                 {
                     return new IDstruct(ObjectType.Ouput, output, null);
                 }
@@ -439,7 +471,7 @@ namespace SeniorDesign.FrontEnd
             {
                 return false;
             }
-            float AllowDif = 2.0f;
+            float AllowDif = 4.0f;
             float slope = (end.Y - start.Y)/ (end.X - start.X);
             float expectedY = (mouse.X - start.X) * slope + start.Y;
             if ( Math.Abs(expectedY - mouse.Y) <= AllowDif)
