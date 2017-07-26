@@ -87,7 +87,7 @@ namespace SeniorDesign.FrontEnd
             {
                 if (upPoint != downPoint)
                 {
-                    drag(currentSelect.A, upPoint);
+                    drag(currentSelect.A, new Point(upPoint.X - width/2, upPoint.Y - height/2));
                 }
             }
             else if (currentSelect.objectType != ObjectType.Null && lastSelect.objectType != ObjectType.Null && currentSelect.A.Id != lastSelect.A.Id)
