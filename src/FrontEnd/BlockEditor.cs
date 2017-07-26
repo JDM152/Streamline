@@ -79,9 +79,10 @@ namespace SeniorDesign.FrontEnd
         }
         public void handleMouseClick()
         {
-            if (currentSelect.objectType == ObjectType.Input ||
+            if (
+                (currentSelect.objectType == ObjectType.Input ||
                 currentSelect.objectType == ObjectType.Output ||
-                currentSelect.objectType == ObjectType.Block ||
+                currentSelect.objectType == ObjectType.Block) &&
                 getObject(upPoint).objectType == ObjectType.Null)
             {
                 if (upPoint != downPoint)
