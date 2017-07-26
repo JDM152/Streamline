@@ -29,9 +29,7 @@ namespace SeniorDesign.FrontEnd
         private IDstruct lastSelect;
         private IDstruct currentSelect;
         private Point mouse;
-
-        //temp
-        private int a = 0;
+        
 
 
         public BlockEditor(GLControl glControl, StreamlineCore core)
@@ -78,11 +76,6 @@ namespace SeniorDesign.FrontEnd
             downPoint = mouse;
             lastSelect = currentSelect;
             currentSelect = getObject();
-            a++;
-            if(a == 5)
-            {
-                throw new Exception(currentSelect.objectType.ToString() + " " + currentSelect.A.Id.ToString() + " " + currentSelect.B.Id.ToString() );
-            }
         }
         public void handleMouseClick()
         {
@@ -99,8 +92,14 @@ namespace SeniorDesign.FrontEnd
             {
                 if (currentSelect.A.Id != lastSelect.A.Id)
                 {
-                    //throw new Exception(lastSelect.ID.ToString() + " " + currentSelect.ID.ToString());
-                    ConnectBlocks(lastSelect.A, currentSelect.B, true);
+                    if(lastSelect.A.Id == output.Id)
+                    {
+                        ConnectBlocks(currentSelect.A, lastSelect.A, true);
+                    }
+                    else
+                    {
+                        ConnectBlocks(lastSelect.A, currentSelect.A, true);
+                    }
                 }
             }
         }
@@ -253,28 +252,48 @@ namespace SeniorDesign.FrontEnd
         }
         public void DisconnectBlocks(IConnectable A, IConnectable B, bool callback = false)
         {
-            DataFilter tempFitler = A as DataFilter;
-            if (tempFitler != null)
+            //input remove
+            if(input != null && input.Id == A.Id)
             {
-                foreach (DataFilter tempFilter in filterList)
+                input.NextConnections.Remove(B);
+                if (callback)
                 {
-                    if (tempFitler.Id == A.Id)
+                    //core call back
+                }
+            }
+            //block ouput
+            else if(output != null && output.Id == B.Id)
+            {
+                for (int i = 0; i < filterList.Count; i++)
+                {
+                    if (filterList[i].Id == A.Id)
                     {
-                        tempFilter.NextConnections.Remove(B);
+                        filterList[i].NextConnections.Remove(output);
+                        if (callback)
+                        {
+                            //core call back
+                        }
+                        return;
                     }
                 }
             }
+            //block
             else
             {
-                DataConnection tempConnection = A as DataConnection;
-                if (tempConnection.IsOutput == false)
+                int left = -1;
+                for (int i = 0; i < filterList.Count; i++)
                 {
-                    A.NextConnections.Remove(B);
+                    if (filterList[i].Id == A.Id)
+                    {
+                        left = i;
+                        return;
+                    }
                 }
-            }
-            if(callback)
-            {
-                //core call back
+                filterList[left].NextConnections.Remove(B);
+                if (callback)
+                {
+                    //core call back
+                }
             }
         }
         public void DeleteBlock(IConnectable temp, bool callback = false)
