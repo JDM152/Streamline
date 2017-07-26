@@ -7,5 +7,6 @@ namespace SeniorDesign.Core.Attributes
     /// </summary>
     public abstract class MetadataAttribute : Attribute
     {
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using SeniorDesign.Core.Attributes;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Streams;
 using System;
 using System.IO;
@@ -9,7 +10,7 @@ namespace SeniorDesign.Plugins.Connections
     ///     A dummy type of Data Connection where constant data is fed
     ///     as a byte stream.
     /// </summary>
-    [MetadataDataStream(AllowAsInput = true, AllowAsOutput = false)]
+    [MetadataDataStream(AllowAsInput = true, AllowAsOutput = false, GenericConverter = false)]
     public class ConstantDataStream : DataStream
     {
         #region User Config
@@ -45,41 +46,6 @@ namespace SeniorDesign.Plugins.Connections
         /// </summary>
         public override bool CanRead { get { return true; } }
 
-        /// <summary>
-        ///     Checks if the position of the stream can be changed.
-        ///     Constant will not allow to simplify finding the length.
-        /// </summary>
-        public override bool CanSeek { get { return false; } }
-
-        /// <summary>
-        ///     Checks if this stream can be written to.
-        ///     Constant will allow, only as a dummy.
-        /// </summary>
-        public override bool CanWrite { get { return true; } }
-
-        /// <summary>
-        ///     Gets the length of the available stream.
-        ///     Constant will not allow seeking, so this throws.
-        /// </summary>
-        public override long Length { get { throw new NotSupportedException(); } }
-
-        /// <summary>
-        ///     Gets the current position in the stream.
-        ///     Constant will not allow seeking, so this throws.
-        /// </summary>
-        public override long Position
-        {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
-
-        /// <summary>
-        ///     Flushes all of the input from the buffer to the output.
-        /// </summary>
-        public override void Flush()
-        {
-            // Do nothing
-        }
 
         /// <summary>
         ///     Reads from the stream into a byte buffer
@@ -106,37 +72,24 @@ namespace SeniorDesign.Plugins.Connections
         }
 
         /// <summary>
-        ///     Moves to a position in the stream.
-        ///     Constant does not allow seeking, so this throws.
+        ///     If this type of data stream supports ReadDirect.
+        ///     Note that this will only apply if the Converter has not been specified
         /// </summary>
-        /// <param name="offset">The position in the stream to move to</param>
-        /// <param name="origin">The position to use as the origin for the stream</param>
-        /// <returns>The position that was moved to in the stream</returns>
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
+        public override bool CanReadDirect { get { return true; } }
 
         /// <summary>
-        ///     Sets the length of the current stream.
-        ///     Constant does not allow seeking, so this throws.
+        ///     Reads directly from the stream, ignoring the Converter, and providing 
         /// </summary>
-        /// <param name="value">The length to set the stream.</param>
-        public override void SetLength(long value)
+        /// <param name="count">The number of points to poll</param>
+        /// <returns>The data packet with at most count data points added</returns>
+        public override DataPacket ReadDirect(int count)
         {
-            throw new NotSupportedException();
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
+            while (count-- > 0)
+                toReturn[0].Add(_value);
+            return toReturn;
         }
 
-        /// <summary>
-        ///     Writes bytes out to the stream.
-        ///     Constant supports this as a dummy operation, but it does nothing
-        /// </summary>
-        /// <param name="buffer">The bytes to write to the stream</param>
-        /// <param name="offset">The offset into the buffer to start</param>
-        /// <param name="count">The number of bytes to write</param>
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            // Do nothing
-        }
     }
 }

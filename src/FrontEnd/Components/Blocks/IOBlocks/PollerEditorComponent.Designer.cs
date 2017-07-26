@@ -31,6 +31,7 @@
             this.AttributeList = new SeniorDesign.FrontEnd.Components.AttributeListComponent();
             this.BlockTypeName = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.ErrorList = new SeniorDesign.FrontEnd.Components.Specialized.ErrorListComponent();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -43,6 +44,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AttributeList.Location = new System.Drawing.Point(3, 3);
+            this.AttributeList.Margin = new System.Windows.Forms.Padding(0);
             this.AttributeList.Name = "AttributeList";
             this.AttributeList.Size = new System.Drawing.Size(228, 236);
             this.AttributeList.TabIndex = 0;
@@ -67,6 +69,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.ErrorList);
             this.splitContainer1.Panel1.Controls.Add(this.BlockTypeName);
             // 
             // splitContainer1.Panel2
@@ -75,6 +78,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(234, 334);
             this.splitContainer1.SplitterDistance = 88;
             this.splitContainer1.TabIndex = 6;
+            // 
+            // ErrorList
+            // 
+            this.ErrorList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ErrorList.Location = new System.Drawing.Point(0, 16);
+            this.ErrorList.Name = "ErrorList";
+            this.ErrorList.Size = new System.Drawing.Size(234, 69);
+            this.ErrorList.TabIndex = 3;
             // 
             // PollerEditorComponent
             // 
@@ -97,5 +110,6 @@
         private AttributeListComponent AttributeList;
         private System.Windows.Forms.Label BlockTypeName;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private Specialized.ErrorListComponent ErrorList;
     }
 }

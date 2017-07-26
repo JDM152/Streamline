@@ -1,4 +1,5 @@
-﻿using SeniorDesign.Core.Attributes;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Streams;
 using System;
 using System.IO;
@@ -9,7 +10,7 @@ namespace SeniorDesign.Plugins.Connections
     ///     A wrapper for a Data Connection where constant data is fed
     ///     back into the console
     /// </summary>
-    [MetadataDataStream(AllowAsInput = false, AllowAsOutput = true)]
+    [MetadataDataStream(AllowAsInput = false, AllowAsOutput = true, GenericPoller = false, GenericConverter = false)]
     public class ConsoleDataStream : DataStream
     {
 
@@ -100,6 +101,23 @@ namespace SeniorDesign.Plugins.Connections
         {
             // Write to the console
             Console.Write(Console.OutputEncoding.GetChars(buffer));
+        }
+
+        /// <summary>
+        ///     If this type of data stream supports WriteDirect.
+        ///     Note that this will only apply if the Converter has not been specified
+        /// </summary>
+        public override bool CanWriteDirect { get { return true; } }
+
+        /// <summary>
+        ///     Writes directly from the stream, ignoring the Converter
+        /// </summary>
+        /// <param name="data">The data to write to the stream</param>
+        public override void WriteDirect(DataPacket data)
+        {
+            // Write directly to the console
+            while (data[0].Count > 0)
+                Console.WriteLine(data.Pop(0));
         }
     }
 }

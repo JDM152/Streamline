@@ -130,6 +130,18 @@
     <Compile Include="Components\AttributeEditors\IntegerEditorComponent.Designer.cs">
       <DependentUpon>IntegerEditorComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\Specialized\CompileButtonComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Specialized\CompileButtonComponent.Designer.cs">
+      <DependentUpon>CompileButtonComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Specialized\ErrorListComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Specialized\ErrorListComponent.Designer.cs">
+      <DependentUpon>ErrorListComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Windows\AdvancedBlockPanel.cs">
@@ -206,6 +218,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\Blocks\IOBlockViewerComponent.resx">
       <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Specialized\CompileButtonComponent.resx">
+      <DependentUpon>CompileButtonComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Specialized\ErrorListComponent.resx">
+      <DependentUpon>ErrorListComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

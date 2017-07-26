@@ -1,6 +1,6 @@
-﻿namespace SeniorDesign.FrontEnd.Components
+﻿namespace SeniorDesign.FrontEnd.Components.Specialized
 {
-    partial class AttributeListComponent
+    partial class ErrorListComponent
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,35 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.AttributeEditorList = new System.Windows.Forms.FlowLayoutPanel();
+            this.ErrorList = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
-            // AttributeEditorList
+            // ErrorList
             // 
-            this.AttributeEditorList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ErrorList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.AttributeEditorList.AutoScroll = true;
-            this.AttributeEditorList.Location = new System.Drawing.Point(0, 0);
-            this.AttributeEditorList.Margin = new System.Windows.Forms.Padding(0);
-            this.AttributeEditorList.Name = "AttributeEditorList";
-            this.AttributeEditorList.Size = new System.Drawing.Size(200, 200);
-            this.AttributeEditorList.TabIndex = 2;
+            this.ErrorList.BackColor = System.Drawing.SystemColors.Control;
+            this.ErrorList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ErrorList.ForeColor = System.Drawing.Color.Red;
+            this.ErrorList.FormattingEnabled = true;
+            this.ErrorList.Location = new System.Drawing.Point(0, 0);
+            this.ErrorList.Name = "ErrorList";
+            this.ErrorList.Size = new System.Drawing.Size(150, 143);
+            this.ErrorList.TabIndex = 0;
             // 
-            // AttributeListComponent
+            // ErrorListComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.AttributeEditorList);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "AttributeListComponent";
-            this.Size = new System.Drawing.Size(200, 200);
+            this.Controls.Add(this.ErrorList);
+            this.Name = "ErrorListComponent";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.FlowLayoutPanel AttributeEditorList;
+        private System.Windows.Forms.ListBox ErrorList;
     }
 }

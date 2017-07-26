@@ -66,5 +66,11 @@ namespace SeniorDesign.Core
         /// <remarks>If data is not emptied, it will be added onto and passed next cycle</remarks>
         void AcceptIncomingData(StreamlineCore core, DataPacket data);
 
+        /// <summary>
+        ///     Ensures that this object is valid before allowing it to be used
+        /// </summary>
+        /// <returns>True if the object is valid</returns>
+        bool Validate();
+
     }
 }

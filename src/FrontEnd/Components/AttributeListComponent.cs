@@ -1,4 +1,5 @@
 ﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections;
 using SeniorDesign.FrontEnd.Components.AttributeEditors;
 using System;
 using System.Reflection;
@@ -46,6 +47,7 @@ namespace SeniorDesign.FrontEnd.Components
             if (_owner == null)
                 return;
 
+            // Add every available field
             foreach (var field in _owner.GetType().GetFields())
             {
                 foreach (var attribute in field.GetCustomAttributes())
@@ -62,6 +64,7 @@ namespace SeniorDesign.FrontEnd.Components
                 }
             }
 
+            // Add every available property
             foreach (var prop in _owner.GetType().GetProperties())
             {
                 foreach (var attribute in prop.GetCustomAttributes())
@@ -77,6 +80,11 @@ namespace SeniorDesign.FrontEnd.Components
                     AttributeEditorList.Controls.Add(editor);
                 }
             }
+
+            // Add a button for recompiling if needed
+            var dcc = _owner as IDataConnectionComponent;
+            if (dcc != null && dcc.CanCompile)
+                AttributeEditorList.Controls.Add(new CompileButtonComponent(dcc));
         }
     }
 }

@@ -67,6 +67,15 @@ namespace SeniorDesign.Core.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public abstract void AcceptIncomingData(StreamlineCore core, DataPacket data);
 
+        /// <summary>
+        ///     Ensures that this object is valid before allowing it to be used
+        /// </summary>
+        /// <returns>True if the object is valid</returns>
+        public bool Validate()
+        {
+            return true;
+        }
+
         #endregion
 
         /// <summary>

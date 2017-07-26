@@ -233,7 +233,7 @@ namespace SeniorDesign.Core.Connections
         ///     Checks to see if this Data Connection is functional
         /// </summary>
         /// <returns>True if the state is valid, False if not</returns>
-        public bool ValidateState()
+        public bool Validate()
         {
             if (MediaConnection == null)
                 return false;
@@ -242,6 +242,15 @@ namespace SeniorDesign.Core.Connections
                 return false;
 
             if (Converter == null && MediaConnection.UsesGenericConverters)
+                return false;
+
+            if (!MediaConnection.Validate())
+                return false;
+
+            if (Poller != null && !Poller.Validate())
+                return false;
+
+            if (Converter != null && !Converter.Validate())
                 return false;
 
             return true;

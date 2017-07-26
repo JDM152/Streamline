@@ -29,6 +29,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks.IOBlocks
         public void SetViewingComponent(DataConverter component)
         {
             _selected = component;
+            ErrorList.SetComponent(_selected);
             ListBlockContent();
         }
 

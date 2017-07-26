@@ -50,7 +50,7 @@
             // CancelCreationButton
             // 
             this.CancelCreationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelCreationButton.Location = new System.Drawing.Point(398, 414);
+            this.CancelCreationButton.Location = new System.Drawing.Point(458, 414);
             this.CancelCreationButton.Name = "CancelCreationButton";
             this.CancelCreationButton.Size = new System.Drawing.Size(184, 23);
             this.CancelCreationButton.TabIndex = 11;
@@ -61,7 +61,7 @@
             // AddBlockButton
             // 
             this.AddBlockButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddBlockButton.Location = new System.Drawing.Point(588, 414);
+            this.AddBlockButton.Location = new System.Drawing.Point(648, 414);
             this.AddBlockButton.Name = "AddBlockButton";
             this.AddBlockButton.Size = new System.Drawing.Size(184, 23);
             this.AddBlockButton.TabIndex = 10;
@@ -84,7 +84,7 @@
             this.fileToolStripMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(784, 24);
+            this.MenuStrip.Size = new System.Drawing.Size(844, 24);
             this.MenuStrip.TabIndex = 8;
             this.MenuStrip.Text = "menuStrip1";
             // 
@@ -124,7 +124,7 @@
             this.MediaTypeBox.FormattingEnabled = true;
             this.MediaTypeBox.Location = new System.Drawing.Point(134, 54);
             this.MediaTypeBox.Name = "MediaTypeBox";
-            this.MediaTypeBox.Size = new System.Drawing.Size(638, 21);
+            this.MediaTypeBox.Size = new System.Drawing.Size(698, 21);
             this.MediaTypeBox.TabIndex = 12;
             this.MediaTypeBox.SelectedIndexChanged += new System.EventHandler(this.MediaTypeBox_SelectedIndexChanged);
             // 
@@ -136,7 +136,7 @@
             this.PollerTypeBox.FormattingEnabled = true;
             this.PollerTypeBox.Location = new System.Drawing.Point(134, 81);
             this.PollerTypeBox.Name = "PollerTypeBox";
-            this.PollerTypeBox.Size = new System.Drawing.Size(638, 21);
+            this.PollerTypeBox.Size = new System.Drawing.Size(698, 21);
             this.PollerTypeBox.TabIndex = 13;
             this.PollerTypeBox.SelectedIndexChanged += new System.EventHandler(this.PollerTypeBox_SelectedIndexChanged);
             // 
@@ -157,7 +157,7 @@
             this.ConverterTypeBox.FormattingEnabled = true;
             this.ConverterTypeBox.Location = new System.Drawing.Point(134, 108);
             this.ConverterTypeBox.Name = "ConverterTypeBox";
-            this.ConverterTypeBox.Size = new System.Drawing.Size(638, 21);
+            this.ConverterTypeBox.Size = new System.Drawing.Size(698, 21);
             this.ConverterTypeBox.TabIndex = 15;
             this.ConverterTypeBox.SelectedIndexChanged += new System.EventHandler(this.ConverterTypeBox_SelectedIndexChanged);
             // 
@@ -181,7 +181,7 @@
             "Output"});
             this.InputOutputBox.Location = new System.Drawing.Point(134, 27);
             this.InputOutputBox.Name = "InputOutputBox";
-            this.InputOutputBox.Size = new System.Drawing.Size(638, 21);
+            this.InputOutputBox.Size = new System.Drawing.Size(698, 21);
             this.InputOutputBox.TabIndex = 17;
             this.InputOutputBox.SelectedIndexChanged += new System.EventHandler(this.InputOutputBox_SelectedIndexChanged);
             // 
@@ -202,14 +202,14 @@
             this.IOBlockViewer.Location = new System.Drawing.Point(15, 138);
             this.IOBlockViewer.Margin = new System.Windows.Forms.Padding(0);
             this.IOBlockViewer.Name = "IOBlockViewer";
-            this.IOBlockViewer.Size = new System.Drawing.Size(757, 273);
+            this.IOBlockViewer.Size = new System.Drawing.Size(817, 273);
             this.IOBlockViewer.TabIndex = 7;
             // 
             // IOBlockCreatorPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 442);
+            this.ClientSize = new System.Drawing.Size(844, 442);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.InputOutputBox);
             this.Controls.Add(this.ConverterTypeLabel);
@@ -222,7 +222,7 @@
             this.Controls.Add(this.MediaTypeLabel);
             this.Controls.Add(this.MenuStrip);
             this.Controls.Add(this.IOBlockViewer);
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(860, 480);
             this.Name = "IOBlockCreatorPanel";
             this.Text = "Create IO Block";
             this.MenuStrip.ResumeLayout(false);

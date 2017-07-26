@@ -177,7 +177,7 @@ namespace SeniorDesign.FrontEnd.Windows
         private void AddBlockButton_Click(object sender, EventArgs e)
         {
             // Verify that the block is valid
-            if (_current == null || !_current.ValidateState())
+            if (_current == null || !_current.Validate())
             {
                 MessageBox.Show("The new IO Block is incomplete.");
                 return;

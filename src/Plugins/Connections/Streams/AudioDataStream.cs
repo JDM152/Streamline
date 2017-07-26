@@ -126,14 +126,6 @@ namespace SeniorDesign.Plugins.Connections
         }
 
         /// <summary>
-        ///     Flushes all of the input from the buffer to the output.
-        /// </summary>
-        public override void Flush()
-        {
-            // Do nothing
-        }
-
-        /// <summary>
         ///     Reads from the stream into a byte buffer
         /// </summary>
         /// <param name="buffer">The buffer to read into</param>
@@ -141,28 +133,6 @@ namespace SeniorDesign.Plugins.Connections
         /// <param name="count">The number of bytes to read into the buffer</param>
         /// <returns>The number of bytes read</returns>
         public override int Read(byte[] buffer, int offset, int count)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        ///     Moves to a position in the stream.
-        ///     Audio does not allow seeking, so this throws.
-        /// </summary>
-        /// <param name="offset">The position in the stream to move to</param>
-        /// <param name="origin">The position to use as the origin for the stream</param>
-        /// <returns>The position that was moved to in the stream</returns>
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        ///     Sets the length of the current stream.
-        ///     Audio does not allow seeking, so this throws.
-        /// </summary>
-        /// <param name="value">The length to set the stream.</param>
-        public override void SetLength(long value)
         {
             throw new NotSupportedException();
         }

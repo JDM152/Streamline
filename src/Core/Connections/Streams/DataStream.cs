@@ -2,6 +2,7 @@
 using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace SeniorDesign.Core.Connections.Streams
     /// <summary>
     ///     A stream specialized for use with Streamline
     /// </summary>
-    public abstract class DataStream : Stream, IRestorable
+    public abstract class DataStream : Stream, IDataConnectionComponent
     {
 
         /// <summary>
@@ -66,6 +67,92 @@ namespace SeniorDesign.Core.Connections.Streams
         /// </summary>
         public virtual int DirectOutputCount { get { return 0; } }
 
+        #region Stream Default Implementation
+
+        /// <summary>
+        ///     Checks if this stream can be read from.
+        /// </summary>
+        public override bool CanRead { get { return false; } }
+
+        /// <summary>
+        ///     Checks if the position of the stream can be changed.
+        /// </summary>
+        public override bool CanSeek { get { return false; } }
+
+        /// <summary>
+        ///     Checks if this stream can be written to.
+        /// </summary>
+        public override bool CanWrite { get { return false; } }
+
+        /// <summary>
+        ///     Gets the length of the available stream.
+        /// </summary>
+        public override long Length { get { throw new NotSupportedException(); } }
+
+        /// <summary>
+        ///     Gets the current position in the stream.
+        /// </summary>
+        public override long Position
+        {
+            get { throw new NotSupportedException(); }
+            set { throw new NotSupportedException(); }
+        }
+
+        /// <summary>
+        ///     Flushes all of the input from the buffer to the output.
+        /// </summary>
+        public override void Flush()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        ///     Reads from the stream into a byte buffer
+        /// </summary>
+        /// <param name="buffer">The buffer to read into</param>
+        /// <param name="offset">The offset into the buffer to start writing</param>
+        /// <param name="count">The number of bytes to read into the buffer</param>
+        /// <returns>The number of bytes read</returns>
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        ///     Moves to a position in the stream.
+        ///     Audio does not allow seeking, so this throws.
+        /// </summary>
+        /// <param name="offset">The position in the stream to move to</param>
+        /// <param name="origin">The position to use as the origin for the stream</param>
+        /// <returns>The position that was moved to in the stream</returns>
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        ///     Sets the length of the current stream.
+        ///     Audio does not allow seeking, so this throws.
+        /// </summary>
+        /// <param name="value">The length to set the stream.</param>
+        public override void SetLength(long value)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        ///     Writes bytes out to the stream.
+        /// </summary>
+        /// <param name="buffer">The bytes to write to the stream</param>
+        /// <param name="offset">The offset into the buffer to start</param>
+        /// <param name="count">The number of bytes to write</param>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion
+
         /// <summary>
         ///     Reads directly from the stream, ignoring the Converter
         /// </summary>
@@ -100,6 +187,85 @@ namespace SeniorDesign.Core.Connections.Streams
             return MethodBase.GetCurrentMethod().DeclaringType.GetCustomAttribute<MetadataDataStreamAttribute>();
         }
 
+        #region IDataConnectionComponent
+
+        /// <summary>
+        ///     Any errors that this component has
+        /// </summary>
+        public IList<string> ErrorStrings { get; } = new List<string>();
+
+        /// <summary>
+        ///     Event that is triggered when the error strings have changed
+        /// </summary>
+        public event EventHandler OnErrorStringsChanged;
+
+        /// <summary>
+        ///     Ensures that this object is valid before allowing it to be used
+        /// </summary>
+        /// <returns>True if the object is valid</returns>
+        public virtual bool Validate()
+        {
+            return true;
+        }
+
+        /// <summary>
+        ///     Checks if this object needs to be compiled before it is actually used
+        /// </summary>
+        /// <returns>True if Compile needs to be called before this object is valid</returns>
+        public virtual bool CanCompile { get { return false; } }
+
+        /// <summary>
+        ///     Checks if this object needs to be compiled (If any changes were made)
+        /// </summary>
+        public bool NeedsCompile
+        {
+            get { return _needsCompile; }
+            protected set
+            {
+                if (_needsCompile == value) return;
+                _needsCompile = value;
+                AddNeedsCompileErorr();
+                OnNeedsCompileChangeEvent?.Invoke(this, value);
+            }
+        }
+        private bool _needsCompile;
+
+        /// <summary>
+        ///     Event that is triggered when the NeedsCompile value changes
+        /// </summary>
+        public event EventHandler<bool> OnNeedsCompileChangeEvent;
+
+        /// <summary>
+        ///     Adds and removes the Needs Compiled Error as needed
+        /// </summary>
+        private void AddNeedsCompileErorr()
+        {
+            var eIndex = ErrorStrings.IndexOf(Constants.ERROR_COMPILE);
+            if (_needsCompile && eIndex < 0)
+            {
+                ErrorStrings.Add(Constants.ERROR_COMPILE);
+                OnErrorStringsChanged?.Invoke(this, null);
+            }
+            else if (!_needsCompile && eIndex >= 0)
+            {
+                ErrorStrings.RemoveAt(eIndex);
+                OnErrorStringsChanged?.Invoke(this, null);
+            }
+        }
+
+        /// <summary>
+        ///     Utility method for invoking the ErrorStringChanged event
+        /// </summary>
+        protected void InvokeOnErrorStringsChanged()
+        {
+            OnErrorStringsChanged?.Invoke(this, null);
+        }
+
+        /// <summary>
+        ///     Compiles this object for actual use
+        /// </summary>
+        public virtual void Compile() { throw new NotImplementedException(); }
+
         /// <summary>
         ///     Converts this object into a byte array representation
         /// </summary>
@@ -118,5 +284,7 @@ namespace SeniorDesign.Core.Connections.Streams
         {
 
         }
+
+        #endregion
     }
 }

@@ -63,11 +63,17 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
 
             // Set the contents
             InputControl.Items.Clear();
-            for (var k = 0; k < Attribute.Values.Length; k+=2)
+            int selectedIndex = -1;
+            var realVal = Field.GetValue(Owner);
+            for (var k = 0; k < Attribute.Values.Length; k += 2)
+            {
                 InputControl.Items.Add(Attribute.Values[k]);
+                if (Attribute.Values[k + 1].Equals(realVal))
+                    selectedIndex = k / 2;
+            }
 
             // Set the default selection
-            InputControl.SelectedIndex = InputControl.Items.IndexOf(Field.GetValue(Owner));
+            InputControl.SelectedIndex = selectedIndex;
         }
 
         /// <summary>
