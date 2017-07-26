@@ -211,7 +211,6 @@
             this.MinimumSize = new System.Drawing.Size(949, 708);
             this.Name = "ControlPanel";
             this.Text = "Streamline - New Schematic";
-            this.Load += new System.EventHandler(this.ControlPanel_Load_1);
             this.MenuStrip.ResumeLayout(false);
             this.MenuStrip.PerformLayout();
             this.ResumeLayout(false);

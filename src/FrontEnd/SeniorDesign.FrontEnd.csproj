@@ -137,6 +137,7 @@
     <Compile Include="Grapher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="Windows\AdvancedBlockPanel.cs">
       <SubType>Form</SubType>
     </Compile>
