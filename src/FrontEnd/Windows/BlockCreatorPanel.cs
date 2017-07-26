@@ -63,7 +63,9 @@ namespace SeniorDesign.FrontEnd.Windows
         /// </summary>
         private void RefreshBlockListings()
         {
+            _typeMapping.Clear();
             BlockTypeBox.Items.Clear();
+
             foreach (var plugin in _core.Plugins)
             {
                 foreach (var connectable in plugin.FilterTypes)

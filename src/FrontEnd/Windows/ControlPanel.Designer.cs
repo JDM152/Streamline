@@ -30,11 +30,17 @@
         {
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedBlockEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.advancedBlockEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveSchematicDialog = new System.Windows.Forms.SaveFileDialog();
+            this.OpenSchematicDialog = new System.Windows.Forms.OpenFileDialog();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,9 +59,42 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.saveAsToolStripMenuItem.Text = "Save As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -72,6 +111,13 @@
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
             // 
+            // advancedBlockEditorToolStripMenuItem
+            // 
+            this.advancedBlockEditorToolStripMenuItem.Name = "advancedBlockEditorToolStripMenuItem";
+            this.advancedBlockEditorToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.advancedBlockEditorToolStripMenuItem.Text = "Advanced Block Editor";
+            this.advancedBlockEditorToolStripMenuItem.Click += new System.EventHandler(this.advancedBlockEditorToolStripMenuItem_Click);
+            // 
             // pluginsToolStripMenuItem
             // 
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
@@ -86,12 +132,17 @@
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
             // 
-            // advancedBlockEditorToolStripMenuItem
+            // SaveSchematicDialog
             // 
-            this.advancedBlockEditorToolStripMenuItem.Name = "advancedBlockEditorToolStripMenuItem";
-            this.advancedBlockEditorToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.advancedBlockEditorToolStripMenuItem.Text = "Advanced Block Editor";
-            this.advancedBlockEditorToolStripMenuItem.Click += new System.EventHandler(this.advancedBlockEditorToolStripMenuItem_Click);
+            this.SaveSchematicDialog.DefaultExt = "schematic";
+            this.SaveSchematicDialog.Filter = "Schematic files|*.schematic|All files|*.*";
+            this.SaveSchematicDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.SaveSchematicDialog_FileOk);
+            // 
+            // OpenSchematicDialog
+            // 
+            this.OpenSchematicDialog.DefaultExt = "schematic";
+            this.OpenSchematicDialog.Filter = "Schematic files|*.schematic|All files|*.*";
+            this.OpenSchematicDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenSchematicDialog_FileOk);
             // 
             // ControlPanel
             // 
@@ -102,7 +153,7 @@
             this.MainMenuStrip = this.MenuStrip;
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "ControlPanel";
-            this.Text = "Streamline";
+            this.Text = "Streamline - New Schematic";
             this.MenuStrip.ResumeLayout(false);
             this.MenuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -119,5 +170,11 @@
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem advancedBlockEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog SaveSchematicDialog;
+        private System.Windows.Forms.OpenFileDialog OpenSchematicDialog;
     }
 }

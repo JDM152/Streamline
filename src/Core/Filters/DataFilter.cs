@@ -33,6 +33,16 @@ namespace SeniorDesign.Core.Filters
         public string Name { get; set; }
 
         /// <summary>
+        ///     The X position of this module in the block editor
+        /// </summary>
+        public int PositionX { get; set; }
+
+        /// <summary>
+        ///     The Y position of this module in the block editor
+        /// </summary>
+        public int PositionY { get; set; }
+
+        /// <summary>
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
@@ -57,6 +67,15 @@ namespace SeniorDesign.Core.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public abstract void AcceptIncomingData(StreamlineCore core, DataPacket data);
 
+        /// <summary>
+        ///     Ensures that this object is valid before allowing it to be used
+        /// </summary>
+        /// <returns>True if the object is valid</returns>
+        public bool Validate()
+        {
+            return true;
+        }
+
         #endregion
 
         /// <summary>
@@ -68,7 +87,7 @@ namespace SeniorDesign.Core.Filters
         ///     Creates a new Data Filter restored from previously saved bytes
         /// </summary>
         /// <param name="restore">The bytes to restore from</param>
-        public DataFilter(List<byte> restore, ref int offset)
+        public DataFilter(byte[] restore, ref int offset)
         {
             Restore(restore, ref offset);
         }
@@ -82,13 +101,16 @@ namespace SeniorDesign.Core.Filters
         ///     Converts this object into a byte array representation
         /// </summary>
         /// <returns>This object as a restoreable byte array</returns>
-        public virtual List<byte> ToBytes()
+        public virtual byte[] ToBytes()
         {
             var toReturn = new List<byte>();
 
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Id));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionX));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionY));
 
-            return toReturn;
+            return toReturn.ToArray();
         }
 
         /// <summary>
@@ -96,9 +118,12 @@ namespace SeniorDesign.Core.Filters
         /// </summary>
         /// <param name="data">The data to restore from</param>
         /// <param name="offset">The offset into the data to start</param>
-        public virtual void Restore(List<byte> data, ref int offset)
+        public virtual void Restore(byte[] data, ref int offset)
         {
+            Id = ByteUtil.GetIntFromSizedArray(data, ref offset);
             Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
+            PositionX = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            PositionY = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
         /// <summary>

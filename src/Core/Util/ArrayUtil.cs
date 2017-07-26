@@ -21,5 +21,20 @@ namespace SeniorDesign.Core.Util
             Buffer.BlockCopy(toAppend, 0, temp, original.Length, toAppend.Length);
             return temp;
         }
+
+        /// <summary>
+        ///     Returns a copy of a sub-array of a given array.
+        /// </summary>
+        /// <typeparam name="T">The type of the array</typeparam>
+        /// <param name="original">The array to get the sub-array of</param>
+        /// <param name="start">The start of the new sub-array</param>
+        /// <param name="count">The number of items to get</param>
+        /// <returns>A new array containing the sub-array</returns>
+        public static T[] Subarray<T>(this T[] original, int start, int count)
+        {
+            var toReturn = new T[count];
+            Buffer.BlockCopy(original, start, toReturn, 0, count);
+            return toReturn;
+        }
     }
 }

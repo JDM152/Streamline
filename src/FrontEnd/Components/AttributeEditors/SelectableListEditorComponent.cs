@@ -17,7 +17,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     The field that is being edited
         /// </summary>
-        public FieldInfo Field { get; protected set; }
+        public WrappedAttributeInfo Field { get; protected set; }
 
         /// <summary>
         ///     The object that this is editing the component of
@@ -40,7 +40,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
-        public SelectableListEditorComponent(object owner, FieldInfo field, UserConfigurableSelectableListAttribute attribute)
+        public SelectableListEditorComponent(object owner, WrappedAttributeInfo field, UserConfigurableSelectableListAttribute attribute)
         {
             _suppressUpdate = true;
             Owner = owner;
@@ -63,11 +63,17 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
 
             // Set the contents
             InputControl.Items.Clear();
-            for (var k = 0; k < Attribute.Values.Length; k+=2)
+            int selectedIndex = -1;
+            var realVal = Field.GetValue(Owner);
+            for (var k = 0; k < Attribute.Values.Length; k += 2)
+            {
                 InputControl.Items.Add(Attribute.Values[k]);
+                if (Attribute.Values[k + 1].Equals(realVal))
+                    selectedIndex = k / 2;
+            }
 
             // Set the default selection
-            InputControl.SelectedIndex = InputControl.Items.IndexOf(Field.GetValue(Owner));
+            InputControl.SelectedIndex = selectedIndex;
         }
 
         /// <summary>

@@ -40,18 +40,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\UserConfigurableAttribute.cs" />
-    <Compile Include="Attributes\UserConfigurableBooleanAttribute.cs" />
-    <Compile Include="Attributes\UserConfigurableDoubleAttribute.cs" />
-    <Compile Include="Attributes\UserConfigurableStringAttribute.cs" />
-    <Compile Include="Attributes\UserConfigurableIntegerAttribute.cs" />
-    <Compile Include="Attributes\UserConfigurableSelectableListAttribute.cs" />
+    <Compile Include="Attributes\Metadata\MetadataAttribute.cs" />
+    <Compile Include="Attributes\Metadata\MetadataDataConverterAttribute.cs" />
+    <Compile Include="Attributes\Metadata\MetadataDataStreamAttribute.cs" />
+    <Compile Include="Attributes\Metadata\MetadataPollerAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableBooleanAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableDoubleAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableFileAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableStringAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableIntegerAttribute.cs" />
+    <Compile Include="Attributes\UserConfigurable\UserConfigurableSelectableListAttribute.cs" />
     <Compile Include="Connections\Converters\DataConverter.cs" />
     <Compile Include="Connections\DataConnection.cs" />
+    <Compile Include="Connections\IDataConnectionComponent.cs" />
     <Compile Include="Connections\Pollers\PollingMechanism.cs" />
+    <Compile Include="Connections\Streams\DataStream.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="CoreSettings.cs" />
     <Compile Include="DataPacket.cs" />
     <Compile Include="Exceptions\InvalidChannelCountException.cs" />
+    <Compile Include="Exceptions\InvalidSchematicException.cs" />
     <Compile Include="IConnectableMetadata.cs" />
     <Compile Include="IRestorable.cs" />
     <Compile Include="StreamlineCore.cs" />

@@ -18,7 +18,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     The field that is being edited
         /// </summary>
-        public FieldInfo Field { get; protected set; }
+        public WrappedAttributeInfo Field { get; protected set; }
 
         /// <summary>
         ///     The object that this is editing the component of
@@ -41,7 +41,7 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
-        public DoubleEditorComponent(object owner, FieldInfo field, UserConfigurableDoubleAttribute attribute)
+        public DoubleEditorComponent(object owner, WrappedAttributeInfo field, UserConfigurableDoubleAttribute attribute)
         {
             _suppressUpdate = true;
             Owner = owner;

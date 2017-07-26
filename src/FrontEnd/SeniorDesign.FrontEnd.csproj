@@ -50,17 +50,60 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\AttributeEditors\FileEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AttributeEditors\FileEditorComponent.Designer.cs">
+      <DependentUpon>FileEditorComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\AttributeEditors\StringEditorComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Components\AttributeEditors\StringEditorComponent.Designer.cs">
       <DependentUpon>StringEditorComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\AttributeEditors\WrappedAttributeInfo.cs" />
+    <Compile Include="Components\AttributeListComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\AttributeListComponent.Designer.cs">
+      <DependentUpon>AttributeListComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Blocks\BlockViewerComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Components\Blocks\BlockViewerComponent.Designer.cs">
       <DependentUpon>BlockViewerComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Blocks\ConnectionViewerComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Blocks\ConnectionViewerComponent.Designer.cs">
+      <DependentUpon>ConnectionViewerComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlocks\ConverterEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlocks\ConverterEditorComponent.Designer.cs">
+      <DependentUpon>ConverterEditorComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlocks\PollerEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlocks\PollerEditorComponent.Designer.cs">
+      <DependentUpon>PollerEditorComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlocks\StreamEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlocks\StreamEditorComponent.Designer.cs">
+      <DependentUpon>StreamEditorComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlockViewerComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Blocks\IOBlockViewerComponent.Designer.cs">
+      <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\IAttributeEditorComponent.cs" />
     <Compile Include="Components\AttributeEditors\SelectableListEditorComponent.cs">
@@ -87,6 +130,18 @@
     <Compile Include="Components\AttributeEditors\IntegerEditorComponent.Designer.cs">
       <DependentUpon>IntegerEditorComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\Specialized\CompileButtonComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Specialized\CompileButtonComponent.Designer.cs">
+      <DependentUpon>CompileButtonComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Specialized\ErrorListComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Specialized\ErrorListComponent.Designer.cs">
+      <DependentUpon>ErrorListComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Windows\AdvancedBlockPanel.cs">
@@ -107,6 +162,12 @@
     <Compile Include="Windows\ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\IOBlockCreatorPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\IOBlockCreatorPanel.Designer.cs">
+      <DependentUpon>IOBlockCreatorPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\PluginPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +180,9 @@
     <Compile Include="Windows\TestPanel.Designer.cs">
       <DependentUpon>TestPanel.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Components\AttributeEditors\FileEditorComponent.resx">
+      <DependentUpon>FileEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\AttributeEditors\StringEditorComponent.resx">
       <DependentUpon>StringEditorComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -134,8 +198,32 @@
     <EmbeddedResource Include="Components\AttributeEditors\IntegerEditorComponent.resx">
       <DependentUpon>IntegerEditorComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\AttributeListComponent.resx">
+      <DependentUpon>AttributeListComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\Blocks\BlockViewerComponent.resx">
       <DependentUpon>BlockViewerComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Blocks\ConnectionViewerComponent.resx">
+      <DependentUpon>ConnectionViewerComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Blocks\IOBlocks\ConverterEditorComponent.resx">
+      <DependentUpon>ConverterEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Blocks\IOBlocks\PollerEditorComponent.resx">
+      <DependentUpon>PollerEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Blocks\IOBlocks\StreamEditorComponent.resx">
+      <DependentUpon>StreamEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Blocks\IOBlockViewerComponent.resx">
+      <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Specialized\CompileButtonComponent.resx">
+      <DependentUpon>CompileButtonComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Specialized\ErrorListComponent.resx">
+      <DependentUpon>ErrorListComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -154,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\IOBlockCreatorPanel.resx">
+      <DependentUpon>IOBlockCreatorPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\PluginPanel.resx">
       <DependentUpon>PluginPanel.cs</DependentUpon>
@@ -186,6 +277,7 @@
       <Name>SeniorDesign.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

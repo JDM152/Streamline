@@ -59,6 +59,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
             if (_selected == null)
             {
                 splitContainer1.Hide();
+                AttributeList.SetComponent(null);
             }
             else
             {
@@ -68,23 +69,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
                 BlockName.Text = _selected.Name;
                 BlockTypeName.Text = _selected.InternalName;
 
-                // Update the collection of attribute editors on the bottom page
-                AttributeEditorList.Controls.Clear();
-                foreach (var field in _selected.GetType().GetFields())
-                {
-                    foreach (var attribute in field.GetCustomAttributes())
-                    {
-
-                        var configAttrib = attribute as UserConfigurableAttribute;
-                        if (configAttrib == null)
-                            continue;
-
-                        // Create the editor for the attribute, and add it in
-                        var editorType = AttributeEditorHelper.GetEditorForAttribute(configAttrib);
-                        var editor = (UserControl) Activator.CreateInstance(editorType, _selected, field, configAttrib);
-                        AttributeEditorList.Controls.Add(editor);
-                    }
-                }
+                AttributeList.SetComponent(_selected);
             }
         }
 

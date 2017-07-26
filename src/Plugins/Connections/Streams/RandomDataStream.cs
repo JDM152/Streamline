@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections.Streams;
+using System;
 using System.IO;
 
 namespace SeniorDesign.Plugins.Connections
@@ -7,8 +9,14 @@ namespace SeniorDesign.Plugins.Connections
     ///     A dummy type of Data Connection where random data is fed
     ///     as a byte stream.
     /// </summary>
-    public class RandomDataStream : Stream
+    [MetadataDataStream(AllowAsInput = true, AllowAsOutput = false)]
+    public class RandomDataStream : DataStream
     {
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Random Stream"; } }
+
         /// <summary>
         ///     The random number generator used to supply data
         /// </summary>
@@ -27,9 +35,8 @@ namespace SeniorDesign.Plugins.Connections
 
         /// <summary>
         ///     Checks if this stream can be written to.
-        ///     Random will allow, only as a dummy.
         /// </summary>
-        public override bool CanWrite { get { return true; } }
+        public override bool CanWrite { get { return false; } }
 
         /// <summary>
         ///     Gets the length of the available stream.
@@ -98,14 +105,13 @@ namespace SeniorDesign.Plugins.Connections
 
         /// <summary>
         ///     Writes bytes out to the stream.
-        ///     Random supports this as a dummy operation, but it does nothing
         /// </summary>
         /// <param name="buffer">The bytes to write to the stream</param>
         /// <param name="offset">The offset into the buffer to start</param>
         /// <param name="count">The number of bytes to write</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            // Do nothing
+            throw new NotSupportedException();
         }
     }
 }

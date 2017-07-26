@@ -8,6 +8,7 @@ namespace SeniorDesign.Plugins.Connections.Pollers
     /// <summary>
     ///     A polling mechanism where data is polled periodically using a timer
     /// </summary>
+    [MetadataPoller(TickBased = false)]
     public class PeriodicPoller : PollingMechanism
     {
 
@@ -24,6 +25,11 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         public int PollingTime = 100;
 
         #endregion
+
+        /// <summary>
+        ///     A name for this particular object type
+        /// </summary>
+        public override string InternalName { get { return "Periodic Poller"; } }
 
         /// <summary>
         ///     Creates a new Periodic Poller
@@ -54,7 +60,10 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         {
             // Remove the timer
             if (PollingTimer != null)
+            {
+                PollingTimer.Dispose();
                 PollingTimer = null;
+            }
         }
 
         /// <summary>
@@ -63,7 +72,7 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         /// <param name="state">The last time of the timer</param>
         private void OnTimerCallback(object state)
         {
-            // Failsafe in case the timer was destroyed (should never trigger)
+            // Failsafe in case the timer was destroyed
             if (PollingTimer == null)
                 return;
 
