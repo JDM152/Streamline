@@ -53,7 +53,7 @@ namespace SeniorDesign.Plugins.Filters
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
-        public override int InputCount { get { return -1; } }
+        public override int InputCount { get { return 1; } }
 
         /// <summary>
         ///     The number of output connections this connectable provides.

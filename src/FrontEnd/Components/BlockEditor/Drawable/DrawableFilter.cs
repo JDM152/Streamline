@@ -30,32 +30,14 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.LoadIdentity();
 
             // Main Box
-            GL.Begin(PrimitiveType.LineStrip);
+            GL.LineWidth(Highlighted ? 2.0f : 1.0f);
+            GL.Begin(PrimitiveType.LineLoop);
             {
-                GL.Color4(0.0f, 0.0f, 0.0f, 1.0f);
+                GL.Color3(0.0f, 0.0f, 0.0f);
                 GL.Vertex3(Object.PositionX, Object.PositionY, 0.0f);
                 GL.Vertex3(Object.PositionX + BlockEditorComponent.BOXWIDTH, Object.PositionY, 0.0f);
                 GL.Vertex3(Object.PositionX + BlockEditorComponent.BOXWIDTH, Object.PositionY + BlockEditorComponent.BOXHEIGHT, 0.0f);
                 GL.Vertex3(Object.PositionX, Object.PositionY + BlockEditorComponent.BOXHEIGHT, 0.0f);
-                GL.Vertex3(Object.PositionX, Object.PositionY, 0.0f);
-            }
-            GL.End();
-
-            // Input Symbol
-            GL.Begin(PrimitiveType.LineStrip);
-            {
-                GL.Vertex3(Object.PositionX - BlockEditorComponent.LINELENGTH, Object.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-                GL.Vertex3(Object.PositionX, Object.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-                GL.Vertex3(Object.PositionX - BlockEditorComponent.LINELENGTH, Object.PositionY + BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-            }
-            GL.End();
-
-            // Output Symbol
-            GL.Begin(PrimitiveType.LineStrip);
-            {
-                GL.Vertex3(Object.PositionX - BlockEditorComponent.LINELENGTH + BlockEditorComponent.BOXWIDTH, Object.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-                GL.Vertex3(Object.PositionX + BlockEditorComponent.BOXWIDTH, Object.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-                GL.Vertex3(Object.PositionX - BlockEditorComponent.LINELENGTH + BlockEditorComponent.BOXWIDTH, Object.PositionY + BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
             }
             GL.End();
 
@@ -76,7 +58,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         /// <param name="x">The X position to check (Absolute)</param>
         /// <param name="y">The Y position to check (Absolute)</param>
         /// <returns>True if the point falls inside this object</returns>
-        public override bool IsPointInside(int x, int y)
+        public override bool IsPointInside(float x, float y)
         {
             bool inX = x >= Object.PositionX && x <= Object.PositionX + BlockEditorComponent.BOXWIDTH;
             bool inY = y >= Object.PositionY && y <= Object.PositionY + BlockEditorComponent.BOXHEIGHT;

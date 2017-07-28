@@ -65,7 +65,7 @@ namespace SeniorDesign.Core.Connections.Streams
         /// <summary>
         ///     How many output channels are available when reading directly
         /// </summary>
-        public virtual int DirectOutputCount { get { return 0; } }
+        public virtual int DirectOutputCount { get { return CanReadDirect ? 1 : 0; } }
 
         #region Stream Default Implementation
 

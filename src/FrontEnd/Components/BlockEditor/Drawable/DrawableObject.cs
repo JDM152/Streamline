@@ -13,6 +13,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         public bool Visible = true;
 
         /// <summary>
+        ///     If this object is currently highlighted
+        /// </summary>
+        public bool Highlighted = false;
+
+        /// <summary>
         ///     The Z position on-screen (For sorting)
         /// </summary>
         public int Z = 10;
@@ -52,6 +57,6 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         /// <param name="x">The X position to check (Absolute)</param>
         /// <param name="y">The Y position to check (Absolute)</param>
         /// <returns>True if the point falls inside this object</returns>
-        public abstract bool IsPointInside(int x, int y);
+        public abstract bool IsPointInside(float x, float y);
     }
 }

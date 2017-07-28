@@ -18,11 +18,6 @@ namespace SeniorDesign.FrontEnd.Windows
         private StreamlineCore _core;
 
         /// <summary>
-        ///     The component that was created in this panel
-        /// </summary>
-        public IConnectable CreatedComponent { get { return _current; } }
-
-        /// <summary>
         ///     The object currently being created
         /// </summary>
         private IConnectable _current;

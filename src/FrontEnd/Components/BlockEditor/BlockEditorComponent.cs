@@ -35,6 +35,15 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
 
         #endregion
 
+        #region Events
+
+        /// <summary>
+        ///     Event trigger that is called when a block is selected
+        /// </summary>
+        public event EventHandler<IConnectable> OnBlockSelected;
+
+        #endregion
+
         #region Public Variables
 
         /// <summary>
@@ -54,12 +63,12 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// <summary>
         ///     The point where the mouse was clicked down
         /// </summary>
-        private Point _downPoint = new Point(0, 0);
+        private Vector3 _downPoint = Vector3.Zero;
 
         /// <summary>
         ///     The point wherre the mouse was released
         /// </summary>
-        private Point _upPoint = new Point(0, 0);
+        private Vector3 _upPoint = Vector3.Zero;
 
         /// <summary>
         ///     The last object selected
@@ -92,6 +101,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         private IConnectable _movingBlock;
 
         /// <summary>
+        ///     The offset from the mouse position that the block should be
+        /// </summary>
+        private Vector3 _movingOffset = Vector3.Zero;
+
+        /// <summary>
         ///     The line used to show where a connection will be made
         /// </summary>
         private DrawableLine _movingLine;
@@ -99,7 +113,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// <summary>
         ///     The list of objects that can be rendered in this scene
         /// </summary>
-        private SortedList<int, DrawableObject> _renderables = new SortedList<int, DrawableObject>();
+        private SortedList<int, DrawableObject> _renderables = new SortedList<int, DrawableObject>(new IntegerComparator());
 
         /// <summary>
         ///     Mappings between IConnectables and the corresponding Drawable Objects.
@@ -123,6 +137,22 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
 
         #endregion
 
+        #region Custom Comparator
+
+        /// <summary>
+        ///     A comparator used for the sortable list that treats duplicates as equal
+        /// </summary>
+        public class IntegerComparator : IComparer<int>
+        {
+            public int Compare(int x, int y)
+            {
+                int result = x.CompareTo(y);
+                return result == 0 ? 1 : result;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         ///     Creates a new Block Editor Component.
         ///     The Core must be set before this can be fully used
@@ -138,9 +168,17 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// <param name="core">The Streamline Core to use</param>
         public void SetCore(StreamlineCore core)
         {
+            // Subscribe to everything needed in the core
             _core = core;
+            _core.OnBlockAdded += (e, o) => CreateBlock(o);
+            _core.OnBlockDeleted += (e, o) => DeleteBlock(o);
+            _core.OnBlocksConnected += (e, o) => ConnectBlocks(o.Item1, o.Item2);
+            _core.OnBlocksDisconnected += (e, o) => DisconnectBlocks(o.Item1, o.Item2);
+
+            // Create the line that is displayed when connecting component
             _movingLine = new DrawableLine(core, Vector3.Zero, Vector3.Zero);
             _movingLine.Visible = false;
+            _renderables.Add(_movingLine.Z, _movingLine);
         }
 
         #region GLControl
@@ -153,6 +191,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             // There's a glitch in OpenTK that the GLControl Load never
             // gets called, so this one works instead
             _glLoaded = true;
+            Render();
         }
 
         /// <summary>
@@ -182,7 +221,8 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             switch (e.KeyCode)
             {
                 case Keys.Delete: // Delete selected object
-                    HandleDelete();
+                    if (_currentSelect != null && _currentSelect.CanDelete)
+                        _currentSelect.Delete();
                     break;
             }
         }
@@ -192,17 +232,33 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// </summary>
         private void BlockControl_MouseDown(object sender, MouseEventArgs e)
         {
+            bool needRefresh = false;
+
             // Update the down position of the mouse, and the selected object
-            _downPoint = _mouse;
+            _downPoint = new Vector3(_mouse.X, _mouse.Y, 0);
             _lastSelect = _currentSelect;
             _currentSelect = GetObject(_downPoint);
+
+            // Highlight the selected object
+            if (_lastSelect != null)
+            {
+                _lastSelect.Highlighted = false;
+                needRefresh = true;
+            }
+            if (_currentSelect != null)
+            {
+                _currentSelect.Highlighted = true;
+                needRefresh = true;
+            }
 
             // Determine which mode to enter by the type of object selected
             if (_currentSelect is DrawablePort)
             {
                 // User is attempting to connect points
-                _movingBlock = ((DrawablePort) _currentSelect).Owner;
-                _movingLine.Start = new Vector3(_mouse.X, _mouse.Y, 0);
+                var dp = ((DrawablePort) _currentSelect);
+                _movingBlock = dp.Owner;
+                _movingLine.Start = dp.Center;
+                _movingLine.End = dp.Center;
                 _movingLine.Visible = true;
                 _dragMode = DragMode.ConnectPorts;
             }
@@ -216,7 +272,16 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 // User is attempting to drag a block
                 _movingBlock = ((IDrawableIConnectable) _currentSelect).GetObject();
                 _dragMode = DragMode.MoveBlock;
+                _movingOffset = new Vector3(_mouse.X - _movingBlock.PositionX, _mouse.Y - _movingBlock.PositionY, 0);
             }
+
+            // Raise a click on an IConnectable if applicable
+            if (_currentSelect is IDrawableIConnectable)
+                OnBlockSelected?.Invoke(this, ((IDrawableIConnectable) _currentSelect).GetObject());
+
+            // Only refresh as needed
+            if (needRefresh)
+                Render();
         }
 
         /// <summary>
@@ -225,7 +290,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         private void BlockControl_MouseUp(object sender, MouseEventArgs e)
         {
             // Update the up position of the mouse, and handle clicking on anything
-            _upPoint = _mouse;
+            _upPoint = new Vector3(_mouse.X, _mouse.Y, 0);
 
             // Branch off by current drag mode if applicable
             switch (_dragMode)
@@ -237,9 +302,20 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 case DragMode.ConnectPorts: // Update the connected blocks
                     // Connect blocks if applicable
                     _movingLine.Visible = false;
-                    var toConnect = GetObject(_mouse);
-                    if (toConnect != null && toConnect is DrawablePort)
-                        _core.ConnectConnectables(_movingBlock, ((DrawablePort) toConnect).Owner);
+                    var toConnect = GetObject(_upPoint) as DrawablePort;
+                    var csp = _currentSelect as DrawablePort;
+                    if (toConnect != null && csp != null
+                        && toConnect.Owner != csp.Owner
+                        && toConnect.IsOutput != csp.IsOutput)
+                    {
+                        // Figure out which is input, and which is output
+                        if (toConnect.IsOutput)
+                            _core.ConnectConnectables(toConnect.Owner, csp.Owner);
+                        else
+                            _core.ConnectConnectables(csp.Owner, toConnect.Owner);
+                    }
+                        
+                    Render();
                     break;
             }
             _dragMode = DragMode.None;
@@ -258,21 +334,49 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             switch (_dragMode)
             {
                 case DragMode.MoveBlock: // Update the block position
-                    _movingBlock.PositionX = _mouse.X;
-                    _movingBlock.PositionY = _mouse.Y;
+                    _movingBlock.PositionX = (int) (_mouse.X - _movingOffset.X);
+                    _movingBlock.PositionY = (int) (_mouse.Y - _movingOffset.Y);
                     Render();
                     break;
 
                 case DragMode.ConnectPorts: // Update the connected blocks
                     // Snap to the port if nearby
-                    var toConnect = GetObject(_mouse);
-                    if (toConnect != null && toConnect is DrawablePort)
-                        _movingLine.End = ((DrawablePort) toConnect).Center;
+                    var toConnect = GetObject(_mouse) as DrawablePort;
+                    var csp = _currentSelect as DrawablePort;
+                    if (toConnect != null && csp != null
+                        && toConnect.Owner != csp.Owner
+                        && toConnect.IsOutput != csp.IsOutput)
+                    {
+                        // Ensure that the two can connect before snapping
+                        if ((toConnect.IsOutput && _core.CanConnectConnectables(toConnect.Owner, csp.Owner)) ||
+                            (!toConnect.IsOutput && _core.CanConnectConnectables(csp.Owner, toConnect.Owner)))
+                        {
+                            _movingLine.End = toConnect.Center;
+                            _movingLine.Highlighted = true;
+                        }
+                        else
+                        {
+                            _movingLine.End = new Vector3(_mouse.X, _mouse.Y, 0);
+                            _movingLine.Highlighted = false;
+                        }
+                    }
                     else
+                    {
                         _movingLine.End = new Vector3(_mouse.X, _mouse.Y, 0);
+                        _movingLine.Highlighted = false;
+                    }
+                        
                     Render();
                     break;
             }
+        }
+
+        /// <summary>
+        ///     Method triggered when the control changes size
+        /// </summary>
+        private void BlockControl_Resize(object sender, EventArgs e)
+        {
+            Render();
         }
 
         #endregion
@@ -295,11 +399,12 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// <param name="temp"></param>
         public void CreateBlock(IConnectable temp)
         {
-            DrawableObject newDrawable;
+            IDrawableIConnectable newDrawable;
 
             // Create a new Block depending on the type
             if (temp is DataFilter)
             {
+                // Create the main Block
                 var dfBlock = new DrawableFilter(_core, temp as DataFilter);
                 _renderables.Add(dfBlock.Z, dfBlock);
                 _objectMapping.Add(temp, dfBlock);
@@ -317,6 +422,20 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 throw new NotSupportedException($"The type {temp.GetType()} does not have an associated block symbol");
             }
 
+            // Create an input and an output port as needed
+            if (temp.OutputCount != 0)
+            {
+                var oPort = new DrawablePort(_core, temp, true);
+                _renderables.Add(oPort.Z, oPort);
+                newDrawable.MappedObjects.Add(oPort);
+            }
+            if (temp.InputCount != 0)
+            {
+                var iPort = new DrawablePort(_core, temp, false);
+                _renderables.Add(iPort.Z, iPort);
+                newDrawable.MappedObjects.Add(iPort);
+            }
+
             // Trigger a re-draw
             Render();
 
@@ -329,10 +448,32 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         public void DeleteBlock(IConnectable temp)
         {
             // Remove from the renderables
-            _renderables.RemoveAt(_renderables.IndexOfValue(_objectMapping[temp]));
+            var obj = _objectMapping[temp];
+            _renderables.RemoveAt(_renderables.IndexOfValue(obj));
 
-            // Note that we do not remove the connections, as the core will call
-            // remove on each of those seperately before this is called.
+            // Remove any objects that cannot be deleted normally
+            // attached to this object.
+            var cobj = obj as IDrawableIConnectable;
+            if (cobj != null)
+            {
+                foreach (var mo in cobj.MappedObjects)
+                    if (!mo.CanDelete)
+                        _renderables.RemoveAt(_renderables.IndexOfValue(mo));
+            }
+
+            // All other deletable objects are cleared by the Core before removing the parent
+
+            // Change highlight as needed
+            if (_lastSelect == obj)
+            {
+                _lastSelect = null;
+            }
+            if (_currentSelect == obj)
+            {
+                _currentSelect = null;
+                _lastSelect = null;
+                OnBlockSelected?.Invoke(this, null);
+            }
 
             // Trigger a re-draw
             Render();
@@ -391,28 +532,21 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
 
         #endregion
 
-        #region Internal Triggers
-
+        
         /// <summary>
-        ///     Method triggered when the user attempts to delete the currently selected component
+        ///     Gets the object that exists underneath a specific point
         /// </summary>
-        private void HandleDelete()
+        /// <param name="point">The point that is being checked</param>
+        /// <returns>The object at that point, or null if none</returns>
+        private DrawableObject GetObject(Vector3 point)
         {
-            if (_currentSelect == null) return;
-
-            // Remove the mapping if an IConnectable
-            if (_currentSelect is IDrawableIConnectable)
-                _objectMapping.Remove(((IDrawableIConnectable)_currentSelect).GetObject());
-
-            // Delete, and remove from the renderables
-            _currentSelect.Delete();
-            _renderables.RemoveAt(_renderables.IndexOfValue(_currentSelect));
-            _currentSelect = null;
+            foreach (var item in _renderables)
+                if (item.Value.IsPointInside(point.X, point.Y))
+                    return item.Value;
+            return null;
 
         }
 
-        #endregion
-        
         /// <summary>
         ///     Gets the object that exists underneath a specific point
         /// </summary>
@@ -461,6 +595,5 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
 
 
         #endregion
-
     }
 }

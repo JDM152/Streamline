@@ -43,9 +43,10 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
+            GL.LineWidth(Highlighted ? 2.0f : 1.0f);
             GL.Begin(PrimitiveType.Lines);
             {
-                GL.Color4(0.0f, 0.0f, 0.0f, 1.0f);
+                GL.Color3(0.0f, 0.0f, 0.0f);
                 GL.Vertex3(Start);
                 GL.Vertex3(End);
             }
@@ -67,7 +68,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         /// <param name="x">The X position to check (Absolute)</param>
         /// <param name="y">The Y position to check (Absolute)</param>
         /// <returns>True if the point falls inside this object</returns>
-        public override bool IsPointInside(int x, int y)
+        public override bool IsPointInside(float x, float y)
         {
             // Cannot select lines
             return false;

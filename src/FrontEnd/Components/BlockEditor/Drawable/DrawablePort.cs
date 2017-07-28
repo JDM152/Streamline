@@ -27,6 +27,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         {
             Z = 0;
             IsOutput = output;
+            Owner = c;
         }
 
         /// <summary>
@@ -39,14 +40,15 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            
-            GL.Begin(PrimitiveType.LineStrip);
+            GL.LineWidth(Highlighted ? 2.0f : 1.0f);
+            GL.Begin(PrimitiveType.LineLoop);
             {
+                GL.Color3(0.0f, 0.0f, 0.0f);
                 if (IsOutput)
                 {
-                    GL.Vertex3(Owner.PositionX - BlockEditorComponent.LINELENGTH + BlockEditorComponent.BOXWIDTH, Owner.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-                    GL.Vertex3(Owner.PositionX + BlockEditorComponent.BOXWIDTH, Owner.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
-                    GL.Vertex3(Owner.PositionX - BlockEditorComponent.LINELENGTH + BlockEditorComponent.BOXWIDTH, Owner.PositionY + BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
+                    GL.Vertex3(Owner.PositionX + BlockEditorComponent.BOXWIDTH, Owner.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
+                    GL.Vertex3(Owner.PositionX + BlockEditorComponent.LINELENGTH + BlockEditorComponent.BOXWIDTH, Owner.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
+                    GL.Vertex3(Owner.PositionX + BlockEditorComponent.BOXWIDTH, Owner.PositionY + BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
                 }
                 else
                 {
@@ -79,7 +81,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         /// <param name="x">The X position to check (Absolute)</param>
         /// <param name="y">The Y position to check (Absolute)</param>
         /// <returns>True if the point falls inside this object</returns>
-        public override bool IsPointInside(int x, int y)
+        public override bool IsPointInside(float x, float y)
         {
             /*// This code was used previously, but I have not investigated it
             float allowedDif = 10.0f;
@@ -101,11 +103,13 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             return DrawableObjectType.Null;
             */
 
-            var xoff = Owner.PositionX + (IsOutput ? 0 : BlockEditorComponent.BOXWIDTH) - BlockEditorComponent.LINELENGTH;
-            var ystart = Owner.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT;
-            var yend = Owner.PositionY + BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT;
+            var lenience = 0.5f;
+            var xoff = Owner.PositionX - lenience - BlockEditorComponent.LINELENGTH;
+            if (IsOutput) xoff += BlockEditorComponent.BOXWIDTH;
+            var ystart = Owner.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT - lenience;
+            var yend = Owner.PositionY + BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT + lenience;
 
-            bool inX = x >= xoff && x <= xoff + BlockEditorComponent.LINELENGTH;
+            bool inX = x >= xoff && x <= xoff + (BlockEditorComponent.LINELENGTH + lenience) * 2;
             bool inY = y >= ystart && y <= yend;
             return inX && inY;
         }

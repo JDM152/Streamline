@@ -10,6 +10,8 @@
   <stream name="Constant Data" class="SeniorDesign.Plugins.Connections.ConstantDataStream"/>
   <stream name="Console Data" class="SeniorDesign.Plugins.Connections.ConsoleDataStream"/>
   <stream name="Serial COM Port" class="SeniorDesign.Plugins.Connections.SerialCOMStream"/>
+  <stream name="CSV File Writer" class="SeniorDesign.Plugins.Connections.CSVFileWriterStream"/>
+  <stream name="CSV File Reader" class="SeniorDesign.Plugins.Connections.CSVFileReaderStream"/>
 
   <!-- Pollers decide when data is requested from streams -->
   <poller name="Periodic" class="SeniorDesign.Plugins.Connections.Pollers.PeriodicPoller"/>

@@ -29,6 +29,11 @@ namespace SeniorDesign.FrontEnd.Windows
             // Don't show debug if not a dev
             if (!CoreSettings.DebugMode)
                 debugToolStripMenuItem.Dispose();
+
+            // Set up the block editor
+            BlockSchematic.SetCore(Core);
+            BlockSchematic.OnBlockSelected += (e, o) => BlockViewer.SetViewingComponent(o);
+            
         }
 
         /// <summary>
@@ -54,6 +59,14 @@ namespace SeniorDesign.FrontEnd.Windows
         private void advancedBlockEditorToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             new AdvancedBlockPanel(Core).ShowDialog();
+        }
+
+        /// <summary>
+        ///     Method triggered when the user clicks Help->About Streamline
+        /// </summary>
+        private void aboutToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            new AboutPanel().ShowDialog();
         }
 
         #region File Menu
@@ -126,8 +139,6 @@ namespace SeniorDesign.FrontEnd.Windows
             // Show the Add Block Panel
             var panel = new BlockCreatorPanel(Core);
             panel.ShowDialog();
-
-            BlockSchematic.CreateBlock(panel.CreatedComponent);
         }
 
         /// <summary>
@@ -138,8 +149,6 @@ namespace SeniorDesign.FrontEnd.Windows
             // Show the Add IO Panel
             var panel = new IOBlockCreatorPanel(Core);
             panel.ShowDialog();
-
-            BlockSchematic.CreateBlock(panel.CreatedComponent);
         }
     }
 }

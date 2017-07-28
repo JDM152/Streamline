@@ -33,7 +33,8 @@
             this.UseTip = new System.Windows.Forms.ToolTip(this.components);
             this.InputText = new System.Windows.Forms.TextBox();
             this.FileButton = new System.Windows.Forms.Button();
-            this.FileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.FileDialogOpen = new System.Windows.Forms.OpenFileDialog();
+            this.FileDialogSave = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // AttributeName
@@ -70,9 +71,13 @@
             this.FileButton.UseVisualStyleBackColor = true;
             this.FileButton.Click += new System.EventHandler(this.FileButton_Click);
             // 
-            // FileDialog
+            // FileDialogOpen
             // 
-            this.FileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.FileDialog_FileOk);
+            this.FileDialogOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.FileDialogOpen_FileOk);
+            // 
+            // FileDialogSave
+            // 
+            this.FileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.FileDialogSave_FileOk);
             // 
             // FileEditorComponent
             // 
@@ -95,6 +100,7 @@
         private System.Windows.Forms.ToolTip UseTip;
         private System.Windows.Forms.TextBox InputText;
         private System.Windows.Forms.Button FileButton;
-        private System.Windows.Forms.OpenFileDialog FileDialog;
+        private System.Windows.Forms.OpenFileDialog FileDialogOpen;
+        private System.Windows.Forms.SaveFileDialog FileDialogSave;
     }
 }

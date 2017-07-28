@@ -49,6 +49,7 @@
             this.BlockControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BlockControl_MouseDown);
             this.BlockControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.BlockControl_MouseMove);
             this.BlockControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BlockControl_MouseUp);
+            this.BlockControl.Resize += new System.EventHandler(this.BlockControl_Resize);
             // 
             // BlockEditorComponent
             // 

@@ -70,7 +70,7 @@ namespace SeniorDesign.Core.Connections
         ///     This is decided by the converter
         /// </summary>
         public int OutputCount { get {
-                if (!IsOutput) return 0;
+                if (IsOutput) return 0;
 
                 if (Converter == null)
                     return MediaConnection.DirectOutputCount;

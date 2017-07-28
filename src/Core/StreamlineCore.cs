@@ -40,6 +40,30 @@ namespace SeniorDesign.Core
         /// </summary>
         private readonly IDictionary<IConnectable, IConnectableMetadata> _connectableMetadata = new Dictionary<IConnectable, IConnectableMetadata>();
 
+        #region Events
+
+        /// <summary>
+        ///     Event triggered whenever a new block is added
+        /// </summary>
+        public event EventHandler<IConnectable> OnBlockAdded;
+
+        /// <summary>
+        ///     Event triggered whenever a block is deleted
+        /// </summary>
+        public event EventHandler<IConnectable> OnBlockDeleted;
+
+        /// <summary>
+        ///     Method triggered whenever two blocks are connected
+        /// </summary>
+        public event EventHandler<Tuple<IConnectable, IConnectable>> OnBlocksConnected;
+
+        /// <summary>
+        ///     Method triggered whenever two blocks are disconnected
+        /// </summary>
+        public event EventHandler<Tuple<IConnectable, IConnectable>> OnBlocksDisconnected;
+
+        #endregion
+
         #region Plugin Management
 
         /// <summary>
@@ -209,6 +233,8 @@ namespace SeniorDesign.Core
                 obj.Name = obj.InternalName + " " + obj.Id;
 
             _connectableMetadata.Add(obj, new IConnectableMetadata());
+
+            OnBlockAdded?.Invoke(this, obj);
         }
 
         /// <summary>
@@ -222,17 +248,19 @@ namespace SeniorDesign.Core
 
             var mdata = _connectableMetadata[obj];
 
+            // Remove the node from all connections
+            foreach (var node in Nodes)
+            {
+                DisconnectConnectables(obj, node);
+                DisconnectConnectables(node, obj);
+            }
+
             // Unregister the node and metadata
             Nodes.Remove(obj);
             obj.Id = -1;
             _connectableMetadata.Remove(obj);
 
-            // Remove the node from all connections
-            foreach (var node in Nodes)
-            {
-                node.NextConnections.Remove(obj);
-                _connectableMetadata[node].IncomingConnections.Remove(obj);
-            }
+            OnBlockDeleted?.Invoke(this, obj);
         }
 
         /// <summary>
@@ -251,6 +279,7 @@ namespace SeniorDesign.Core
             // Make the connection
             original.NextConnections.Add(toAdd);
             _connectableMetadata[toAdd].IncomingConnections.Add(original);
+            OnBlocksConnected?.Invoke(this, new Tuple<IConnectable, IConnectable>(original, toAdd));
             return true;
         }
 
@@ -299,6 +328,7 @@ namespace SeniorDesign.Core
             // Remove the connection
             original.NextConnections.Remove(toRemove);
             _connectableMetadata[toRemove].IncomingConnections.Remove(original);
+            OnBlocksDisconnected?.Invoke(this, new Tuple<IConnectable, IConnectable>(original, toRemove));
             return true;
         }
 

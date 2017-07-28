@@ -40,7 +40,7 @@ namespace SeniorDesign.Core.Connections.Converter
         /// <summary>
         ///     The number of output streams this converts from a single byte stream
         /// </summary>
-        public virtual int DecodeDataCount { get; }
+        public virtual int DecodeDataCount { get; } = -1;
 
         #region IDataConnectionComponent
 

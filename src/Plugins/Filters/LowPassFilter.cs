@@ -41,10 +41,10 @@ namespace SeniorDesign.Plugins.Filters
         )]
         public double CutoffFrequency
         {
-            get { return _cutoffFrequency; }
+            get { return _cutoffFrequency / (2 * Math.PI); }
             set
             {
-                _cutoffFrequency = value;
+                _cutoffFrequency = value * (2 * Math.PI);
                 RecalcValues();
             }
         }
