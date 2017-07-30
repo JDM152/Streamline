@@ -8,7 +8,7 @@ namespace SeniorDesign.Core
     internal class IConnectableMetadata
     {
         /// <summary>
-        ///     A collection of extra data points that were not used in the previous interaction
+        ///     A collection of extra data points that were not used in the previous interaction (input)
         /// </summary>
         public readonly DataPacket LeftoverData = new DataPacket();
 
@@ -16,6 +16,15 @@ namespace SeniorDesign.Core
         ///     The connections that provide incoming data
         /// </summary>
         public readonly IList<IConnectable> IncomingConnections = new List<IConnectable>();
+
+        /// <summary>
+        ///     Creates a new set of IConnectableMetadata
+        /// </summary>
+        public IConnectableMetadata()
+        {
+            // Always have at least one channel
+            LeftoverData.AddChannel();
+        }
 
     }
 }

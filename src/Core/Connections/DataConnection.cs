@@ -87,6 +87,11 @@ namespace SeniorDesign.Core.Connections
                     return Converter.DecodeDataCount;
             } }
 
+        /// <summary>
+        ///     The number of samples per field required to use this
+        /// </summary>
+        public virtual int InputLength { get { return 1; } }
+
         #endregion
 
         /// <summary>
@@ -169,6 +174,11 @@ namespace SeniorDesign.Core.Connections
         private byte[] _leftoverInputData;
 
         /// <summary>
+        ///     The data that was not output yet
+        /// </summary>
+        private DataPacket _leftoverDecodedData = new DataPacket();
+
+        /// <summary>
         ///     Creates a new DataConnection
         /// </summary>
         /// <param name="core">The core to use</param>
@@ -193,7 +203,8 @@ namespace SeniorDesign.Core.Connections
         /// </summary>
         public void Enable()
         {
-            Core.EnableConnectable(this);
+            if (MediaConnection != null && (IsOutput || NextConnections.Count > 0))
+                Core.EnableConnectable(this);
         }
 
         /// <summary>
@@ -218,16 +229,20 @@ namespace SeniorDesign.Core.Connections
             }
             else
             {
-                // Grab all available bytes, and pass it to the decoder
-                var data = MediaConnection.ReadToEnd(pollCount);
-                if (_leftoverInputData != null)
-                    _leftoverInputData = _leftoverInputData.Concat(data);
-                else
-                    _leftoverInputData = data;
-                var decodedData = Converter.DecodeData(ref _leftoverInputData);
+                // Only grab new points if we went through the decoded data
+                if (!_leftoverDecodedData.MinCountOnAllChannels(pollCount))
+                {
+                    // Grab all available bytes, and pass it to the decoder
+                    var data = MediaConnection.ReadToEnd(Core.Settings.InputBuffer);
+                    if (_leftoverInputData != null)
+                        _leftoverInputData = _leftoverInputData.Concat(data);
+                    else
+                        _leftoverInputData = data;
+                    _leftoverDecodedData.Add(Converter.DecodeData(ref _leftoverInputData));
+                }
 
                 // Pass the data on to the next step
-                core.PassDataToNextConnectable(this, new DataPacket(decodedData));
+                core.PassDataToNextConnectable(this, _leftoverDecodedData.PopSubPacket(pollCount));
             }
         }
 

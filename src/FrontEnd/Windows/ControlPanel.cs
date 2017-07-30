@@ -37,7 +37,7 @@ namespace SeniorDesign.FrontEnd.Windows
             InitializeComponent();
 
             // Don't show debug if not a dev
-            if (!CoreSettings.DebugMode)
+            if (!Core.Settings.DebugMode)
                 debugToolStripMenuItem.Dispose();
 
             // Set up the block editor

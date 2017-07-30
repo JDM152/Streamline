@@ -68,6 +68,11 @@ namespace SeniorDesign.Core
         int OutputCount { get; }
 
         /// <summary>
+        ///     The number of samples per field required to use this
+        /// </summary>
+        int InputLength { get; }
+
+        /// <summary>
         ///     The next connections in the connectable graph
         /// </summary>
         IList<IConnectable> NextConnections { get; }

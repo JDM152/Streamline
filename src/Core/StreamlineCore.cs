@@ -72,6 +72,16 @@ namespace SeniorDesign.Core
         /// </summary>
         private Timer _tickTimer;
 
+        /// <summary>
+        ///     The settings applicable to this instance of the program
+        /// </summary>
+        public readonly CoreSettings Settings = new CoreSettings();
+
+        /// <summary>
+        ///     The lock used to prevent concurrent access to the ticker queue
+        /// </summary>
+        private object _tickLock = new object();
+
         #region Events
 
         /// <summary>
@@ -276,74 +286,82 @@ namespace SeniorDesign.Core
         /// </summary>
         private void TickCycle()
         {
-            // Stop polling if nothing left anywhere
-            if (_executionQueue.Count <= 0 && _tickers.Count <= 0)
-                return;
-
-            // Perform the polling as needed
-            if (_executionQueue.Count <= 0)
-                _tickersPosition = 0;
-
-            if (_tickerMode)
+            lock (_tickLock)
             {
-                // Continue polling where left off last poll
-                while (_tickersPosition < _tickers.Count)
+
+                // Stop polling if nothing left anywhere
+                if (_executionQueue.Count <= 0 && _tickers.Count <= 0)
+                    return;
+
+                // Perform the polling as needed
+                if (_executionQueue.Count <= 0)
+                    _tickersPosition = 0;
+
+                if (_tickerMode)
                 {
-                    // Attempt to run the next available ticker
-                    if (_tickers[_tickersPosition].Connection.Enabled)
+                    // Continue polling where left off last poll
+                    while (_tickersPosition < _tickers.Count)
                     {
+                        // Attempt to run the next available ticker
+                        if (_tickers[_tickersPosition].Connection.Enabled)
+                        {
+                            try
+                            {
+                                OnBlockActivated?.Invoke(this, _tickers[_tickersPosition].Connection);
+                                _tickers[_tickersPosition++].Poll();
+                                break;
+                            }
+                            catch (Exception ex)
+                            {
+                                DisableConnectable(_tickers[_tickersPosition++].Connection);
+                            }
+                        }
+                        else
+                        {
+                            _tickersPosition++;
+                        }
+                    }
+
+                    // If no poller found, must be at end of list. Make way for the executables
+                    if (_tickersPosition >= _tickers.Count)
+                    {
+                        _tickersPosition = -1;
+                        _tickerMode = false;
+                    }
+
+                }
+                else
+                {
+                    // Move on and execute 
+                    while (_executionQueue.Count > 0)
+                    {
+                        var node = _executionQueue.Dequeue();
+                        if (!node.Enabled || !_connectableMetadata[node].LeftoverData.MinCountOnAllChannels(node.InputLength)) continue;
+
+                        // Accept the incoming data
                         try
                         {
-                            OnBlockActivated?.Invoke(this, _tickers[_tickersPosition].Connection);
-                            _tickers[_tickersPosition++].Poll();
-                            break;
+                            OnBlockActivated?.Invoke(this, node);
+                            node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
                         }
                         catch (Exception ex)
                         {
-                            DisableConnectable(_tickers[_tickersPosition++].Connection);
+                            DisableConnectable(node);
                         }
+
+                        // Only break out if schedule a tick later
+                        if (TickTime > 0)
+                            break;
                     }
+
+                    // Start with the inputs again next time
+                    if (_executionQueue.Count <= 0)
+                        _tickerMode = true;
                 }
 
-                // If no poller found, must be at end of list. Make way for the executables
-                if (_tickersPosition >= _tickers.Count)
-                {
-                    _tickersPosition = -1;
-                    _tickerMode = false;
-                }
-
+                // Schedule the next tick
+                _tickTimer.Change(TickTime, Timeout.Infinite);
             }
-            else
-            {
-                // Move on and execute 
-                while (_executionQueue.Count > 0)
-                {
-                    var node = _executionQueue.Dequeue();
-                    if (!node.Enabled) continue;
-
-                    // Accept the incoming data
-                    try
-                    {
-                        OnBlockActivated?.Invoke(this, node);
-                        node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
-                    }
-                    catch (Exception ex)
-                    {
-                        DisableConnectable(node);
-                    }
-
-                    // Only break out if schedule a tick later
-                    if (TickTime > 0)
-                        break;
-                }
-
-                // Start with the inputs again next time
-                if (_executionQueue.Count <= 0)
-                    _tickerMode = true; 
-            }
-
-            // Schedule the next tick
-            _tickTimer.Change(TickTime, Timeout.Infinite);
         }
 
         /// <summary>
@@ -352,30 +370,33 @@ namespace SeniorDesign.Core
         /// <param name="obj">The connectable to add</param>
         public void AddConnectable(IConnectable obj)
         {
-            // Register the node and add some metadata
-            if (Nodes.Contains(obj))
-                return;
-
-            Nodes.Add(obj);
-            obj.Id = _nodeIndex++;
-
-            // Get a name to call the object if not specified
-            if (string.IsNullOrEmpty(obj.Name))
-                obj.Name = obj.InternalName + " " + obj.Id;
-
-            _connectableMetadata.Add(obj, new IConnectableMetadata());
-
-            // Check to see if the connection has a ticker
-            var dc = obj as DataConnection;
-            if (dc != null && dc.Poller != null && dc.Poller.IsTickPoller)
+            lock (_tickLock)
             {
-                // Add the ticker and start the timer as needed
-                _tickers.Add(dc.Poller);
-                if (_tickers.Count == 1)
-                    _tickTimer.Change(TickTime, Timeout.Infinite);
-            }
+                // Register the node and add some metadata
+                if (Nodes.Contains(obj))
+                    return;
 
-            OnBlockAdded?.Invoke(this, obj);
+                Nodes.Add(obj);
+                obj.Id = _nodeIndex++;
+
+                // Get a name to call the object if not specified
+                if (string.IsNullOrEmpty(obj.Name))
+                    obj.Name = obj.InternalName + " " + obj.Id;
+
+                _connectableMetadata.Add(obj, new IConnectableMetadata());
+
+                // Check to see if the connection has a ticker
+                var dc = obj as DataConnection;
+                if (dc != null && dc.Poller != null && dc.Poller.IsTickPoller)
+                {
+                    // Add the ticker and start the timer as needed
+                    _tickers.Add(dc.Poller);
+                    if (_tickers.Count == 1)
+                        _tickTimer.Change(TickTime, Timeout.Infinite);
+                }
+
+                OnBlockAdded?.Invoke(this, obj);
+            }
         }
 
         /// <summary>
@@ -384,33 +405,37 @@ namespace SeniorDesign.Core
         /// <param name="obj">The connectable to remove</param>
         public void DeleteConnectable(IConnectable obj)
         {
-            if (!Nodes.Contains(obj))
-                return;
-
-            var mdata = _connectableMetadata[obj];
-
-            // Remove the node from all connections
-            foreach (var node in Nodes)
+            obj.Disable();
+            lock (_tickLock)
             {
-                DisconnectConnectables(obj, node);
-                DisconnectConnectables(node, obj);
+                if (!Nodes.Contains(obj))
+                    return;
+
+                var mdata = _connectableMetadata[obj];
+
+                // Remove the node from all connections
+                foreach (var node in Nodes)
+                {
+                    DisconnectConnectables(obj, node);
+                    DisconnectConnectables(node, obj);
+                }
+
+                // Unregister the node and metadata
+                Nodes.Remove(obj);
+                obj.Id = -1;
+                _connectableMetadata.Remove(obj);
+
+                // Check to see if the connection has a ticker
+                var dc = obj as DataConnection;
+                if (dc != null && dc.Poller != null && dc.Poller.IsTickPoller)
+                {
+                    _tickers.Remove(dc.Poller);
+                    if (_tickers.Count <= 0)
+                        _tickTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                }
+
+                OnBlockDeleted?.Invoke(this, obj);
             }
-
-            // Unregister the node and metadata
-            Nodes.Remove(obj);
-            obj.Id = -1;
-            _connectableMetadata.Remove(obj);
-
-            // Check to see if the connection has a ticker
-            var dc = obj as DataConnection;
-            if (dc != null && dc.Poller != null && dc.Poller.IsTickPoller)
-            {
-                _tickers.Remove(dc.Poller);
-                if (_tickers.Count <= 0)
-                    _tickTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            }
-
-            OnBlockDeleted?.Invoke(this, obj);
         }
 
         /// <summary>
@@ -422,14 +447,17 @@ namespace SeniorDesign.Core
         /// <returns>True if the connection was able to be made</returns>
         public bool ConnectConnectables(IConnectable original, IConnectable toAdd)
         {
-            // Ensure the connection is legal
-            if (!CanConnectConnectables(original, toAdd))
-                return false;
+            lock (_tickLock)
+            {
+                // Ensure the connection is legal
+                if (!CanConnectConnectables(original, toAdd))
+                    return false;
 
-            // Make the connection
-            original.NextConnections.Add(toAdd);
-            _connectableMetadata[toAdd].IncomingConnections.Add(original);
-            OnBlocksConnected?.Invoke(this, new Tuple<IConnectable, IConnectable>(original, toAdd));
+                // Make the connection
+                original.NextConnections.Add(toAdd);
+                _connectableMetadata[toAdd].IncomingConnections.Add(original);
+                OnBlocksConnected?.Invoke(this, new Tuple<IConnectable, IConnectable>(original, toAdd));
+            }
             return true;
         }
 
@@ -470,15 +498,17 @@ namespace SeniorDesign.Core
         /// <returns>True if the component was able to be removed</returns>
         public bool DisconnectConnectables(IConnectable original, IConnectable toRemove)
         {
+            lock (_tickLock)
+            {
+                // Ensure that the two are actually connected
+                if (!original.NextConnections.Contains(toRemove))
+                    return false;
 
-            // Ensure that the two are actually connected
-            if (!original.NextConnections.Contains(toRemove))
-                return false;
-
-            // Remove the connection
-            original.NextConnections.Remove(toRemove);
-            _connectableMetadata[toRemove].IncomingConnections.Remove(original);
-            OnBlocksDisconnected?.Invoke(this, new Tuple<IConnectable, IConnectable>(original, toRemove));
+                // Remove the connection
+                original.NextConnections.Remove(toRemove);
+                _connectableMetadata[toRemove].IncomingConnections.Remove(original);
+                OnBlocksDisconnected?.Invoke(this, new Tuple<IConnectable, IConnectable>(original, toRemove));
+            }
             return true;
         }
 
@@ -515,8 +545,11 @@ namespace SeniorDesign.Core
         /// <param name="toEnable">The connectable to enable</param>
         public void EnableConnectable(IConnectable toEnable)
         {
-            toEnable.Enabled = true;
-            OnBlockEnabled?.Invoke(this, toEnable);
+            lock (_tickLock)
+            {
+                toEnable.Enabled = true;
+                OnBlockEnabled?.Invoke(this, toEnable);
+            }
         }
 
         /// <summary>
@@ -525,8 +558,11 @@ namespace SeniorDesign.Core
         /// <param name="toDisable">The connectable to enable</param>
         public void DisableConnectable(IConnectable toDisable)
         {
-            toDisable.Enabled = false;
-            OnBlockDisabled?.Invoke(this, toDisable);
+            lock (_tickLock)
+            {
+                toDisable.Enabled = false;
+                OnBlockDisabled?.Invoke(this, toDisable);
+            }
         }
 
         /// <summary>
@@ -538,6 +574,25 @@ namespace SeniorDesign.Core
         public void PassDataToNextConnectable(IConnectable root, double[][] data)
         {
             PassDataToNextConnectable(root, new DataPacket(data));
+        }
+
+        /// <summary>
+        ///     Passes data from a single connection to all available connections,
+        ///     performing all translations as needed
+        /// </summary>
+        /// <param name="root">The IConnetable giving out the data</param>
+        /// <param name="data">The data being appended to the first channel of data</param>
+        public void PassDataToNextConnectable(IConnectable root, double data)
+        {
+            // Pass on to each connection available
+            foreach (var connection in root.NextConnections)
+            {
+                // Add the data
+                _connectableMetadata[connection].LeftoverData[0].Add(data);
+
+                // Enqueue the new node to be run
+                _executionQueue.Enqueue(connection);
+            }
         }
 
         /// <summary>
@@ -570,7 +625,14 @@ namespace SeniorDesign.Core
         /// <param name="filename">The file to save the core settings to</param>
         public void SaveCoreSettings(string filename)
         {
+            if (File.Exists(filename))
+                File.Delete(filename);
 
+            using (var toSave = File.OpenWrite(filename))
+            {
+                var data = Settings.ToBytes();
+                toSave.Write(data, 0, data.Length);
+            }
         }
 
         /// <summary>
@@ -579,7 +641,12 @@ namespace SeniorDesign.Core
         /// <param name="filename">The file containing the core settings</param>
         public void LoadCoreSettings(string filename)
         {
+            if (!File.Exists(filename))
+                return;
 
+            var data = File.ReadAllBytes(filename);
+            var pos = 0;
+            Settings.Restore(data, ref pos);
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace SeniorDesign.Core.Connections.Converter
         /// </summary>
         /// <param name="input">The input byte array to convert</param>
         /// <returns>A series of doubles representing the decoded data</returns>
-        public virtual double[][] DecodeData(ref byte[] input)
+        public virtual DataPacket DecodeData(ref byte[] input)
         {
             return null;
         }

@@ -17,6 +17,11 @@ namespace SeniorDesign.FrontEnd
         {
             // Create the Streamline Core object, and load the default plugins
             var core = new StreamlineCore();
+            try
+            {
+                core.LoadCoreSettings("settings.ini");
+            }
+            catch { }
             var pluginErrors = new List<string>();
             core.LoadPluginsFromAssembly(typeof(RollingAverageFilter).Assembly, pluginErrors);
             foreach (var line in pluginErrors)

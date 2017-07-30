@@ -287,6 +287,23 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
+        ///     Pops a sub-packet with a specified number of points.
+        ///     This will have the same number of channels
+        /// </summary>
+        /// <param name="count">The number of points to pop</param>
+        /// <returns>A new Collection of doubles with the specified range</returns>
+        public DataPacket PopSubPacket(int count)
+        {
+            var toReturn = new DataPacket();
+            for (var k = 0; k < _data.Count; k++)
+            {
+                toReturn.AddChannel();
+                toReturn.AddChannel(PopRange(k, count));
+            }
+            return toReturn;
+        }
+
+        /// <summary>
         ///     Checks to see if all channels have at least min points
         /// </summary>
         /// <param name="min">The minimum to check for</param>

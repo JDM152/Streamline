@@ -152,6 +152,7 @@ namespace SeniorDesign.Plugins.Connections
                 }
             }
 
+            EndOfStream = Reader.EndOfStream;
             return toReturn;
         }
 

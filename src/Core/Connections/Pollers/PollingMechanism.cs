@@ -53,7 +53,7 @@ namespace SeniorDesign.Core.Connections.Pollers
         /// </summary>
         public virtual void Poll()
         {
-            Connection.Poll(Core, CoreSettings.InputBuffer);
+            Connection.Poll(Core, Core.Settings.InputBuffer);
         }
 
         #region IDataConnectionComponent
