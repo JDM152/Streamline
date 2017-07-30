@@ -34,17 +34,25 @@ namespace SeniorDesign.FrontEnd
         {
             glControl.MakeCurrent();
             GL.PushMatrix();
-            GL.ClearColor(backgroundColor );
+            GL.ClearColor(backgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Viewport(0, 0, glControl.Width, glControl.Height);
+            GL.Viewport(0, 0, glControl.Width, glControl.Height * 4 / 5);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Ortho(1, HISTORY, minY, maxY + textHeight, -1, 1);
+            GL.Ortho(1, HISTORY, minY, maxY, -1, 1);
+            drawData(packet);
+            GL.PopMatrix();
+            //different viewport
+            GL.PushMatrix();
+            GL.Viewport(0, glControl.Height * 3 / 4, glControl.Width, glControl.Height * 1 / 5);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, 1, 1, 0, -1, 1);
             GL.Enable(EnableCap.Texture2D);
             drawStatitics(packet);
             GL.Disable(EnableCap.Texture2D);
-            drawData(packet);
             GL.PopMatrix();
+
             glControl.SwapBuffers();
             deleteHistory(packet);
         }
@@ -81,7 +89,7 @@ namespace SeniorDesign.FrontEnd
         /// </summary>
         private void drawData(DataPacket packet)
         {
-           
+
             GL.PushMatrix();
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -156,27 +164,27 @@ namespace SeniorDesign.FrontEnd
         ///     this function draw statitics
         /// </summary>
         private void drawStatitics(DataPacket packet)
-        { 
+        {
             double max = packet[0][packet[0].Count - 1];
             double min = packet[0][packet[0].Count - 1];
             double avg = packet[0][packet[0].Count - 1];
             for (int i = packet[0].Count - 2; i >= 0 && i >= packet[0].Count - HISTORY; i--)
             {
                 double temp = packet[0][i];
-                if(temp > max)
+                if (temp > max)
                 {
                     max = temp;
                 }
-                if(temp < min)
+                if (temp < min)
                 {
                     min = temp;
                 }
                 avg += temp;
             }
             avg /= HISTORY;
-            String maxText = "Max: " + max.ToString() +"\n";
-            String minText = "Min: " + min.ToString() +"\n";
-            String avgText = "AVG: " + avg.ToString() +"\n";
+            String maxText = "Max: " + max.ToString() + "\n";
+            String minText = "Min: " + min.ToString() + "\n";
+            String avgText = "AVG: " + avg.ToString() + "\n";
             Bitmap tempImg = DrawText(maxText + minText + avgText, font, renderColor, backgroundColor);
             int textureID = LoadTexture(tempImg);
             renderText(textureID);
@@ -197,13 +205,13 @@ namespace SeniorDesign.FrontEnd
             GL.Color4(Color.Transparent);
             GL.TexCoord2(0, 0);
             //150 and 200 are magic x value, fell free to change
-            GL.Vertex3(150, maxY + textHeight, 0);
+            GL.Vertex3(0.5, 0, 0);
             GL.TexCoord2(1, 0);
-            GL.Vertex3(200, maxY + textHeight, 0);
+            GL.Vertex3(1, 0, 0);
             GL.TexCoord2(1, 1);
-            GL.Vertex3(200, maxY, 0);
+            GL.Vertex3(1, 1, 0);
             GL.TexCoord2(0, 1);
-            GL.Vertex3(150, maxY, 0);
+            GL.Vertex3(0.5, 1, 0);
             GL.End();
             GL.PopMatrix();
         }
