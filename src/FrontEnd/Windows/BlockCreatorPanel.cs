@@ -53,7 +53,7 @@ namespace SeniorDesign.FrontEnd.Windows
                 throw new Exception("Invalid object type! Not a DataFilter!");
 
             // Start creating the skeleton, and display it
-            _current = (DataFilter) Activator.CreateInstance(type);
+            _current = (DataFilter) Activator.CreateInstance(type, _core);
             _current.Name = _current.InternalName;
             BlockViewer.SetViewingComponent(_current);
         }

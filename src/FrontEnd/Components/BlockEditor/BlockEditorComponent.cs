@@ -81,6 +81,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         private DrawableObject _currentSelect;
 
         /// <summary>
+        ///     The block that is currently being processed
+        /// </summary>
+        private IDrawableIConnectable _currentProcess;
+
+        /// <summary>
         ///     The current position of the mouse
         /// </summary>
         private Point _mouse;
@@ -174,6 +179,9 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             _core.OnBlockDeleted += (e, o) => DeleteBlock(o);
             _core.OnBlocksConnected += (e, o) => ConnectBlocks(o.Item1, o.Item2);
             _core.OnBlocksDisconnected += (e, o) => DisconnectBlocks(o.Item1, o.Item2);
+            _core.OnBlockEnabled += (e, o) => Render();
+            _core.OnBlockDisabled += (e, o) => Render();
+            //_core.OnBlockActivated += (e, o) => SetBlockActive(o);
 
             // Create the line that is displayed when connecting component
             _movingLine = new DrawableLine(core, Vector3.Zero, Vector3.Zero);
@@ -191,6 +199,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             // There's a glitch in OpenTK that the GLControl Load never
             // gets called, so this one works instead
             _glLoaded = true;
+            RenderRefresh();
             Render();
         }
 
@@ -208,8 +217,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// </summary>
         private void BlockControl_Paint(object sender, PaintEventArgs e)
         {
-            // Don't paint if not loaded yet
-            if (!_glLoaded) return;
+            Render();
         }
 
         /// <summary>
@@ -232,24 +240,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// </summary>
         private void BlockControl_MouseDown(object sender, MouseEventArgs e)
         {
-            bool needRefresh = false;
 
             // Update the down position of the mouse, and the selected object
             _downPoint = new Vector3(_mouse.X, _mouse.Y, 0);
             _lastSelect = _currentSelect;
-            _currentSelect = GetObject(_downPoint);
-
-            // Highlight the selected object
-            if (_lastSelect != null)
-            {
-                _lastSelect.Highlighted = false;
-                needRefresh = true;
-            }
-            if (_currentSelect != null)
-            {
-                _currentSelect.Highlighted = true;
-                needRefresh = true;
-            }
+            var needRefresh = SelectObject(GetObject(_downPoint));
 
             // Determine which mode to enter by the type of object selected
             if (_currentSelect is DrawablePort)
@@ -274,10 +269,6 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 _dragMode = DragMode.MoveBlock;
                 _movingOffset = new Vector3(_mouse.X - _movingBlock.PositionX, _mouse.Y - _movingBlock.PositionY, 0);
             }
-
-            // Raise a click on an IConnectable if applicable
-            if (_currentSelect is IDrawableIConnectable)
-                OnBlockSelected?.Invoke(this, ((IDrawableIConnectable) _currentSelect).GetObject());
 
             // Only refresh as needed
             if (needRefresh)
@@ -406,6 +397,8 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             {
                 // Create the main Block
                 var dfBlock = new DrawableFilter(_core, temp as DataFilter);
+                dfBlock.Object.PositionX = BlockControl.Width / 2;
+                dfBlock.Object.PositionY = BlockControl.Height / 2;
                 _renderables.Add(dfBlock.Z, dfBlock);
                 _objectMapping.Add(temp, dfBlock);
                 newDrawable = dfBlock;
@@ -413,6 +406,8 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             else if (temp is DataConnection)
             {
                 var dcBlock = new DrawableInputOutput(_core, temp as DataConnection);
+                dcBlock.Object.PositionX = BlockControl.Width / 2;
+                dcBlock.Object.PositionY = BlockControl.Height / 2;
                 _renderables.Add(dcBlock.Z, dcBlock);
                 _objectMapping.Add(temp, dcBlock);
                 newDrawable = dcBlock;
@@ -436,7 +431,8 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 newDrawable.MappedObjects.Add(iPort);
             }
 
-            // Trigger a re-draw
+            // Select the block
+            SelectObject(newDrawable as DrawableObject);
             Render();
 
         }
@@ -530,9 +526,23 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             Render();
         }
 
+        /// <summary>
+        ///     Method triggered whenever the active block changes in the core
+        /// </summary>
+        /// <param name="o">The block that was activated</param>
+        private void SetBlockActive(IConnectable o)
+        {
+            if (_currentProcess != null)
+                _currentProcess.IsProcessing = false;
+            _currentProcess = _objectMapping[o] as IDrawableIConnectable;
+            if (_currentProcess != null)
+                _currentProcess.IsProcessing = true;
+            Render();
+        }
+
         #endregion
 
-        
+
         /// <summary>
         ///     Gets the object that exists underneath a specific point
         /// </summary>
@@ -561,6 +571,33 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
 
         }
 
+        /// <summary>
+        ///     Selects a given object
+        /// </summary>
+        /// <param name="obj">The object to select</param>
+        /// <returns>True if a render refresh needs to be performed</returns>
+        private bool SelectObject(DrawableObject obj)
+        {
+            var needRefresh = false;
+            _currentSelect = obj;
+
+            // Highlight the selected object
+            if (_lastSelect != null)
+            {
+                _lastSelect.Highlighted = false;
+                needRefresh = true;
+            }
+            if (_currentSelect != null)
+            {
+                _currentSelect.Highlighted = true;
+                needRefresh = true;
+            }
+            if (_currentSelect is IDrawableIConnectable)
+                OnBlockSelected?.Invoke(this, ((IDrawableIConnectable) _currentSelect).GetObject());
+
+            return needRefresh;
+        }
+
         #region Rendering
 
         /// <summary>
@@ -568,31 +605,41 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// </summary>
         public void Render()
         {
-            BlockControl.MakeCurrent();
-            GL.PushMatrix();
-            GL.ClearColor(Color.White);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.Viewport(0, 0, BlockControl.Width, BlockControl.Height);
+            if (!_glLoaded)
+                return;
+
+            if (_isRendering)
+                return;
+            lock (_lock)
+            {
+                _isRendering = true;
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+                // Render every control available
+                foreach (var obj in _renderables)
+                {
+                    GL.Translate(Offset);
+                    obj.Value.Draw();
+                    GL.LoadIdentity();
+                }
+
+                BlockControl.SwapBuffers();
+                _isRendering = false;
+            }
+        }
+        private object _lock = new object();
+        private bool _isRendering = false;
+
+        private void RenderRefresh()
+        {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            //subject to change if support zoom in and zoom out
+            GL.Viewport(0, 0, BlockControl.Width, BlockControl.Height);
             GL.Ortho(0, BlockControl.Width, BlockControl.Height, 0, -1, 1);
-            //enable transparency
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            // Render every control available
-            foreach (var obj in _renderables)
-            {
-                GL.Translate(Offset);
-                obj.Value.Draw();
-                GL.LoadIdentity();
-            }
-
-            GL.PopMatrix();
-            BlockControl.SwapBuffers();
+            GL.MatrixMode(MatrixMode.Modelview);  
+            GL.LoadIdentity();
+            GL.ClearColor(Color.White);
         }
-
 
         #endregion
     }

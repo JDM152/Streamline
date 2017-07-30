@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Xml;
 
 namespace SeniorDesign.Core
@@ -20,6 +21,12 @@ namespace SeniorDesign.Core
     /// </summary>
     public sealed class StreamlineCore
     {
+        /// <summary>
+        ///     The time between ticks in milliseconds.
+        ///     Set to 0 for continuous ticking.
+        /// </summary>
+        public int TickTime = 100;
+
         /// <summary>
         ///     The plugins being used by the program
         /// </summary>
@@ -40,6 +47,31 @@ namespace SeniorDesign.Core
         /// </summary>
         private readonly IDictionary<IConnectable, IConnectableMetadata> _connectableMetadata = new Dictionary<IConnectable, IConnectableMetadata>();
 
+        /// <summary>
+        ///     The list of connectables that start every cycle
+        /// </summary>
+        private readonly List<PollingMechanism> _tickers = new List<PollingMechanism>();
+
+        /// <summary>
+        ///     The position into the tickers list that this is currently on
+        /// </summary>
+        private int _tickersPosition = -1;
+
+        /// <summary>
+        ///     If the tickers should be polled instead of the filters
+        /// </summary>
+        private bool _tickerMode = true;
+
+        /// <summary>
+        ///     The queue of IConnectables that need to be executed next
+        /// </summary>
+        private readonly Queue<IConnectable> _executionQueue = new Queue<IConnectable>();
+
+        /// <summary>
+        ///     The timer used to schedule ticks
+        /// </summary>
+        private Timer _tickTimer;
+
         #region Events
 
         /// <summary>
@@ -53,16 +85,40 @@ namespace SeniorDesign.Core
         public event EventHandler<IConnectable> OnBlockDeleted;
 
         /// <summary>
-        ///     Method triggered whenever two blocks are connected
+        ///     Event triggered whenever two blocks are connected
         /// </summary>
         public event EventHandler<Tuple<IConnectable, IConnectable>> OnBlocksConnected;
 
         /// <summary>
-        ///     Method triggered whenever two blocks are disconnected
+        ///     Event triggered whenever two blocks are disconnected
         /// </summary>
         public event EventHandler<Tuple<IConnectable, IConnectable>> OnBlocksDisconnected;
 
+        /// <summary>
+        ///     Event triggered whenever a block is enabled
+        /// </summary>
+        public event EventHandler<IConnectable> OnBlockEnabled;
+
+        /// <summary>
+        ///     Event triggered whenever a block is disabled
+        /// </summary>
+        public event EventHandler<IConnectable> OnBlockDisabled;
+
+        /// <summary>
+        ///     Method triggered whenever a block is ticked
+        /// </summary>
+        public event EventHandler<IConnectable> OnBlockActivated;
+
         #endregion
+
+        /// <summary>
+        ///     Creates a new Streamline Core
+        /// </summary>
+        public StreamlineCore()
+        {
+            // Create the tick timer, but don't start it yet
+            _tickTimer = new Timer((o) => TickCycle(), null, Timeout.Infinite, Timeout.Infinite);
+        }
 
         #region Plugin Management
 
@@ -216,6 +272,81 @@ namespace SeniorDesign.Core
         #region Connectable Management
 
         /// <summary>
+        ///     Continues ticking for the current cycle
+        /// </summary>
+        private void TickCycle()
+        {
+            // Stop polling if nothing left anywhere
+            if (_executionQueue.Count <= 0 && _tickers.Count <= 0)
+                return;
+
+            // Perform the polling as needed
+            if (_executionQueue.Count <= 0)
+                _tickersPosition = 0;
+
+            if (_tickerMode)
+            {
+                // Continue polling where left off last poll
+                while (_tickersPosition < _tickers.Count)
+                {
+                    // Attempt to run the next available ticker
+                    if (_tickers[_tickersPosition].Connection.Enabled)
+                    {
+                        try
+                        {
+                            OnBlockActivated?.Invoke(this, _tickers[_tickersPosition].Connection);
+                            _tickers[_tickersPosition++].Poll();
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            DisableConnectable(_tickers[_tickersPosition++].Connection);
+                        }
+                    }
+                }
+
+                // If no poller found, must be at end of list. Make way for the executables
+                if (_tickersPosition >= _tickers.Count)
+                {
+                    _tickersPosition = -1;
+                    _tickerMode = false;
+                }
+
+            }
+            else
+            {
+                // Move on and execute 
+                while (_executionQueue.Count > 0)
+                {
+                    var node = _executionQueue.Dequeue();
+                    if (!node.Enabled) continue;
+
+                    // Accept the incoming data
+                    try
+                    {
+                        OnBlockActivated?.Invoke(this, node);
+                        node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
+                    }
+                    catch (Exception ex)
+                    {
+                        DisableConnectable(node);
+                    }
+
+                    // Only break out if schedule a tick later
+                    if (TickTime > 0)
+                        break;
+                }
+
+                // Start with the inputs again next time
+                if (_executionQueue.Count <= 0)
+                    _tickerMode = true; 
+            }
+
+            // Schedule the next tick
+            _tickTimer.Change(TickTime, Timeout.Infinite);
+        }
+
+        /// <summary>
         ///     Adds a new connection to the currently active ones
         /// </summary>
         /// <param name="obj">The connectable to add</param>
@@ -233,6 +364,16 @@ namespace SeniorDesign.Core
                 obj.Name = obj.InternalName + " " + obj.Id;
 
             _connectableMetadata.Add(obj, new IConnectableMetadata());
+
+            // Check to see if the connection has a ticker
+            var dc = obj as DataConnection;
+            if (dc != null && dc.Poller != null && dc.Poller.IsTickPoller)
+            {
+                // Add the ticker and start the timer as needed
+                _tickers.Add(dc.Poller);
+                if (_tickers.Count == 1)
+                    _tickTimer.Change(TickTime, Timeout.Infinite);
+            }
 
             OnBlockAdded?.Invoke(this, obj);
         }
@@ -259,6 +400,15 @@ namespace SeniorDesign.Core
             Nodes.Remove(obj);
             obj.Id = -1;
             _connectableMetadata.Remove(obj);
+
+            // Check to see if the connection has a ticker
+            var dc = obj as DataConnection;
+            if (dc != null && dc.Poller != null && dc.Poller.IsTickPoller)
+            {
+                _tickers.Remove(dc.Poller);
+                if (_tickers.Count <= 0)
+                    _tickTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            }
 
             OnBlockDeleted?.Invoke(this, obj);
         }
@@ -360,6 +510,26 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
+        ///     Enables a connectable so that it can be used
+        /// </summary>
+        /// <param name="toEnable">The connectable to enable</param>
+        public void EnableConnectable(IConnectable toEnable)
+        {
+            toEnable.Enabled = true;
+            OnBlockEnabled?.Invoke(this, toEnable);
+        }
+
+        /// <summary>
+        ///     Enables a connectable so that it can be used
+        /// </summary>
+        /// <param name="toDisable">The connectable to enable</param>
+        public void DisableConnectable(IConnectable toDisable)
+        {
+            toDisable.Enabled = false;
+            OnBlockDisabled?.Invoke(this, toDisable);
+        }
+
+        /// <summary>
         ///     Passes data from a single connection to all available connections,
         ///     performing all translations as needed
         /// </summary>
@@ -379,26 +549,14 @@ namespace SeniorDesign.Core
         /// <param name="data">The data being sent</param>
         public void PassDataToNextConnectable(IConnectable root, DataPacket data)
         {
-            // Grab the metadata for the connectable
-            var meta = _connectableMetadata[root];
-
             // Pass on to each connection available
             foreach (var connection in root.NextConnections)
             {
-                // Use the extra data not previously accepted
-                var mdata = meta.GetLeftoverData(connection);
-                mdata.Add(data);
+                // Add the data
+                _connectableMetadata[connection].LeftoverData.Add(data);
 
-                // Do nothing if no data
-                if (mdata.ChannelCount == 0)
-                    return;
-
-                // Ensure that the channel count is valid
-                if (connection.InputCount != -1 && mdata.ChannelCount != connection.InputCount)
-                    throw new InvalidChannelCountException($"[{connection.Name}] expected {connection.InputCount} input channels, but was given {mdata.ChannelCount} by [{root.Name}]");
-
-                // Accept the incoming data
-                connection.AcceptIncomingData(this, mdata);
+                // Enqueue the new node to be run
+                _executionQueue.Enqueue(connection);
             }
         }
 
@@ -535,7 +693,7 @@ namespace SeniorDesign.Core
                     case 0x01: // Node definition
                         stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
                         type = Type.GetType(stype, true, true);
-                        var cobj = (IConnectable) Activator.CreateInstance(type);
+                        var cobj = (IConnectable) Activator.CreateInstance(type, this);
                         var robj = cobj as IRestorable;
                         robj.Restore(data, ref pos);
                         nodeMapping.Add(cobj.Id, cobj);

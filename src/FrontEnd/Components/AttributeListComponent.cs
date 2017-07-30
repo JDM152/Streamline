@@ -47,6 +47,11 @@ namespace SeniorDesign.FrontEnd.Components
             if (_owner == null)
                 return;
 
+            // Add a button for enabling if needed
+            var dc = _owner as DataConnection;
+            if (dc != null)
+                AttributeEditorList.Controls.Add(new EnableButtonComponent(dc));
+
             // Add every available field
             foreach (var field in _owner.GetType().GetFields())
             {

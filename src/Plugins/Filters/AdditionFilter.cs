@@ -32,6 +32,11 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return 1; } }
 
         /// <summary>
+        ///     Creates a new Addition Filter
+        /// </summary>
+        public AdditionFilter(StreamlineCore core) : base(core) { }
+
+        /// <summary>
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>

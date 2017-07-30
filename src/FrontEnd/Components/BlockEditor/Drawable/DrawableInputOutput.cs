@@ -39,9 +39,20 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.Begin(PrimitiveType.LineLoop);
             {
                 if (Object.Enabled)
-                    GL.Color3(0.0f, 0.0f, 0.0f);
+                {
+                    if (IsProcessing)
+                    {
+                        GL.Color3(0.0f, 1.0f, 0.1f);
+                    }
+                    else
+                    {
+                        GL.Color3(0.0f, 0.0f, 0.0f);
+                    }
+                }
                 else
+                {
                     GL.Color3(1.0f, 0.1f, 0.2f);
+                }
                 if (IsOutput)
                 {
                     // Output Block

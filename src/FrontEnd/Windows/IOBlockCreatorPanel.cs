@@ -60,7 +60,7 @@ namespace SeniorDesign.FrontEnd.Windows
         public IOBlockCreatorPanel(StreamlineCore core)
         {
             _core = core;
-            _current = new DataConnection();
+            _current = new DataConnection(core);
             _current.Name = _current.InternalName;
 
             InitializeComponent();

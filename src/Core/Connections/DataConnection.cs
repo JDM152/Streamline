@@ -1,9 +1,9 @@
-﻿using SeniorDesign.Core.Attributes;
-using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
 using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Util;
 using SeniorDesign.Plugins.Util;
+using System;
 using System.Collections.Generic;
 
 namespace SeniorDesign.Core.Connections
@@ -15,22 +15,31 @@ namespace SeniorDesign.Core.Connections
     /// </summary>
     public class DataConnection : IConnectable, IRestorable
     {
+        #region IConnectable
+
+        /// <summary>
+        ///     The core that this connectable reports back to
+        /// </summary>
+        public StreamlineCore Core { get; protected set; }
+
         /// <summary>
         ///     If this data connection is currently active or not
         /// </summary>
-        [UserConfigurableBoolean(
-            Name = "Enabled",
-            Description = "If the data connection is currently polling for data"
-        )]
         public bool Enabled
         {
             get { return _enabled; }
             set {
                 _enabled = value;
                 EnablePolling(value);
+                OnEnabledChanged?.Invoke(this, value);
             }
         }
         private bool _enabled;
+
+        /// <summary>
+        ///     Event triggered whenever the object is enabled/disabled
+        /// </summary>
+        public event EventHandler<bool> OnEnabledChanged;
 
         /// <summary>
         ///     An indentifier for this particular connection.
@@ -77,6 +86,8 @@ namespace SeniorDesign.Core.Connections
                 else
                     return Converter.DecodeDataCount;
             } }
+
+        #endregion
 
         /// <summary>
         ///     The physical connection that can send and recieve data
@@ -158,6 +169,15 @@ namespace SeniorDesign.Core.Connections
         private byte[] _leftoverInputData;
 
         /// <summary>
+        ///     Creates a new DataConnection
+        /// </summary>
+        /// <param name="core">The core to use</param>
+        public DataConnection (StreamlineCore core)
+        {
+            Core = core;
+        }
+
+        /// <summary>
         ///     Enables or disables Polling
         /// </summary>
         /// <param name="status">True to enable, false to disable</param>
@@ -169,21 +189,37 @@ namespace SeniorDesign.Core.Connections
         }
 
         /// <summary>
+        ///     Enables this connectable to be used
+        /// </summary>
+        public void Enable()
+        {
+            Core.EnableConnectable(this);
+        }
+
+        /// <summary>
+        ///     Stops this connectable from being used
+        /// </summary>
+        public void Disable()
+        {
+            Core.DisableConnectable(this);
+        }
+
+        /// <summary>
         ///     Polls the data connection for any new data.
         ///     This is specifically for the Polling Mechanism
         /// </summary>
-        public void Poll(StreamlineCore core)
+        public void Poll(StreamlineCore core, int pollCount)
         {
             // Check if we can read directly
             if (Converter == null && MediaConnection.CanReadDirect)
             {
                 // Read a data packet directly from the connection
-                core.PassDataToNextConnectable(this, MediaConnection.ReadDirect(CoreSettings.InputBuffer));
+                core.PassDataToNextConnectable(this, MediaConnection.ReadDirect(pollCount));
             }
             else
             {
                 // Grab all available bytes, and pass it to the decoder
-                var data = MediaConnection.ReadToEnd(CoreSettings.InputBuffer);
+                var data = MediaConnection.ReadToEnd(pollCount);
                 if (_leftoverInputData != null)
                     _leftoverInputData = _leftoverInputData.Concat(data);
                 else

@@ -129,6 +129,11 @@ namespace SeniorDesign.Plugins.Filters
         private double _y2 = 0;
 
         /// <summary>
+        ///     Creates a new Addition Filter
+        /// </summary>
+        public StopBandFilter(StreamlineCore core) : base(core) { }
+
+        /// <summary>
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>

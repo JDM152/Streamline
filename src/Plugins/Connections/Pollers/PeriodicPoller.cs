@@ -24,12 +24,26 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         )]
         public int PollingTime = 100;
 
+        /// <summary>
+        ///     How many points are pulled per polling instance (max)
+        /// </summary>
+        [UserConfigurableInteger(
+            Name = "Point Count",
+            Description = "The number of points that are polled maximum",
+            Minimum = 1
+        )]
+        public int PollingCount = 1;
         #endregion
 
         /// <summary>
         ///     A name for this particular object type
         /// </summary>
         public override string InternalName { get { return "Periodic Poller"; } }
+
+        /// <summary>
+        ///     If this polling mechanism is to be in the tick queue
+        /// </summary>
+        public override bool IsTickPoller { get { return false; } }
 
         /// <summary>
         ///     Creates a new Periodic Poller
@@ -77,7 +91,7 @@ namespace SeniorDesign.Plugins.Connections.Pollers
                 return;
 
             // Tell the connection to perform a poll
-            Connection.Poll(Core);
+            Connection.Poll(Core, PollingCount);
 
             // Reset the timer as needed
             if ((int) state != PollingTime)

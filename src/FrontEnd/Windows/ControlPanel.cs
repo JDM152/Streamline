@@ -19,6 +19,16 @@ namespace SeniorDesign.FrontEnd.Windows
         protected readonly StreamlineCore Core;
 
         /// <summary>
+        ///     The BlockCreatorPanel currently being used
+        /// </summary>
+        private BlockCreatorPanel _blockCreatorPanel = null;
+
+        /// <summary>
+        ///     The IOBlockCreatorPanel currently being used
+        /// </summary>
+        private IOBlockCreatorPanel _ioBlockCreatorPanel = null;
+
+        /// <summary>
         ///     Creates a new central control panel using a given core
         /// </summary>
         public ControlPanel(StreamlineCore core)
@@ -137,8 +147,10 @@ namespace SeniorDesign.FrontEnd.Windows
         private void AddFilterButton_Click(object sender, System.EventArgs e)
         {
             // Show the Add Block Panel
-            var panel = new BlockCreatorPanel(Core);
-            panel.ShowDialog();
+            if (_blockCreatorPanel == null || _blockCreatorPanel.IsDisposed)
+                _blockCreatorPanel = new BlockCreatorPanel(Core);
+            _blockCreatorPanel.Show();
+            _blockCreatorPanel.BringToFront();
         }
 
         /// <summary>
@@ -147,8 +159,10 @@ namespace SeniorDesign.FrontEnd.Windows
         private void AddIOButton_Click(object sender, System.EventArgs e)
         {
             // Show the Add IO Panel
-            var panel = new IOBlockCreatorPanel(Core);
-            panel.ShowDialog();
+            if (_ioBlockCreatorPanel == null || _ioBlockCreatorPanel.IsDisposed)
+                _ioBlockCreatorPanel = new IOBlockCreatorPanel(Core);
+            _ioBlockCreatorPanel.Show();
+            _ioBlockCreatorPanel.BringToFront();
         }
     }
 }

@@ -48,6 +48,11 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return SmoothingFactor; } }
 
         /// <summary>
+        ///     Creates a new Rolling Average Filter
+        /// </summary>
+        public RollingAverageFilter(StreamlineCore core) : base(core) { }
+
+        /// <summary>
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>

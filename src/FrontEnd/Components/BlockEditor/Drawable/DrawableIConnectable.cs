@@ -35,6 +35,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         ///     The objects that are related, but not directly owned by this object
         /// </summary>
         public IList<DrawableObject> MappedObjects { get; protected set; } = new List<DrawableObject>();
+
+        /// <summary>
+        ///     If this block is currently being processed in the core
+        /// </summary>
+        public bool IsProcessing { get; set; }
     }
 
     /// <summary>
@@ -54,6 +59,9 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         /// </summary>
         IList<DrawableObject> MappedObjects { get; }
 
-
+        /// <summary>
+        ///     If this block is currently being processed in the core
+        /// </summary>
+        bool IsProcessing { get; set; }
     }
 }

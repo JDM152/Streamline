@@ -146,6 +146,12 @@
     <Compile Include="Components\AttributeEditors\IntegerEditorComponent.Designer.cs">
       <DependentUpon>IntegerEditorComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\Specialized\EnableButtonComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Specialized\EnableButtonComponent.Designer.cs">
+      <DependentUpon>EnableButtonComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Specialized\CompileButtonComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -177,6 +183,12 @@
     </Compile>
     <Compile Include="Windows\BlockCreatorPanel.Designer.cs">
       <DependentUpon>BlockCreatorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ConsolePanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ConsolePanel.Designer.cs">
+      <DependentUpon>ConsolePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\ControlPanel.cs">
       <SubType>Form</SubType>
@@ -244,6 +256,9 @@
     <EmbeddedResource Include="Components\Blocks\IOBlockViewerComponent.resx">
       <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\Specialized\EnableButtonComponent.resx">
+      <DependentUpon>EnableButtonComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\Specialized\CompileButtonComponent.resx">
       <DependentUpon>CompileButtonComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -267,6 +282,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\BlockCreatorPanel.resx">
       <DependentUpon>BlockCreatorPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ConsolePanel.resx">
+      <DependentUpon>ConsolePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>

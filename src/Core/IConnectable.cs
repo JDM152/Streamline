@@ -11,6 +11,21 @@ namespace SeniorDesign.Core
     {
 
         /// <summary>
+        ///     The core that this connectable reports back to
+        /// </summary>
+        StreamlineCore Core { get; }
+
+        /// <summary>
+        ///     Enables this connectable to be used
+        /// </summary>
+        void Enable();
+
+        /// <summary>
+        ///     Stops this connectable from being used
+        /// </summary>
+        void Disable();
+
+        /// <summary>
         ///     If this connectable is currently active or not
         /// </summary>
         bool Enabled { get; set; }

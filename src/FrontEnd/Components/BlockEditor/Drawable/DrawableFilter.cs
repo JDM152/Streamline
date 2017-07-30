@@ -33,7 +33,10 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.LineWidth(Highlighted ? 2.0f : 1.0f);
             GL.Begin(PrimitiveType.LineLoop);
             {
-                GL.Color3(0.0f, 0.0f, 0.0f);
+                if (IsProcessing)
+                    GL.Color3(0.0f, 1.0f, 0.1f);
+                else
+                    GL.Color3(0.0f, 0.0f, 0.0f);
                 GL.Vertex3(Object.PositionX, Object.PositionY, 0.0f);
                 GL.Vertex3(Object.PositionX + BlockEditorComponent.BOXWIDTH, Object.PositionY, 0.0f);
                 GL.Vertex3(Object.PositionX + BlockEditorComponent.BOXWIDTH, Object.PositionY + BlockEditorComponent.BOXHEIGHT, 0.0f);

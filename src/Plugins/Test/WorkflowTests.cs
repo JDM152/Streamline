@@ -23,7 +23,7 @@ namespace SeniorDesign.FrontEnd.Test
         public static void CreateDummyWorkflowTestA(StreamlineCore core)
         {
             // Create the random input object that is polled every 100ms
-            var input = new DataConnection();
+            var input = new DataConnection(core);
             input.MediaConnection = new RandomDataStream();
             input.Converter = new SimpleStreamConverter();
             input.Poller = new PeriodicPoller(core);
@@ -37,14 +37,14 @@ namespace SeniorDesign.FrontEnd.Test
             */
 
             // Create the quantizer filter object and connect it
-            var quantizerFilter = new QuantizerFilter();
+            var quantizerFilter = new QuantizerFilter(core);
             input.NextConnections.Add(quantizerFilter);
             quantizerFilter.Maximum = 64000;
             quantizerFilter.StepSize = 100;
             core.AddConnectable(quantizerFilter);
 
             // Create the console output object and connect it to the filter
-            var output = new DataConnection();
+            var output = new DataConnection(core);
             output.IsOutput = true;
             output.MediaConnection = new ConsoleDataStream();
             output.Converter = new SimpleStringConverter();
