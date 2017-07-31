@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.BlockTypeName = new System.Windows.Forms.Label();
+            this.BlockDataText = new System.Windows.Forms.Label();
             this.BlockName = new System.Windows.Forms.TextBox();
             this.AttributeList = new SeniorDesign.FrontEnd.Components.AttributeListComponent();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -49,7 +49,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.BlockTypeName);
+            this.splitContainer1.Panel1.Controls.Add(this.BlockDataText);
             this.splitContainer1.Panel1.Controls.Add(this.BlockName);
             // 
             // splitContainer1.Panel2
@@ -59,14 +59,14 @@
             this.splitContainer1.SplitterDistance = 167;
             this.splitContainer1.TabIndex = 4;
             // 
-            // BlockTypeName
+            // BlockDataText
             // 
-            this.BlockTypeName.AutoSize = true;
-            this.BlockTypeName.Location = new System.Drawing.Point(3, 26);
-            this.BlockTypeName.Name = "BlockTypeName";
-            this.BlockTypeName.Size = new System.Drawing.Size(101, 13);
-            this.BlockTypeName.TabIndex = 1;
-            this.BlockTypeName.Text = "- Nothing Selected -";
+            this.BlockDataText.AutoSize = true;
+            this.BlockDataText.Location = new System.Drawing.Point(3, 26);
+            this.BlockDataText.Name = "BlockDataText";
+            this.BlockDataText.Size = new System.Drawing.Size(101, 13);
+            this.BlockDataText.TabIndex = 1;
+            this.BlockDataText.Text = "- Nothing Selected -";
             // 
             // BlockName
             // 
@@ -82,6 +82,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AttributeList.Location = new System.Drawing.Point(3, 3);
+            this.AttributeList.Margin = new System.Windows.Forms.Padding(0);
             this.AttributeList.Name = "AttributeList";
             this.AttributeList.Size = new System.Drawing.Size(428, 157);
             this.AttributeList.TabIndex = 0;
@@ -105,7 +106,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Label BlockTypeName;
+        private System.Windows.Forms.Label BlockDataText;
         private System.Windows.Forms.TextBox BlockName;
         private AttributeListComponent AttributeList;
     }

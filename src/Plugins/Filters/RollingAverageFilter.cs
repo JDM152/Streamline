@@ -34,18 +34,23 @@ namespace SeniorDesign.Plugins.Filters
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
-        public override int InputCount { get { return -1; } }
+        public override int InputCount { get { return 1; } }
 
         /// <summary>
         ///     The number of output connections this connectable provides.
         ///     -1 means the number of outputs matches the number of inputs
         /// </summary>
-        public override int OutputCount { get { return -1; } }
+        public override int OutputCount { get { return 1; } }
 
         /// <summary>
         ///     The number of samples per field required to use this filter
         /// </summary>
         public override int InputLength { get { return SmoothingFactor; } }
+
+        /// <summary>
+        ///     Creates a new Rolling Average Filter
+        /// </summary>
+        public RollingAverageFilter(StreamlineCore core) : base(core) { }
 
         /// <summary>
         ///     Accepts incoming data from a previous connection.

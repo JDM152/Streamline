@@ -1,4 +1,5 @@
 ﻿using SeniorDesign.Core.Util;
+using System;
 using System.Collections.Generic;
 
 namespace SeniorDesign.Core.Filters
@@ -12,9 +13,24 @@ namespace SeniorDesign.Core.Filters
         #region IConnectable
 
         /// <summary>
+        ///     The core that this connectable reports back to
+        /// </summary>
+        public StreamlineCore Core { get; protected set; }
+
+        /// <summary>
+        ///     Enables this connectable to be used
+        /// </summary>
+        public void Enable() { throw new NotImplementedException(); }
+
+        /// <summary>
+        ///     Stops this connectable from being used
+        /// </summary>
+        public void Disable() { }
+
+        /// <summary>
         ///     If this connectable is currently active or not
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled { get { return true; } set { } }
 
         /// <summary>
         ///     An indentifier for this particular object.
@@ -81,14 +97,15 @@ namespace SeniorDesign.Core.Filters
         /// <summary>
         ///     Creates a new, empty Data Filter
         /// </summary>
-        public DataFilter() { }
+        public DataFilter(StreamlineCore core) { Core = core; }
 
         /// <summary>
         ///     Creates a new Data Filter restored from previously saved bytes
         /// </summary>
         /// <param name="restore">The bytes to restore from</param>
-        public DataFilter(byte[] restore, ref int offset)
+        public DataFilter(StreamlineCore core, byte[] restore, ref int offset)
         {
+            Core = core;
             Restore(restore, ref offset);
         }
 

@@ -41,6 +41,11 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         private int _ticks = 0;
 
         /// <summary>
+        ///     If this polling mechanism is to be in the tick queue
+        /// </summary>
+        public override bool IsTickPoller { get { return true; } }
+
+        /// <summary>
         ///     A name for this particular object type
         /// </summary>
         public override string InternalName { get { return "Tick Poller"; } }
@@ -66,6 +71,16 @@ namespace SeniorDesign.Plugins.Connections.Pollers
         {
         }
 
-
+        /// <summary>
+        ///     Polls this object so that the data can be generated
+        /// </summary>
+        public override void Poll()
+        {
+            _ticks++;
+            if (_ticks < PollingTime)
+                return;
+            _ticks = 0;
+            Connection.Poll(Core, PollingCount);
+        }
     }
 }

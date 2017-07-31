@@ -65,7 +65,24 @@ namespace SeniorDesign.Core.Connections.Streams
         /// <summary>
         ///     How many output channels are available when reading directly
         /// </summary>
-        public virtual int DirectOutputCount { get { return 0; } }
+        public virtual int DirectOutputCount { get { return CanReadDirect ? 1 : 0; } }
+
+        /// <summary>
+        ///     If the end of the stream has been reached
+        /// </summary>
+        public bool EndOfStream {
+            get
+            {
+                return _endOfStream;
+            }
+            protected set
+            {
+                if (_endOfStream == value) return;
+                _endOfStream = value;
+                if (_endOfStream) Console.WriteLine("End of file reached on " + InternalName);
+            }
+        }
+        private bool _endOfStream;
 
         #region Stream Default Implementation
 

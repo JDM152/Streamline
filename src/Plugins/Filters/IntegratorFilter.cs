@@ -55,6 +55,11 @@ namespace SeniorDesign.Plugins.Filters
         private double LastOutput = 0.0;
 
         /// <summary>
+        ///     Creates a new Integrator Filter
+        /// </summary>
+        public IntegratorFilter(StreamlineCore core) : base(core) { }
+
+        /// <summary>
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>

@@ -32,23 +32,21 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         #endregion
 
         /// <summary>
-        ///     If the value should be allowed to update or not
+        ///     If this is a save or load file dialog
         /// </summary>
-        private bool _suppressUpdate = false;
+        private bool _isSave = false;
 
         /// <summary>
         ///     Creates a new editor for the given component of an object
         /// </summary>
         public FileEditorComponent(object owner, WrappedAttributeInfo field, UserConfigurableFileAttribute attribute)
         {
-            _suppressUpdate = true;
             Owner = owner;
             Field = field;
             Attribute = attribute;
 
             InitializeComponent();
             UpdateComponent();
-            _suppressUpdate = false;
         }
 
         /// <summary>
@@ -61,7 +59,10 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
             UseTip.SetToolTip(InputText, Attribute.Description);
 
             // Set the filters
-            FileDialog.Filter = Attribute.Filter;
+            FileDialogOpen.Filter = Attribute.Filter;
+            FileDialogSave.Filter = Attribute.Filter;
+
+            _isSave = Attribute.IsSave;
 
             InputText.Text = (string) Field.GetValue(Owner);
         }
@@ -71,17 +72,30 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// </summary>
         private void FileButton_Click(object sender, EventArgs e)
         {
-            FileDialog.ShowDialog();
+            if (_isSave)
+                FileDialogSave.ShowDialog();
+            else
+                FileDialogOpen.ShowDialog();
         }
 
         /// <summary>
-        ///     Method triggered when a file has been selected
+        ///     Method triggered when an open file has been selected
         /// </summary>
-        private void FileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        private void FileDialogOpen_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Set real value
-            InputText.Text = FileDialog.FileName;
-            Field.SetValue(Owner, FileDialog.FileName);
+            InputText.Text = FileDialogOpen.FileName;
+            Field.SetValue(Owner, FileDialogOpen.FileName);
+        }
+
+        /// <summary>
+        ///     Method triggered when a save file has been selected
+        /// </summary>
+        private void FileDialogSave_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Set real value
+            InputText.Text = FileDialogSave.FileName;
+            Field.SetValue(Owner, FileDialogSave.FileName);
         }
     }
 }

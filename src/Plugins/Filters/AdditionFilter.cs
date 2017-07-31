@@ -32,6 +32,11 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return 1; } }
 
         /// <summary>
+        ///     Creates a new Addition Filter
+        /// </summary>
+        public AdditionFilter(StreamlineCore core) : base(core) { }
+
+        /// <summary>
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>
@@ -39,19 +44,14 @@ namespace SeniorDesign.Plugins.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            // Return a new packet with the sum
-            var toReturn = new DataPacket();
-            toReturn.AddChannel();
-
-            while (data.MinCountOnAllChannels(1))
-            {
-                toReturn[0].Add(0);
-                for (var k = 0; k < data.ChannelCount; k++)
-                    toReturn[0][toReturn[0].Count - 1] += data.Pop(k);
-            } 
+            // Sum every available channel
+            var val = 0.0;
+            for (var k = 0; k < data.ChannelCount; k++)
+                if (data[k].Count > 0)
+                    val += data.Pop(k);
 
             // Push to the next node
-            core.PassDataToNextConnectable(this, toReturn);
+            core.PassDataToNextConnectable(this, val);
         }
 
     }

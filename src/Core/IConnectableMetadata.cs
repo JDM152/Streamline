@@ -8,9 +8,9 @@ namespace SeniorDesign.Core
     internal class IConnectableMetadata
     {
         /// <summary>
-        ///     A collection of extra data points that were not used in the previous interaction
+        ///     A collection of extra data points that were not used in the previous interaction (input)
         /// </summary>
-        protected readonly IDictionary<IConnectable, DataPacket> LeftoverData = new Dictionary<IConnectable, DataPacket>();
+        public readonly DataPacket LeftoverData = new DataPacket();
 
         /// <summary>
         ///     The connections that provide incoming data
@@ -18,17 +18,11 @@ namespace SeniorDesign.Core
         public readonly IList<IConnectable> IncomingConnections = new List<IConnectable>();
 
         /// <summary>
-        ///     Gets the leftover data for a particular connectable.
-        ///     Any data added to the returned DataPacket will be saved for next iteration.
+        ///     Creates a new set of IConnectableMetadata
         /// </summary>
-        /// <param name="connection">The data connection to get the leftovers for</param>
-        /// <returns>The leftover data packets for the connection</returns>
-        public DataPacket GetLeftoverData(IConnectable connection)
+        public IConnectableMetadata()
         {
-            if (!LeftoverData.ContainsKey(connection))
-                LeftoverData.Add(connection, new DataPacket());
-
-            return LeftoverData[connection];
+            
         }
 
     }

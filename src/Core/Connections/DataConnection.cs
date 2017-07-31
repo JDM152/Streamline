@@ -1,9 +1,9 @@
-﻿using SeniorDesign.Core.Attributes;
-using SeniorDesign.Core.Connections.Converter;
+﻿using SeniorDesign.Core.Connections.Converter;
 using SeniorDesign.Core.Connections.Pollers;
 using SeniorDesign.Core.Connections.Streams;
 using SeniorDesign.Core.Util;
 using SeniorDesign.Plugins.Util;
+using System;
 using System.Collections.Generic;
 
 namespace SeniorDesign.Core.Connections
@@ -15,22 +15,31 @@ namespace SeniorDesign.Core.Connections
     /// </summary>
     public class DataConnection : IConnectable, IRestorable
     {
+        #region IConnectable
+
+        /// <summary>
+        ///     The core that this connectable reports back to
+        /// </summary>
+        public StreamlineCore Core { get; protected set; }
+
         /// <summary>
         ///     If this data connection is currently active or not
         /// </summary>
-        [UserConfigurableBoolean(
-            Name = "Enabled",
-            Description = "If the data connection is currently polling for data"
-        )]
         public bool Enabled
         {
             get { return _enabled; }
             set {
                 _enabled = value;
                 EnablePolling(value);
+                OnEnabledChanged?.Invoke(this, value);
             }
         }
         private bool _enabled;
+
+        /// <summary>
+        ///     Event triggered whenever the object is enabled/disabled
+        /// </summary>
+        public event EventHandler<bool> OnEnabledChanged;
 
         /// <summary>
         ///     An indentifier for this particular connection.
@@ -70,13 +79,20 @@ namespace SeniorDesign.Core.Connections
         ///     This is decided by the converter
         /// </summary>
         public int OutputCount { get {
-                if (!IsOutput) return 0;
+                if (IsOutput) return 0;
 
                 if (Converter == null)
                     return MediaConnection.DirectOutputCount;
                 else
                     return Converter.DecodeDataCount;
             } }
+
+        /// <summary>
+        ///     The number of samples per field required to use this
+        /// </summary>
+        public virtual int InputLength { get { return 1; } }
+
+        #endregion
 
         /// <summary>
         ///     The physical connection that can send and recieve data
@@ -158,6 +174,20 @@ namespace SeniorDesign.Core.Connections
         private byte[] _leftoverInputData;
 
         /// <summary>
+        ///     The data that was not output yet
+        /// </summary>
+        private DataPacket _leftoverDecodedData = new DataPacket();
+
+        /// <summary>
+        ///     Creates a new DataConnection
+        /// </summary>
+        /// <param name="core">The core to use</param>
+        public DataConnection (StreamlineCore core)
+        {
+            Core = core;
+        }
+
+        /// <summary>
         ///     Enables or disables Polling
         /// </summary>
         /// <param name="status">True to enable, false to disable</param>
@@ -169,29 +199,50 @@ namespace SeniorDesign.Core.Connections
         }
 
         /// <summary>
+        ///     Enables this connectable to be used
+        /// </summary>
+        public void Enable()
+        {
+            if (MediaConnection != null && (IsOutput || NextConnections.Count > 0))
+                Core.EnableConnectable(this);
+        }
+
+        /// <summary>
+        ///     Stops this connectable from being used
+        /// </summary>
+        public void Disable()
+        {
+            Core.DisableConnectable(this);
+        }
+
+        /// <summary>
         ///     Polls the data connection for any new data.
         ///     This is specifically for the Polling Mechanism
         /// </summary>
-        public void Poll(StreamlineCore core)
+        public void Poll(StreamlineCore core, int pollCount)
         {
             // Check if we can read directly
             if (Converter == null && MediaConnection.CanReadDirect)
             {
                 // Read a data packet directly from the connection
-                core.PassDataToNextConnectable(this, MediaConnection.ReadDirect(CoreSettings.InputBuffer));
+                core.PassDataToNextConnectable(this, MediaConnection.ReadDirect(pollCount));
             }
             else
             {
-                // Grab all available bytes, and pass it to the decoder
-                var data = MediaConnection.ReadToEnd(CoreSettings.InputBuffer);
-                if (_leftoverInputData != null)
-                    _leftoverInputData = _leftoverInputData.Concat(data);
-                else
-                    _leftoverInputData = data;
-                var decodedData = Converter.DecodeData(ref _leftoverInputData);
+                // Only grab new points if we went through the decoded data
+                if (!_leftoverDecodedData.MinCountOnAllChannels(pollCount))
+                {
+                    // Grab all available bytes, and pass it to the decoder
+                    var data = MediaConnection.ReadToEnd(Core.Settings.InputBuffer);
+                    if (_leftoverInputData != null)
+                        _leftoverInputData = _leftoverInputData.Concat(data);
+                    else
+                        _leftoverInputData = data;
+                    _leftoverDecodedData.Add(Converter.DecodeData(ref _leftoverInputData));
+                }
 
                 // Pass the data on to the next step
-                core.PassDataToNextConnectable(this, new DataPacket(decodedData));
+                core.PassDataToNextConnectable(this, _leftoverDecodedData.PopSubPacket(pollCount));
             }
         }
 

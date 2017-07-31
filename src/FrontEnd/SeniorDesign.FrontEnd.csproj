@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B93FF613-6A61-497D-800A-F6950B7E427A}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SeniorDesign.FrontEnd</RootNamespace>
     <AssemblyName>SeniorDesign.FrontEnd</AssemblyName>
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,10 +33,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SeniorDesign.FrontEnd.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\resources\OpenTK\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\..\resources\OpenTK\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,6 +76,19 @@
     <Compile Include="Components\AttributeListComponent.Designer.cs">
       <DependentUpon>AttributeListComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\BlockEditor\BlockEditorComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\BlockEditor\BlockEditorComponent.Designer.cs">
+      <DependentUpon>BlockEditorComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\BlockEditor\Drawable\DrawableConnector.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableFilter.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableIConnectable.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableInputOutput.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableLine.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawableObject.cs" />
+    <Compile Include="Components\BlockEditor\Drawable\DrawablePort.cs" />
     <Compile Include="Components\Blocks\BlockViewerComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -130,6 +150,12 @@
     <Compile Include="Components\AttributeEditors\IntegerEditorComponent.Designer.cs">
       <DependentUpon>IntegerEditorComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\Specialized\EnableButtonComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Specialized\EnableButtonComponent.Designer.cs">
+      <DependentUpon>EnableButtonComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Specialized\CompileButtonComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -144,6 +170,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Windows\AboutPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\AboutPanel.Designer.cs">
+      <DependentUpon>AboutPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\AdvancedBlockPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +187,12 @@
     </Compile>
     <Compile Include="Windows\BlockCreatorPanel.Designer.cs">
       <DependentUpon>BlockCreatorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ConsolePanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ConsolePanel.Designer.cs">
+      <DependentUpon>ConsolePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\ControlPanel.cs">
       <SubType>Form</SubType>
@@ -173,6 +211,12 @@
     </Compile>
     <Compile Include="Windows\PluginPanel.Designer.cs">
       <DependentUpon>PluginPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SettingsPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\SettingsPanel.Designer.cs">
+      <DependentUpon>SettingsPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\TestPanel.cs">
       <SubType>Form</SubType>
@@ -201,6 +245,9 @@
     <EmbeddedResource Include="Components\AttributeListComponent.resx">
       <DependentUpon>AttributeListComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\BlockEditor\BlockEditorComponent.resx">
+      <DependentUpon>BlockEditorComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\Blocks\BlockViewerComponent.resx">
       <DependentUpon>BlockViewerComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -219,6 +266,9 @@
     <EmbeddedResource Include="Components\Blocks\IOBlockViewerComponent.resx">
       <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\Specialized\EnableButtonComponent.resx">
+      <DependentUpon>EnableButtonComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\Specialized\CompileButtonComponent.resx">
       <DependentUpon>CompileButtonComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -234,11 +284,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Windows\AboutPanel.resx">
+      <DependentUpon>AboutPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\AdvancedBlockPanel.resx">
       <DependentUpon>AdvancedBlockPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\BlockCreatorPanel.resx">
       <DependentUpon>BlockCreatorPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ConsolePanel.resx">
+      <DependentUpon>ConsolePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
@@ -249,11 +305,12 @@
     <EmbeddedResource Include="Windows\PluginPanel.resx">
       <DependentUpon>PluginPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\SettingsPanel.resx">
+      <DependentUpon>SettingsPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\TestPanel.resx">
       <DependentUpon>TestPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

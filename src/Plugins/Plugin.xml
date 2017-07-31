@@ -10,6 +10,8 @@
   <stream name="Constant Data" class="SeniorDesign.Plugins.Connections.ConstantDataStream"/>
   <stream name="Console Data" class="SeniorDesign.Plugins.Connections.ConsoleDataStream"/>
   <stream name="Serial COM Port" class="SeniorDesign.Plugins.Connections.SerialCOMStream"/>
+  <stream name="CSV File Writer" class="SeniorDesign.Plugins.Connections.CSVFileWriterStream"/>
+  <stream name="CSV File Reader" class="SeniorDesign.Plugins.Connections.CSVFileReaderStream"/>
 
   <!-- Pollers decide when data is requested from streams -->
   <poller name="Periodic" class="SeniorDesign.Plugins.Connections.Pollers.PeriodicPoller"/>
@@ -21,6 +23,8 @@
   
   <!-- Filters are objects that process data streams -->
   <filter name="Additive" class="SeniorDesign.Plugins.Filters.AdditionFilter"/>
+  <filter name="Gain" class="SeniorDesign.Plugins.Filters.GainFilter"/>
+  <filter name="Delay" class="SeniorDesign.Plugins.Filters.DelayFilter"/>
   <filter name="Quantizer" class="SeniorDesign.Plugins.Filters.QuantizerFilter"/>
   <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
   <filter name="Differentiator" class="SeniorDesign.Plugins.Filters.DifferentiatorFilter"/>

@@ -21,7 +21,7 @@ namespace SeniorDesign.Core.Connections.Converter
         /// </summary>
         /// <param name="input">The input byte array to convert</param>
         /// <returns>A series of doubles representing the decoded data</returns>
-        public virtual double[][] DecodeData(ref byte[] input)
+        public virtual DataPacket DecodeData(ref byte[] input)
         {
             return null;
         }
@@ -40,7 +40,7 @@ namespace SeniorDesign.Core.Connections.Converter
         /// <summary>
         ///     The number of output streams this converts from a single byte stream
         /// </summary>
-        public virtual int DecodeDataCount { get; }
+        public virtual int DecodeDataCount { get; } = -1;
 
         #region IDataConnectionComponent
 

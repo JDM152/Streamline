@@ -36,6 +36,7 @@
             this.DeleteBlockButton = new System.Windows.Forms.Button();
             this.ConnectionEditor = new SeniorDesign.FrontEnd.Components.Blocks.ConnectionViewerComponent();
             this.BlockViewComponent = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,9 +52,11 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.fileToolStripMenuItem.Text = "View";
             // 
             // BlockList
             // 
@@ -119,6 +122,13 @@
             this.BlockViewComponent.Size = new System.Drawing.Size(342, 351);
             this.BlockViewComponent.TabIndex = 2;
             // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // AdvancedBlockPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -152,5 +162,6 @@
         private System.Windows.Forms.Button AddIOButton;
         private System.Windows.Forms.Button DeleteBlockButton;
         private Components.Blocks.ConnectionViewerComponent ConnectionEditor;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }

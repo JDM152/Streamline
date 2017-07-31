@@ -39,8 +39,14 @@
             this.advancedBlockEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveSchematicDialog = new System.Windows.Forms.SaveFileDialog();
             this.OpenSchematicDialog = new System.Windows.Forms.OpenFileDialog();
+            this.AddFilterButton = new System.Windows.Forms.Button();
+            this.AddIOButton = new System.Windows.Forms.Button();
+            this.BlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
+            this.BlockSchematic = new SeniorDesign.FrontEnd.Components.BlockEditor.BlockEditorComponent();
             this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,10 +56,11 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.viewToolStripMenuItem,
-            this.debugToolStripMenuItem});
+            this.debugToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(624, 24);
+            this.MenuStrip.Size = new System.Drawing.Size(884, 24);
             this.MenuStrip.TabIndex = 0;
             this.MenuStrip.Text = "Menu";
             // 
@@ -132,6 +139,21 @@
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.aboutToolStripMenuItem.Text = "About Streamline";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // SaveSchematicDialog
             // 
             this.SaveSchematicDialog.DefaultExt = "schematic";
@@ -144,14 +166,59 @@
             this.OpenSchematicDialog.Filter = "Schematic files|*.schematic|All files|*.*";
             this.OpenSchematicDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenSchematicDialog_FileOk);
             // 
+            // AddFilterButton
+            // 
+            this.AddFilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddFilterButton.Location = new System.Drawing.Point(432, 27);
+            this.AddFilterButton.Name = "AddFilterButton";
+            this.AddFilterButton.Size = new System.Drawing.Size(176, 23);
+            this.AddFilterButton.TabIndex = 2;
+            this.AddFilterButton.Text = "Add Filter";
+            this.AddFilterButton.UseVisualStyleBackColor = true;
+            this.AddFilterButton.Click += new System.EventHandler(this.AddFilterButton_Click);
+            // 
+            // AddIOButton
+            // 
+            this.AddIOButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddIOButton.Location = new System.Drawing.Point(432, 56);
+            this.AddIOButton.Name = "AddIOButton";
+            this.AddIOButton.Size = new System.Drawing.Size(176, 23);
+            this.AddIOButton.TabIndex = 3;
+            this.AddIOButton.Text = "Add Input/Output";
+            this.AddIOButton.UseVisualStyleBackColor = true;
+            this.AddIOButton.Click += new System.EventHandler(this.AddIOButton_Click);
+            // 
+            // BlockViewer
+            // 
+            this.BlockViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.BlockViewer.Location = new System.Drawing.Point(432, 90);
+            this.BlockViewer.Name = "BlockViewer";
+            this.BlockViewer.Size = new System.Drawing.Size(440, 340);
+            this.BlockViewer.TabIndex = 5;
+            // 
+            // BlockSchematic
+            // 
+            this.BlockSchematic.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.BlockSchematic.Location = new System.Drawing.Point(12, 27);
+            this.BlockSchematic.Name = "BlockSchematic";
+            this.BlockSchematic.Size = new System.Drawing.Size(414, 403);
+            this.BlockSchematic.TabIndex = 4;
+            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 442);
+            this.ClientSize = new System.Drawing.Size(884, 442);
+            this.Controls.Add(this.BlockViewer);
+            this.Controls.Add(this.BlockSchematic);
+            this.Controls.Add(this.AddIOButton);
+            this.Controls.Add(this.AddFilterButton);
             this.Controls.Add(this.MenuStrip);
             this.MainMenuStrip = this.MenuStrip;
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(900, 480);
             this.Name = "ControlPanel";
             this.Text = "Streamline - New Schematic";
             this.MenuStrip.ResumeLayout(false);
@@ -176,5 +243,11 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog SaveSchematicDialog;
         private System.Windows.Forms.OpenFileDialog OpenSchematicDialog;
+        private System.Windows.Forms.Button AddFilterButton;
+        private System.Windows.Forms.Button AddIOButton;
+        private Components.BlockEditor.BlockEditorComponent BlockSchematic;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private Components.Blocks.BlockViewerComponent BlockViewer;
     }
 }

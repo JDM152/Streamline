@@ -59,7 +59,7 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// </summary>
         /// <param name="input">The input byte array to convert</param>
         /// <returns>A series of doubles representing the decoded data</returns>
-        public override double[][] DecodeData(ref byte[] input)
+        public override DataPacket DecodeData(ref byte[] input)
         {
             // TODO : The way Encodings get bytes is strange. Figure out how to get the number of bytes used
             throw new NotImplementedException();

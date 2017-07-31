@@ -49,13 +49,17 @@
     <Compile Include="Connections\Pollers\TickPoller.cs" />
     <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
     <Compile Include="Connections\Streams\AudioDataStream.cs" />
+    <Compile Include="Connections\Streams\CSVFileReaderStream.cs" />
     <Compile Include="Connections\Streams\AudioFileStream.cs" />
+    <Compile Include="Connections\Streams\CSVFileWriterStream.cs" />
     <Compile Include="Connections\Streams\ConsoleDataStream.cs" />
     <Compile Include="Connections\Streams\ConstantDataStream.cs" />
     <Compile Include="Connections\Streams\RandomDataStream.cs" />
     <Compile Include="Connections\Streams\SerialCOMStream.cs" />
     <Compile Include="Enums\EncodingEnum.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
+    <Compile Include="Filters\DelayFilter.cs" />
+    <Compile Include="Filters\GainFilter.cs" />
     <Compile Include="Filters\StopBandFilter.cs" />
     <Compile Include="Filters\IntegratorFilter.cs" />
     <Compile Include="Filters\DifferentiatorFilter.cs" />

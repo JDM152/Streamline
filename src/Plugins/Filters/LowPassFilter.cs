@@ -41,10 +41,10 @@ namespace SeniorDesign.Plugins.Filters
         )]
         public double CutoffFrequency
         {
-            get { return _cutoffFrequency; }
+            get { return _cutoffFrequency / (2 * Math.PI); }
             set
             {
-                _cutoffFrequency = value;
+                _cutoffFrequency = value * (2 * Math.PI);
                 RecalcValues();
             }
         }
@@ -127,6 +127,11 @@ namespace SeniorDesign.Plugins.Filters
         ///     The previous previous output value
         /// </summary>
         private double _y2 = 0;
+
+        /// <summary>
+        ///     Creates a new Low-Pass Filter
+        /// </summary>
+        public LowPassFilter(StreamlineCore core) : base(core) { }
 
         /// <summary>
         ///     Accepts incoming data from a previous connection.

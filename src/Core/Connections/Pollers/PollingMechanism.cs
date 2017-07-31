@@ -43,6 +43,19 @@ namespace SeniorDesign.Core.Connections.Pollers
         /// </summary>
         public abstract void Disable();
 
+        /// <summary>
+        ///     If this polling mechanism is to be in the tick queue
+        /// </summary>
+        public abstract bool IsTickPoller { get; }
+
+        /// <summary>
+        ///     Polls this object so that the data can be generated
+        /// </summary>
+        public virtual void Poll()
+        {
+            Connection.Poll(Core, Core.Settings.InputBuffer);
+        }
+
         #region IDataConnectionComponent
 
         /// <summary>

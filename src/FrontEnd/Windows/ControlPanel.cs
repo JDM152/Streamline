@@ -19,6 +19,16 @@ namespace SeniorDesign.FrontEnd.Windows
         protected readonly StreamlineCore Core;
 
         /// <summary>
+        ///     The BlockCreatorPanel currently being used
+        /// </summary>
+        private BlockCreatorPanel _blockCreatorPanel = null;
+
+        /// <summary>
+        ///     The IOBlockCreatorPanel currently being used
+        /// </summary>
+        private IOBlockCreatorPanel _ioBlockCreatorPanel = null;
+
+        /// <summary>
         ///     Creates a new central control panel using a given core
         /// </summary>
         public ControlPanel(StreamlineCore core)
@@ -27,8 +37,13 @@ namespace SeniorDesign.FrontEnd.Windows
             InitializeComponent();
 
             // Don't show debug if not a dev
-            if (!CoreSettings.DebugMode)
+            if (!Core.Settings.DebugMode)
                 debugToolStripMenuItem.Dispose();
+
+            // Set up the block editor
+            BlockSchematic.SetCore(Core);
+            BlockSchematic.OnBlockSelected += (e, o) => BlockViewer.SetViewingComponent(o);
+            
         }
 
         /// <summary>
@@ -54,6 +69,14 @@ namespace SeniorDesign.FrontEnd.Windows
         private void advancedBlockEditorToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             new AdvancedBlockPanel(Core).ShowDialog();
+        }
+
+        /// <summary>
+        ///     Method triggered when the user clicks Help->About Streamline
+        /// </summary>
+        private void aboutToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            new AboutPanel().ShowDialog();
         }
 
         #region File Menu
@@ -118,5 +141,28 @@ namespace SeniorDesign.FrontEnd.Windows
 
         #endregion
 
+        /// <summary>
+        ///     Method triggered when the user presses the "Add Filter" button
+        /// </summary>
+        private void AddFilterButton_Click(object sender, System.EventArgs e)
+        {
+            // Show the Add Block Panel
+            if (_blockCreatorPanel == null || _blockCreatorPanel.IsDisposed)
+                _blockCreatorPanel = new BlockCreatorPanel(Core);
+            _blockCreatorPanel.Show();
+            _blockCreatorPanel.BringToFront();
+        }
+
+        /// <summary>
+        ///     Method triggered when the user presses the "Add Input/Output" button
+        /// </summary>
+        private void AddIOButton_Click(object sender, System.EventArgs e)
+        {
+            // Show the Add IO Panel
+            if (_ioBlockCreatorPanel == null || _ioBlockCreatorPanel.IsDisposed)
+                _ioBlockCreatorPanel = new IOBlockCreatorPanel(Core);
+            _ioBlockCreatorPanel.Show();
+            _ioBlockCreatorPanel.BringToFront();
+        }
     }
 }

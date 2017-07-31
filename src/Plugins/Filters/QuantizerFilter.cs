@@ -53,7 +53,7 @@ namespace SeniorDesign.Plugins.Filters
         ///     The number of input connections this connectable accepts.
         ///     -1 means an arbitrary number.
         /// </summary>
-        public override int InputCount { get { return -1; } }
+        public override int InputCount { get { return 1; } }
 
         /// <summary>
         ///     The number of output connections this connectable provides.
@@ -67,6 +67,11 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return 1; } }
 
         /// <summary>
+        ///     Creates a new Quantizer Filter
+        /// </summary>
+        public QuantizerFilter(StreamlineCore core) : base(core) { }
+
+        /// <summary>
         ///     Accepts incoming data from a previous connection.
         ///     This is allowed to queue and store as needed.
         /// </summary>
@@ -75,27 +80,18 @@ namespace SeniorDesign.Plugins.Filters
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
             // Quantize all points in each channel
-            while (data.MinCountOnAllChannels(1))
-            {
-                for (var k = 0; k < data.ChannelCount; k++)
-                {
-                    for (var j = 0; j < data[k].Count; j++)
-                    {
-                        var currentData = data[k][j];
-                        if (currentData < Minimum)
-                            data[k][j] = Minimum;
-                        else if (currentData > Maximum)
-                            data[k][j] = Maximum;
-                        else
-                            data[k][j] = Math.Floor((currentData - Minimum) / StepSize) * StepSize + Minimum;
-                    }
-                }
-            }
+            var toReturn = 0.0;
+            var currentData = data.Pop(0);
+            if (currentData < Minimum)
+                toReturn = Minimum;
+            else if (currentData > Maximum)
+                toReturn = Maximum;
+            else
+                toReturn = Math.Floor((currentData - Minimum) / StepSize) * StepSize + Minimum;
             
 
             // Push to the next node, and clear the saved data
-            core.PassDataToNextConnectable(this, data);
-            data.Clear();
+            core.PassDataToNextConnectable(this, toReturn);
         }
 
         /// <summary>

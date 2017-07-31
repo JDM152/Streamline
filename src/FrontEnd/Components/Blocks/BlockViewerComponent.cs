@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Connections;
 using SeniorDesign.FrontEnd.Components.AttributeEditors;
 using System;
 using System.Reflection;
@@ -67,7 +68,18 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
 
                 // Update the data on the top page
                 BlockName.Text = _selected.Name;
-                BlockTypeName.Text = _selected.InternalName;
+                var realType = _selected.InternalName;
+                var dc = _selected as DataConnection;
+                if (dc != null)
+                {
+                    if (dc.MediaConnection != null)
+                        realType += $"\nMedia : {dc.MediaConnection.InternalName}";
+                    if (dc.Poller != null)
+                        realType += $"\nPoller : {dc.Poller.InternalName}";
+                    if (dc.Converter != null)
+                        realType += $"\nConverter : {dc.Converter.InternalName}";
+                }
+                BlockDataText.Text = $"Type : {realType}\nAvailable Inputs : {(_selected.InputCount == -1 ? "Unlimited" : _selected.InputCount.ToString())}\nAvailable Outputs : {_selected.OutputCount}"; ;
 
                 AttributeList.SetComponent(_selected);
             }

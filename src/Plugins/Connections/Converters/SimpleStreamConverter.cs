@@ -57,7 +57,7 @@ namespace SeniorDesign.Plugins.Connections.Converters
         /// </summary>
         /// <param name="input">The input byte array to convert</param>
         /// <returns>A series of doubles representing the decoded data</returns>
-        public override double[][] DecodeData(ref byte[] input)
+        public override DataPacket DecodeData(ref byte[] input)
         {
             // Only decode when possible
             if (input.Length < DataSize)
@@ -65,10 +65,10 @@ namespace SeniorDesign.Plugins.Connections.Converters
 
             // Take out everything possible from the input
             var pieceCount = input.Length / DataSize;
-            var toReturn = new double[1][];
-            toReturn[0] = new double[pieceCount];
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
             for (var k = 0; k < pieceCount; k++)
-                toReturn[0][k] = ConversionUtil.BytesToDouble(input, k * DataSize, DataSize, Signed, LittleEndianMode);
+                toReturn[0].Add(ConversionUtil.BytesToDouble(input, k * DataSize, DataSize, Signed, LittleEndianMode));
 
             // Set the input to the correct sub-buffer
             var fullSize = pieceCount * DataSize;
