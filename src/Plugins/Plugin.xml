@@ -23,6 +23,8 @@
   
   <!-- Filters are objects that process data streams -->
   <filter name="Additive" class="SeniorDesign.Plugins.Filters.AdditionFilter"/>
+  <filter name="Gain" class="SeniorDesign.Plugins.Filters.GainFilter"/>
+  <filter name="Delay" class="SeniorDesign.Plugins.Filters.DelayFilter"/>
   <filter name="Quantizer" class="SeniorDesign.Plugins.Filters.QuantizerFilter"/>
   <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
   <filter name="Differentiator" class="SeniorDesign.Plugins.Filters.DifferentiatorFilter"/>

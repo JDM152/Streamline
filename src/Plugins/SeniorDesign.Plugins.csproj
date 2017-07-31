@@ -58,6 +58,8 @@
     <Compile Include="Connections\Streams\SerialCOMStream.cs" />
     <Compile Include="Enums\EncodingEnum.cs" />
     <Compile Include="Filters\AdditionFilter.cs" />
+    <Compile Include="Filters\DelayFilter.cs" />
+    <Compile Include="Filters\GainFilter.cs" />
     <Compile Include="Filters\StopBandFilter.cs" />
     <Compile Include="Filters\IntegratorFilter.cs" />
     <Compile Include="Filters\DifferentiatorFilter.cs" />

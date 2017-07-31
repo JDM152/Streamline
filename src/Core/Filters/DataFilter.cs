@@ -25,7 +25,7 @@ namespace SeniorDesign.Core.Filters
         /// <summary>
         ///     Stops this connectable from being used
         /// </summary>
-        public void Disable() { throw new NotImplementedException(); }
+        public void Disable() { }
 
         /// <summary>
         ///     If this connectable is currently active or not

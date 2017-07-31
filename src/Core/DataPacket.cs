@@ -9,6 +9,12 @@ namespace SeniorDesign.Core
     {
 
         /// <summary>
+        ///     The index that new data should be added to.
+        ///     This resets every cycle
+        /// </summary>
+        public int ChannelIndex = 0;
+
+        /// <summary>
         ///     The collection of actual data
         /// </summary>
         private List<List<double>> _data = new List<List<double>>();
@@ -143,6 +149,69 @@ namespace SeniorDesign.Core
             _data.Add(list);
             list.AddRange(data);
             return _data.IndexOf(list);
+        }
+
+        /// <summary>
+        ///     Merges a data packet with this one, adding
+        ///     the channels from the packet to the end.
+        /// </summary>
+        /// <param name="data">The data packet to take the channels from</param>
+        public void Merge(DataPacket data)
+        {
+            // TODO : There may be a bug by just taking references...
+            for (var k = 0; k < data.ChannelCount; k++)
+                _data.Add(data[k]);
+        }
+
+        /// <summary>
+        ///     Adds values to the current channel, and increases
+        ///     the channel index by one.
+        ///     This should be used to keep previous data while still
+        ///     ensuring that channels are added as needed
+        /// </summary>
+        /// <returns>The new current index</returns>
+        public int AddToCurrentChannel(double data)
+        {
+            if (_data.Count <= ChannelIndex)
+                AddChannel(data);
+            else
+                _data[ChannelIndex].Add(data);
+            ChannelIndex++;
+
+            return ChannelIndex;
+        }
+
+        /// <summary>
+        ///     Adds values to the current channel, and increases
+        ///     the channel index by one.
+        ///     This should be used to keep previous data while still
+        ///     ensuring that channels are added as needed
+        /// </summary>
+        /// <returns>The new current index</returns>
+        public int AddToCurrentChannel(DataPacket data)
+        {
+            if (_data.Count <= ChannelIndex)
+                AddChannel(data[0]);
+            else
+                _data[ChannelIndex] = data[0];
+            ChannelIndex++;
+
+            return ChannelIndex;
+        }
+
+        /// <summary>
+        ///     Removes all of the empty channels.
+        ///     Starts from the end, and stops if one is not empty.
+        /// </summary>
+        public void RemoveEmptyChannels()
+        {
+            for (var k = _data.Count - 1; k >= 0; k--)
+            {
+                if (_data[k].Count <= 0)
+                    _data.RemoveAt(k);
+                else
+                    return;
+            }
         }
 
         /// <summary>

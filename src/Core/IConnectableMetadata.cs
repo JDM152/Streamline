@@ -22,8 +22,7 @@ namespace SeniorDesign.Core
         /// </summary>
         public IConnectableMetadata()
         {
-            // Always have at least one channel
-            LeftoverData.AddChannel();
+            
         }
 
     }
