@@ -125,6 +125,7 @@
     <Compile Include="Components\Blocks\IOBlockViewerComponent.Designer.cs">
       <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\Grapher\Grapher.cs" />
     <Compile Include="Components\IAttributeEditorComponent.cs" />
     <Compile Include="Components\AttributeEditors\SelectableListEditorComponent.cs">
       <SubType>UserControl</SubType>
