@@ -23,7 +23,10 @@ namespace SeniorDesign.FrontEnd
             }
             catch { }
             var pluginErrors = new List<string>();
+
             core.LoadPluginsFromAssembly(typeof(RollingAverageFilter).Assembly, pluginErrors);
+            core.LoadPluginsFromAssembly(typeof(Program).Assembly, pluginErrors);
+
             foreach (var line in pluginErrors)
                 Console.WriteLine("Plugin Error : " + line);
 

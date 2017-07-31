@@ -1,4 +1,5 @@
 ﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Connections;
 using SeniorDesign.FrontEnd.Components.AttributeEditors;
 using System;
@@ -53,7 +54,8 @@ namespace SeniorDesign.FrontEnd.Components
                 AttributeEditorList.Controls.Add(new EnableButtonComponent(dc));
 
             // Add every available field
-            foreach (var field in _owner.GetType().GetFields())
+            var otype = _owner.GetType();
+            foreach (var field in otype.GetFields())
             {
                 foreach (var attribute in field.GetCustomAttributes())
                 {
@@ -70,7 +72,7 @@ namespace SeniorDesign.FrontEnd.Components
             }
 
             // Add every available property
-            foreach (var prop in _owner.GetType().GetProperties())
+            foreach (var prop in otype.GetProperties())
             {
                 foreach (var attribute in prop.GetCustomAttributes())
                 {
@@ -90,6 +92,16 @@ namespace SeniorDesign.FrontEnd.Components
             var dcc = _owner as IDataConnectionComponent;
             if (dcc != null && dcc.CanCompile)
                 AttributeEditorList.Controls.Add(new CompileButtonComponent(dcc));
+
+            // Add buttons for all of the available methods
+            foreach (var method in otype.GetMethods())
+            {
+                var attr = method.GetCustomAttribute<FunctionButtonAttribute>();
+                if (attr == null) continue;
+
+                // Create a button that triggers the function
+                AttributeEditorList.Controls.Add(new FunctionButtonComponent(_owner, method, attr));
+            }
         }
     }
 }

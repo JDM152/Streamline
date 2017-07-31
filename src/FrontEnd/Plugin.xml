@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- This XML is used to map plugins in this assembly for the Core -->
+<plugin name="Default GUI Plugins" description="Additional plugins that have custom GUI elements">
+
+  <!-- Streams are the raw IO ports, such as a websocket or Bluetooth -->
+  <stream name="Grapher" class="SeniorDesign.FrontEnd.Connections.Streams.GrapherDataStream"/>
+
+</plugin>

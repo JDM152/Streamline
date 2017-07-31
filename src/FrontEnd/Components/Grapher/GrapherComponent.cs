@@ -1,71 +1,93 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 using OpenTK;
-using System;
+using OpenTK.Graphics.OpenGL;
 using SeniorDesign.Core;
 using System.Drawing.Imaging;
 
-namespace SeniorDesign.FrontEnd
+namespace SeniorDesign.FrontEnd.Components.Grapher
 {
-    class Grapher
+    public partial class GrapherComponent : UserControl
     {
+        /// <summary>
+        ///     If the component has loaded and rendering is possible
+        /// </summary>
+        private bool _canRender = false;
+
+        /// <summary>
+        ///     Creates a new Grapher Component
+        /// </summary>
+        public GrapherComponent()
+        {
+            InitializeComponent();
+
+            // Create the default font to render
+            FontFamily fontFamily = new FontFamily("Times New Roman");
+            font = new Font(fontFamily, 12, FontStyle.Regular, GraphicsUnit.Pixel);
+        }
+
+
+        /// <summary>
+        ///     Method triggered whenver the grapher component fully loads
+        /// </summary>
+        private void GrapherComponent_Load(object sender, EventArgs e)
+        {
+            _canRender = true;
+        }
+
         //default
         private const int HISTORY = 200;
-        private GLControl glControl;
         private float minY = -10.0f;
         private float maxY = 10.0f;
         private Color backgroundColor = Color.White;
         private Color renderColor = Color.Black;
         private Font font;
         private float textHeight = 5.0f;
-        /// <summary>
-        ///     This class take glControl to render
-        /// </summary>
-        public Grapher(GLControl glControl)
-        {
-            this.glControl = glControl;
-            FontFamily fontFamily = new FontFamily("Times New Roman");
-            font = new Font(fontFamily, 12, FontStyle.Regular, GraphicsUnit.Pixel);
-        }
+
         /// <summary>
         ///     this function take a datapacket and render it 
         /// </summary>
         public void Draw(DataPacket packet)
         {
-            glControl.MakeCurrent();
+            if (!_canRender) return;
+
+            GlComponent.MakeCurrent();
             GL.PushMatrix();
             GL.ClearColor(backgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Viewport(0, 0, glControl.Width, glControl.Height * 4 / 5);
+            GL.Viewport(0, 0, GlComponent.Width, GlComponent.Height * 4 / 5);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(1, HISTORY, minY, maxY, -1, 1);
-            drawData(packet);
+            DrawData(packet);
             GL.PopMatrix();
             //different viewport
             GL.PushMatrix();
-            GL.Viewport(0, glControl.Height * 3 / 4, glControl.Width, glControl.Height * 1 / 5);
+            GL.Viewport(0, GlComponent.Height * 3 / 4, GlComponent.Width, GlComponent.Height * 1 / 5);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, 1, 1, 0, -1, 1);
             GL.Enable(EnableCap.Texture2D);
-            drawStatitics(packet);
+            DrawStatitics(packet);
             GL.Disable(EnableCap.Texture2D);
             GL.PopMatrix();
 
-            glControl.SwapBuffers();
-            deleteHistory(packet);
+            GlComponent.SwapBuffers();
+            DeleteHistory(packet);
         }
+
         /// <summary>
-        ///     this function set the max height of the graph
+        ///     Sets the max height of the graph
         /// </summary>
         public void SetHeight(float minY, float maxY)
         {
             this.minY = minY;
             this.maxY = maxY;
         }
+
         /// <summary>
-        ///     this function set the color of rendered line
+        ///     Set the color of rendered line
         /// </summary>
         public void SetLineColor(int rgb)
         {
@@ -74,8 +96,9 @@ namespace SeniorDesign.FrontEnd
             int argb = alpha | rgb;
             renderColor = Color.FromArgb(argb);
         }
+
         /// <summary>
-        ///     this function set the color of background
+        ///     Set the color of background
         /// </summary>
         public void SetBackgroundColor(int rgb)
         {
@@ -84,12 +107,12 @@ namespace SeniorDesign.FrontEnd
             int argb = alpha | rgb;
             backgroundColor = Color.FromArgb(argb);
         }
-        /// <summary>
-        ///     this function render datapacket 
-        /// </summary>
-        private void drawData(DataPacket packet)
-        {
 
+        /// <summary>
+        ///     Renders the data given from a DataPacket
+        /// </summary>
+        private void DrawData(DataPacket packet)
+        {
             GL.PushMatrix();
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -104,17 +127,18 @@ namespace SeniorDesign.FrontEnd
             GL.End();
             GL.PopMatrix();
         }
+
         /// <summary>
         ///     this function delete unneeded data
         /// </summary>
-        private void deleteHistory(DataPacket packet)
+        private void DeleteHistory(DataPacket packet)
         {
-
             while (packet[0].Count > HISTORY)
             {
                 packet.Pop(0);
             }
         }
+
         /// <summary>
         ///     this function convert string to bitmap image
         /// </summary>
@@ -125,7 +149,7 @@ namespace SeniorDesign.FrontEnd
             SizeF textSize = drawing.MeasureString(text, font);
             img.Dispose();
             drawing.Dispose();
-            img = new Bitmap((int)textSize.Width, (int)textSize.Height);
+            img = new Bitmap((int) textSize.Width, (int) textSize.Height);
             drawing = Graphics.FromImage(img);
             drawing.Clear(backColor);
             Brush textBrush = new SolidBrush(textColor);
@@ -153,17 +177,17 @@ namespace SeniorDesign.FrontEnd
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
             OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             bitmap.UnlockBits(data);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.Repeat);
 
             return tex;
         }
         /// <summary>
         ///     this function draw statitics
         /// </summary>
-        private void drawStatitics(DataPacket packet)
+        private void DrawStatitics(DataPacket packet)
         {
             double max = packet[0][packet[0].Count - 1];
             double min = packet[0][packet[0].Count - 1];
@@ -187,14 +211,15 @@ namespace SeniorDesign.FrontEnd
             String avgText = "AVG: " + avg.ToString() + "\n";
             Bitmap tempImg = DrawText(maxText + minText + avgText, font, renderColor, backgroundColor);
             int textureID = LoadTexture(tempImg);
-            renderText(textureID);
+            RenderText(textureID);
             //discard it after rendering
             GL.DeleteTexture(textureID);
         }
+
         /// <summary>
         ///     this function render statitics
         /// </summary>
-        private void renderText(int textureID)
+        private void RenderText(int textureID)
         {
             GL.PushMatrix();
             GL.MatrixMode(MatrixMode.Modelview);
