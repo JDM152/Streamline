@@ -68,6 +68,16 @@ namespace SeniorDesign.Core.Connections.Streams
         public virtual int DirectOutputCount { get { return CanReadDirect ? 1 : 0; } }
 
         /// <summary>
+        ///     Method triggered whenever the stream is enabled
+        /// </summary>
+        public virtual void Enable() { }
+
+        /// <summary>
+        ///     Method triggered when the stream is disabled
+        /// </summary>
+        public virtual void Disable() { }
+
+        /// <summary>
         ///     If the end of the stream has been reached
         /// </summary>
         public bool EndOfStream {

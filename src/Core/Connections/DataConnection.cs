@@ -29,8 +29,10 @@ namespace SeniorDesign.Core.Connections
         {
             get { return _enabled; }
             set {
+                if (_enabled == value) return;
                 _enabled = value;
                 EnablePolling(value);
+                EnableStreaming(value);
                 OnEnabledChanged?.Invoke(this, value);
             }
         }
@@ -191,11 +193,24 @@ namespace SeniorDesign.Core.Connections
         ///     Enables or disables Polling
         /// </summary>
         /// <param name="status">True to enable, false to disable</param>
-        public void EnablePolling(bool status = true)
+        private void EnablePolling(bool status = true)
         {
             if (_poller == null) return;
             if (status) _poller.Enable();
             else _poller.Disable();
+        }
+
+        /// <summary>
+        ///     Enables or disables streaming
+        ///     This only affects certain types of streams where data
+        ///     input is seperate from the polling rate.
+        /// </summary>
+        /// <param name="status">True to enable, false to disable</param>
+        public void EnableStreaming(bool status = true)
+        {
+            if (_mediaConnection == null) return;
+            if (status) _mediaConnection.Enable();
+            else _mediaConnection.Disable();
         }
 
         /// <summary>

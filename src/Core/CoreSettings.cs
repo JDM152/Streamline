@@ -30,6 +30,15 @@ namespace SeniorDesign.Core
         public int TickTime = 10;
 
         /// <summary>
+        ///     If the tick time should be ignored, and run as fast as possible instead
+        /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Unlimited Tickrate",
+            Description = "If enabled, the tickrate will not be limited"
+        )]
+        public bool UnlimitedTickrate = false;
+
+        /// <summary>
         ///     If debug mode is currently enabled
         /// </summary>
         public bool DebugMode = true;
@@ -44,6 +53,7 @@ namespace SeniorDesign.Core
 
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(InputBuffer));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(TickTime));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(UnlimitedTickrate));
 
             return toReturn.ToArray();
         }
@@ -57,6 +67,7 @@ namespace SeniorDesign.Core
         {
             InputBuffer = ByteUtil.GetIntFromSizedArray(data, ref offset);
             TickTime = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            UnlimitedTickrate = ByteUtil.GetBoolFromSizedArray(data, ref offset);
         }
     }
 }

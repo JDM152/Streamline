@@ -34,6 +34,15 @@ namespace SeniorDesign.Plugins.Connections
             }
         private int _samplingRate = 44100;
 
+        /// <summary>
+        ///     How many seconds of audio are required before playback begins
+        /// </summary>
+        [UserConfigurableInteger(
+            Name = "Autoplay Sample Count",
+            Description = "The number of points to wait for before auto-playing"
+        )]
+        public int AutoplayCount = 44100;
+
         #endregion
 
         /// <summary>
@@ -171,10 +180,14 @@ namespace SeniorDesign.Plugins.Connections
                 }
 
                 // Swap out the buffers and play if we have enough for a sample
-                if (Memory.Position >= _samplingRate)
+                if (Memory.Position >= AutoplayCount)
                 {
                     Memory.Position = 0;
-                    Player.Play();
+                    if (Player.PlaybackState == PlaybackState.Stopped)
+                        Player.Play();
+                    else
+                        Player.Resume();
+                    
                     Memory.Position = 0;
                 }
             }

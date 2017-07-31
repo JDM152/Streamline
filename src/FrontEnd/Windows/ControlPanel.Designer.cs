@@ -49,6 +49,7 @@
             this.BlockSchematic = new SeniorDesign.FrontEnd.Components.BlockEditor.BlockEditorComponent();
             this.IOBlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.IOBlockViewerComponent();
             this.BlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -119,7 +120,8 @@
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.advancedBlockEditorToolStripMenuItem,
-            this.pluginsToolStripMenuItem});
+            this.pluginsToolStripMenuItem,
+            this.settingsToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -243,6 +245,13 @@
             this.BlockViewer.Size = new System.Drawing.Size(544, 357);
             this.BlockViewer.TabIndex = 5;
             // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,5 +297,6 @@
         private Components.Blocks.BlockViewerComponent BlockViewer;
         private Components.Blocks.IOBlockViewerComponent IOBlockViewer;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }

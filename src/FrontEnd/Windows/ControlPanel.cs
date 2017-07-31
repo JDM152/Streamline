@@ -205,5 +205,13 @@ namespace SeniorDesign.FrontEnd.Windows
         {
 
         }
+
+        /// <summary>
+        ///     Method triggered whenever View->Settings is selected
+        /// </summary>
+        private void settingsToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            new SettingsPanel(Core).ShowDialog();
+        }
     }
 }

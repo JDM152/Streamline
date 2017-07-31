@@ -141,6 +141,7 @@ namespace SeniorDesign.Plugins.Connections
             toReturn.AddChannel();
 
             // Read the required number of points off of the stream
+            count *= 4;
             var buffer = new float[count];
             count = Sampler.Read(buffer, 0, count);
             if (count <= 0)

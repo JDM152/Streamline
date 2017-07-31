@@ -49,6 +49,7 @@
     <Compile Include="Connections\Pollers\TickPoller.cs" />
     <Compile Include="Connections\Pollers\PeriodicPoller.cs" />
     <Compile Include="Connections\Streams\AudioDataStream.cs" />
+    <Compile Include="Connections\Streams\MicrophoneStream.cs" />
     <Compile Include="Connections\Streams\CSVFileReaderStream.cs" />
     <Compile Include="Connections\Streams\AudioFileStream.cs" />
     <Compile Include="Connections\Streams\CSVFileWriterStream.cs" />

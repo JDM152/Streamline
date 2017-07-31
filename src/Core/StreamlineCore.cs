@@ -286,84 +286,101 @@ namespace SeniorDesign.Core
         /// </summary>
         private void TickCycle()
         {
-            lock (_tickLock)
+            bool oneCycle = true;
+            while (Settings.UnlimitedTickrate || oneCycle)
             {
-
-                // Stop polling if nothing left anywhere
-                if (_executionQueue.Count <= 0 && _tickers.Count <= 0)
-                    return;
-
-                // Perform the polling as needed
-                if (_executionQueue.Count <= 0)
-                    _tickersPosition = 0;
-
-                if (_tickerMode)
+                // Perform the lock on the inside so it has a chance to be taken elsewhere
+                lock (_tickLock)
                 {
-                    // Continue polling where left off last poll
-                    while (_tickersPosition < _tickers.Count)
-                    {
-                        // Attempt to run the next available ticker
-                        if (_tickers[_tickersPosition].Connection.Enabled)
-                        {
-                            try
-                            {
-                                OnBlockActivated?.Invoke(this, _tickers[_tickersPosition].Connection);
-                                _tickers[_tickersPosition++].Poll();
-                                break;
-                            }
-                            catch
-                            {
-                                if (Settings.DebugMode) throw;
-                                DisableConnectable(_tickers[_tickersPosition++].Connection);
-                            }
-                        }
-                        else
-                        {
-                            _tickersPosition++;
-                        }
-                    }
+                    
+                    // Stop polling if nothing left anywhere
+                    if (_executionQueue.Count <= 0 && _tickers.Count <= 0)
+                        return;
 
-                    // If no poller found, must be at end of list. Make way for the executables
-                    if (_tickersPosition >= _tickers.Count)
-                    {
-                        _tickersPosition = -1;
-                        _tickerMode = false;
-                    }
-
-                }
-                else
-                {
-                    // Move on and execute 
-                    while (_executionQueue.Count > 0)
-                    {
-                        var node = _executionQueue.Dequeue();
-                        if (!node.Enabled || (node.InputCount > 0 && !_connectableMetadata[node].LeftoverData.MinCountOnAllChannels(node.InputLength))) continue;
-                        _connectableMetadata[node].LeftoverData.ChannelIndex = 0;
-
-                        // Accept the incoming data
-                        try
-                        {
-                            OnBlockActivated?.Invoke(this, node);
-                            node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
-                        }
-                        catch
-                        {
-                            if (Settings.DebugMode) throw;
-                            DisableConnectable(node);
-                        }
-
-                        // Only break out if schedule a tick later
-                        if (TickTime > 0)
-                            break;
-                    }
-
-                    // Start with the inputs again next time
+                    // Perform the polling as needed
                     if (_executionQueue.Count <= 0)
-                        _tickerMode = true;
-                }
+                        _tickersPosition = 0;
 
-                // Schedule the next tick
-                _tickTimer.Change(TickTime, Timeout.Infinite);
+                    if (_tickerMode)
+                    {
+                        // Continue polling where left off last poll
+                        while (_tickersPosition < _tickers.Count)
+                        {
+                            // Attempt to run the next available ticker
+                            if (_tickers[_tickersPosition].Connection.Enabled)
+                            {
+                                if (Settings.DebugMode)
+                                {
+                                    OnBlockActivated?.Invoke(this, _tickers[_tickersPosition].Connection);
+                                    _tickers[_tickersPosition++].Poll();
+                                }
+                                else
+                                    try
+                                    {
+                                        OnBlockActivated?.Invoke(this, _tickers[_tickersPosition].Connection);
+                                        _tickers[_tickersPosition++].Poll();
+                                        break;
+                                    }
+                                    catch
+                                    {
+                                        DisableConnectable(_tickers[_tickersPosition++].Connection);
+                                    }
+                            }
+                            else
+                            {
+                                _tickersPosition++;
+                            }
+                        }
+
+                        // If no poller found, must be at end of list. Make way for the executables
+                        if (_tickersPosition >= _tickers.Count)
+                        {
+                            _tickersPosition = -1;
+                            _tickerMode = false;
+                        }
+
+                    }
+                    else
+                    {
+                        // Move on and execute 
+                        while (_executionQueue.Count > 0)
+                        {
+                            var node = _executionQueue.Dequeue();
+                            if (!node.Enabled || (node.InputCount > 0 && !_connectableMetadata[node].LeftoverData.MinCountOnAllChannels(node.InputLength))) continue;
+                            _connectableMetadata[node].LeftoverData.ChannelIndex = 0;
+
+                            // Accept the incoming data
+                            if (Settings.DebugMode)
+                            {
+                                OnBlockActivated?.Invoke(this, node);
+                                node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
+                            }
+                            else
+                                try
+                                {
+                                    OnBlockActivated?.Invoke(this, node);
+                                    node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
+                                }
+                                catch
+                                {
+
+                                    DisableConnectable(node);
+                                }
+
+                            // Only break out if schedule a tick later
+                            if (TickTime > 0)
+                                break;
+                        }
+
+                        // Start with the inputs again next time
+                        if (_executionQueue.Count <= 0)
+                            _tickerMode = true;
+                    }
+
+                    // Schedule the next tick
+                    if (!Settings.UnlimitedTickrate)
+                        _tickTimer.Change(TickTime, Timeout.Infinite);
+                }
             }
         }
 
@@ -616,6 +633,7 @@ namespace SeniorDesign.Core
                 // Enqueue the new node to be run
                 _executionQueue.Enqueue(connection);
             }
+            data.Clear();
         }
 
         #endregion

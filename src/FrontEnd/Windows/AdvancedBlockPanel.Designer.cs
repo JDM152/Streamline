@@ -28,35 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.MenuStrip = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlockList = new System.Windows.Forms.ListBox();
             this.AddBlockButton = new System.Windows.Forms.Button();
             this.AddIOButton = new System.Windows.Forms.Button();
             this.DeleteBlockButton = new System.Windows.Forms.Button();
             this.ConnectionEditor = new SeniorDesign.FrontEnd.Components.Blocks.ConnectionViewerComponent();
             this.BlockViewComponent = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // MenuStrip
-            // 
-            this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
-            this.MenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(884, 24);
-            this.MenuStrip.TabIndex = 0;
-            this.MenuStrip.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.fileToolStripMenuItem.Text = "View";
             // 
             // BlockList
             // 
@@ -122,13 +100,6 @@
             this.BlockViewComponent.Size = new System.Drawing.Size(342, 351);
             this.BlockViewComponent.TabIndex = 2;
             // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-            // 
             // AdvancedBlockPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -140,28 +111,19 @@
             this.Controls.Add(this.AddBlockButton);
             this.Controls.Add(this.BlockViewComponent);
             this.Controls.Add(this.BlockList);
-            this.Controls.Add(this.MenuStrip);
-            this.MainMenuStrip = this.MenuStrip;
             this.MinimumSize = new System.Drawing.Size(900, 420);
             this.Name = "AdvancedBlockPanel";
             this.Text = "Block Viewer";
-            this.MenuStrip.ResumeLayout(false);
-            this.MenuStrip.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip MenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ListBox BlockList;
         private Components.Blocks.BlockViewerComponent BlockViewComponent;
         private System.Windows.Forms.Button AddBlockButton;
         private System.Windows.Forms.Button AddIOButton;
         private System.Windows.Forms.Button DeleteBlockButton;
         private Components.Blocks.ConnectionViewerComponent ConnectionEditor;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
