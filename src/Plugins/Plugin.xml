@@ -32,5 +32,10 @@
   <filter name="Low-Pass" class="SeniorDesign.Plugins.Filters.LowPassFilter"/>
   <filter name="High-Pass" class="SeniorDesign.Plugins.Filters.HighPassFilter"/>
   <filter name="Stop-Band" class="SeniorDesign.Plugins.Filters.StopBandFilter"/>
+  <filter name="Simpson's Integrator" class="SeniorDesign.Plugins.Filters.SimpsonsIntegratorFilter"/>
+  <filter name="Butterworth 1st Order High Pass" class="SeniorDesign.Plugins.Filters.ButterworthHighPassFilter1"/>
+  <filter name="Butterworth 2nd Order High Pass" class="SeniorDesign.Plugins.Filters.ButterworthHighPassFilter2"/>
+  <filter name="Butterworth 1st Order Low Pass" class="SeniorDesign.Plugins.Filters.ButterworthLowPassFilter1"/>
+  <filter name="Butterworth 2nd Order Low Pass" class="SeniorDesign.Plugins.Filters.ButterworthLowPassFilter2"/>
   
 </plugin>
