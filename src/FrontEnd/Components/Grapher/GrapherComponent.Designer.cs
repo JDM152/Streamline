@@ -42,6 +42,7 @@
             this.GlComponent.Size = new System.Drawing.Size(150, 150);
             this.GlComponent.TabIndex = 0;
             this.GlComponent.VSync = false;
+            this.GlComponent.Resize += new System.EventHandler(this.GlComponent_Resize);
             // 
             // GrapherComponent
             // 

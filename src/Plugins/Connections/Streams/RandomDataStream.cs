@@ -1,7 +1,9 @@
-﻿using SeniorDesign.Core.Attributes;
+﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Streams;
+using SeniorDesign.Core.Util;
 using System;
-using System.IO;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Connections
 {
@@ -9,9 +11,46 @@ namespace SeniorDesign.Plugins.Connections
     ///     A dummy type of Data Connection where random data is fed
     ///     as a byte stream.
     /// </summary>
-    [MetadataDataStream(AllowAsInput = true, AllowAsOutput = false)]
+    [MetadataDataStream(AllowAsInput = true, AllowAsOutput = false, GenericConverter = false)]
     public class RandomDataStream : DataStream
     {
+        #region User Config
+
+        /// <summary>
+        ///     The lowest random value that is allowed
+        /// </summary>
+        [UserConfigurableDouble(
+            Name = "Minimum",
+            Description = "The lowest value allowed"
+        )]
+        public double Minimum
+        {
+            get { return _minimum; }
+            set { _minimum = value; _off = _maximum - _minimum; }
+        }
+        private double _minimum = 0;
+
+        /// <summary>
+        ///     The highest random value that is allowed
+        /// </summary>
+        [UserConfigurableDouble(
+            Name = "Maximum",
+            Description = "The highest value allowed"
+        )]
+        public double Maximum
+        {
+            get { return _maximum; }
+            set { _maximum = value; _off = _maximum - _minimum; }
+        } 
+        private double _maximum = 100;
+
+        /// <summary>
+        ///     The difference between the min and max (faster calc)
+        /// </summary>
+        private double _off = 100;
+
+        #endregion
+
         /// <summary>
         ///     A name for this particular object type
         /// </summary>
@@ -26,40 +65,6 @@ namespace SeniorDesign.Plugins.Connections
         ///     Checks if this stream can be read from
         /// </summary>
         public override bool CanRead{  get { return true; } }
-
-        /// <summary>
-        ///     Checks if the position of the stream can be changed.
-        ///     Random will not allow to simplify finding the length.
-        /// </summary>
-        public override bool CanSeek { get { return false; } }
-
-        /// <summary>
-        ///     Checks if this stream can be written to.
-        /// </summary>
-        public override bool CanWrite { get { return false; } }
-
-        /// <summary>
-        ///     Gets the length of the available stream.
-        ///     Random will not allow seeking, so this throws.
-        /// </summary>
-        public override long Length { get { throw new NotSupportedException(); } }
-
-        /// <summary>
-        ///     Gets the current position in the stream.
-        ///     Random will not allow seeking, so this throws.
-        /// </summary>
-        public override long Position {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
-
-        /// <summary>
-        ///     Flushes all of the input from the buffer to the output.
-        /// </summary>
-        public override void Flush()
-        {
-            // Do nothing
-        }
 
         /// <summary>
         ///     Reads from the stream into a byte buffer
@@ -82,36 +87,54 @@ namespace SeniorDesign.Plugins.Connections
         }
 
         /// <summary>
-        ///     Moves to a position in the stream.
-        ///     Random does not allow seeking, so this throws.
+        ///     If this type of data stream supports ReadDirect.
+        ///     Note that this will only apply if the Converter has not been specified
         /// </summary>
-        /// <param name="offset">The position in the stream to move to</param>
-        /// <param name="origin">The position to use as the origin for the stream</param>
-        /// <returns>The position that was moved to in the stream</returns>
-        public override long Seek(long offset, SeekOrigin origin)
+        public override bool CanReadDirect { get { return true; } }
+
+        /// <summary>
+        ///     Reads directly from the stream, ignoring the Converter, and providing 
+        /// </summary>
+        /// <param name="count">The number of points to poll</param>
+        /// <returns>The data packet with at most count data points added</returns>
+        public override DataPacket ReadDirect(int count)
         {
-            throw new NotSupportedException();
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
+            while (count-- > 0)
+                toReturn[0].Add((RNG.NextDouble() * _off) + Minimum);
+            return toReturn;
         }
 
         /// <summary>
-        ///     Sets the length of the current stream.
-        ///     Random does not allow seeking, so this throws.
+        ///     Converts this object into a byte array representation
         /// </summary>
-        /// <param name="value">The length to set the stream.</param>
-        public override void SetLength(long value)
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
         {
-            throw new NotSupportedException();
+            // Start constructing the data array
+            var toReturn = new List<byte>(base.ToBytes());
+
+            // Add all of the user configurable options
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Minimum));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Maximum));
+
+            return toReturn.ToArray();
         }
 
         /// <summary>
-        ///     Writes bytes out to the stream.
+        ///     Restores the state of this object from the data of ToBytes()
         /// </summary>
-        /// <param name="buffer">The bytes to write to the stream</param>
-        /// <param name="offset">The offset into the buffer to start</param>
-        /// <param name="count">The number of bytes to write</param>
-        public override void Write(byte[] buffer, int offset, int count)
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
         {
-            throw new NotSupportedException();
+            // Restore the base first
+            base.Restore(data, ref offset);
+
+            // Restore all of the user configurable options
+            Minimum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
+            Maximum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
     }
 }

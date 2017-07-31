@@ -1,4 +1,5 @@
 ﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Connections;
 using System.Windows.Forms;
 
 namespace SeniorDesign.FrontEnd.Windows
@@ -12,6 +13,11 @@ namespace SeniorDesign.FrontEnd.Windows
         ///     The filename that is currently being edited
         /// </summary>
         protected string Filename = null;
+
+        /// <summary>
+        ///     An object used to reserve rendering time for OpenGL
+        /// </summary>
+        public static object RenderLock = new object();
 
         /// <summary>
         ///     The core of the program (the actual Streamline)
@@ -40,9 +46,39 @@ namespace SeniorDesign.FrontEnd.Windows
             if (!Core.Settings.DebugMode)
                 debugToolStripMenuItem.Dispose();
 
+            // Hide the components until something is selected
+            BlockViewer.Hide();
+            IOBlockViewer.Hide();
+
             // Set up the block editor
             BlockSchematic.SetCore(Core);
-            BlockSchematic.OnBlockSelected += (e, o) => BlockViewer.SetViewingComponent(o);
+            BlockSchematic.OnBlockSelected += DetermineViewingComponent;
+            
+        }
+
+        /// <summary>
+        ///     Determines which block viewer should be shown for the user
+        /// </summary>
+        private void DetermineViewingComponent(object owner, IConnectable c)
+        {
+            var dc = c as DataConnection;
+            if (dc != null)
+            {
+                // Treat as Data Connection
+                BlockViewer.SetViewingComponent(null);
+                IOBlockViewer.SetViewingComponent(dc);
+                IOBlockViewer.UpdateAllComponents();
+                BlockViewer.Hide();
+                IOBlockViewer.Show();
+            }
+            else
+            {
+                // Treat as generic block
+                BlockViewer.SetViewingComponent(c);
+                IOBlockViewer.SetViewingComponent(null);
+                BlockViewer.Show();
+                IOBlockViewer.Hide();
+            }
             
         }
 
@@ -163,6 +199,11 @@ namespace SeniorDesign.FrontEnd.Windows
                 _ioBlockCreatorPanel = new IOBlockCreatorPanel(Core);
             _ioBlockCreatorPanel.Show();
             _ioBlockCreatorPanel.BringToFront();
+        }
+
+        private void IOBlockViewer_Load(object sender, System.EventArgs e)
+        {
+
         }
     }
 }

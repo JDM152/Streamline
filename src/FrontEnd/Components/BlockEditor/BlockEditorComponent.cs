@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using SeniorDesign.FrontEnd.Components.BlockEditor.Drawable;
 using OpenTK;
+using SeniorDesign.FrontEnd.Windows;
 
 namespace SeniorDesign.FrontEnd.Components.BlockEditor
 {
@@ -94,6 +95,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         ///     If the GLControl is loaded, and it is safe to paint
         /// </summary>
         private bool _glLoaded = false;
+
+        /// <summary>
+        ///     If the GL controls have been initialized on the first draw
+        /// </summary>
+        private bool _glInit = false;
 
         /// <summary>
         ///     If the user is currently dragging something, and what that mode is
@@ -199,8 +205,6 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             // There's a glitch in OpenTK that the GLControl Load never
             // gets called, so this one works instead
             _glLoaded = true;
-            RenderRefresh();
-            Render();
         }
 
         /// <summary>
@@ -610,9 +614,17 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
 
             if (_isRendering)
                 return;
-            lock (_lock)
+            lock (ControlPanel.RenderLock)
             {
+                BlockControl.MakeCurrent();
+
                 _isRendering = true;
+                if (!_glInit)
+                {
+                    _glInit = true;
+                    RenderRefresh();
+                }
+
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
                 // Render every control available
@@ -627,7 +639,6 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 _isRendering = false;
             }
         }
-        private object _lock = new object();
         private bool _isRendering = false;
 
         private void RenderRefresh()

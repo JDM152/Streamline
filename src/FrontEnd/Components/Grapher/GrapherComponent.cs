@@ -5,6 +5,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using SeniorDesign.Core;
 using System.Drawing.Imaging;
+using SeniorDesign.FrontEnd.Windows;
 
 namespace SeniorDesign.FrontEnd.Components.Grapher
 {
@@ -44,6 +45,7 @@ namespace SeniorDesign.FrontEnd.Components.Grapher
         private Color renderColor = Color.Black;
         private Font font;
         private float textHeight = 5.0f;
+        private bool _isRendering = false;
 
         /// <summary>
         ///     this function take a datapacket and render it 
@@ -51,29 +53,34 @@ namespace SeniorDesign.FrontEnd.Components.Grapher
         public void Draw(DataPacket packet)
         {
             if (!_canRender) return;
+            if (_isRendering) return;
 
-            GlComponent.MakeCurrent();
-            GL.PushMatrix();
-            GL.ClearColor(backgroundColor);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Viewport(0, 0, GlComponent.Width, GlComponent.Height * 4 / 5);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(1, HISTORY, minY, maxY, -1, 1);
-            DrawData(packet);
-            GL.PopMatrix();
-            //different viewport
-            GL.PushMatrix();
-            GL.Viewport(0, GlComponent.Height * 3 / 4, GlComponent.Width, GlComponent.Height * 1 / 5);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, 1, 1, 0, -1, 1);
-            GL.Enable(EnableCap.Texture2D);
-            DrawStatitics(packet);
-            GL.Disable(EnableCap.Texture2D);
-            GL.PopMatrix();
-
-            GlComponent.SwapBuffers();
+            lock (ControlPanel.RenderLock)
+            {
+                _isRendering = true;
+                GlComponent.MakeCurrent();
+                GL.PushMatrix();
+                GL.ClearColor(backgroundColor);
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                GL.Viewport(0, 0, GlComponent.Width, GlComponent.Height * 4 / 5);
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.LoadIdentity();
+                GL.Ortho(1, HISTORY, minY, maxY, -1, 1);
+                DrawData(packet);
+                GL.PopMatrix();
+                //different viewport
+                GL.PushMatrix();
+                GL.Viewport(0, GlComponent.Height * 3 / 4, GlComponent.Width, GlComponent.Height * 1 / 5);
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.LoadIdentity();
+                GL.Ortho(0, 1, 1, 0, -1, 1);
+                GL.Enable(EnableCap.Texture2D);
+                DrawStatitics(packet);
+                GL.Disable(EnableCap.Texture2D);
+                GL.PopMatrix();
+                _isRendering = false;
+                GlComponent.SwapBuffers();
+            }
             DeleteHistory(packet);
         }
 
@@ -241,5 +248,12 @@ namespace SeniorDesign.FrontEnd.Components.Grapher
             GL.PopMatrix();
         }
 
+        /// <summary>
+        ///     Method triggered when the object resizes
+        /// </summary>
+        private void GlComponent_Resize(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -70,6 +70,7 @@ namespace SeniorDesign.FrontEnd.Windows
             _current.IsOutput = false;
             _ignoreUpdate = false;
 
+            IOBlockViewer.AttributeList.AllowEnable = false;
             IOBlockViewer.SetViewingComponent(_current);
             RefreshBlockListings();
         }

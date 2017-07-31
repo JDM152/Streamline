@@ -19,6 +19,11 @@ namespace SeniorDesign.FrontEnd.Components
         private object _owner;
 
         /// <summary>
+        ///     If the "Enable" button should be allowed for DataConnections
+        /// </summary>
+        public bool AllowEnable = true;
+
+        /// <summary>
         ///     Creates a new list of attribute editors
         /// </summary>
         public AttributeListComponent()
@@ -50,7 +55,7 @@ namespace SeniorDesign.FrontEnd.Components
 
             // Add a button for enabling if needed
             var dc = _owner as DataConnection;
-            if (dc != null)
+            if (AllowEnable && dc != null)
                 AttributeEditorList.Controls.Add(new EnableButtonComponent(dc));
 
             // Add every available field

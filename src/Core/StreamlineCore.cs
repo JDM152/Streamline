@@ -311,8 +311,9 @@ namespace SeniorDesign.Core
                                 _tickers[_tickersPosition++].Poll();
                                 break;
                             }
-                            catch (Exception ex)
+                            catch
                             {
+                                if (Settings.DebugMode) throw;
                                 DisableConnectable(_tickers[_tickersPosition++].Connection);
                             }
                         }
@@ -345,8 +346,9 @@ namespace SeniorDesign.Core
                             OnBlockActivated?.Invoke(this, node);
                             node.AcceptIncomingData(this, _connectableMetadata[node].LeftoverData);
                         }
-                        catch (Exception ex)
+                        catch
                         {
+                            if (Settings.DebugMode) throw;
                             DisableConnectable(node);
                         }
 
@@ -759,13 +761,18 @@ namespace SeniorDesign.Core
                 switch (data[pos++])
                 {
                     case 0x01: // Node definition
+                        if (lastConnectable != null)
+                        {
+                            AddConnectable(lastConnectable);
+                            lastConnectable = null;
+                        }
+
                         stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
                         type = Type.GetType(stype, true, true);
                         var cobj = (IConnectable) Activator.CreateInstance(type, this);
                         var robj = cobj as IRestorable;
                         robj.Restore(data, ref pos);
                         nodeMapping.Add(cobj.Id, cobj);
-                        AddConnectable(cobj);
                         if (cobj.Id >= _nodeIndex)
                             _nodeIndex = cobj.Id + 1;
 
@@ -774,6 +781,12 @@ namespace SeniorDesign.Core
                         break;
 
                     case 0x02: // Connection
+                        if (lastConnectable != null)
+                        {
+                            AddConnectable(lastConnectable);
+                            lastConnectable = null;
+                        }
+
                         var nodeId = ByteUtil.GetIntFromSizedArray(data, ref pos);
                         var nodeSize = ByteUtil.GetIntFromSizedArray(data, ref pos);
                         var parentNode = nodeMapping[nodeId];
@@ -818,8 +831,14 @@ namespace SeniorDesign.Core
                         break;
 
                     default: // Unknown
-                        throw new InvalidSchematicException(errorStr);
+                        throw new InvalidSchematicException(errorStr + " Unknown OP " + data[pos - 1]);
                 }
+            }
+
+            if (lastConnectable != null)
+            {
+                AddConnectable(lastConnectable);
+                lastConnectable = null;
             }
         }
 

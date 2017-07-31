@@ -35,6 +35,8 @@ namespace SeniorDesign.FrontEnd.Components.AttributeEditors
         /// </summary>
         private void OnEnabledChanged(object sender, bool e)
         {
+            if (EnableButton.InvokeRequired)
+                EnableButton.Invoke(new MethodInvoker(() => { OnEnabledChanged(sender, e); }));
             EnableButton.Text = e ? "Disable" : "Enable";
         }
 

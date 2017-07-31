@@ -45,9 +45,15 @@
             this.OpenSchematicDialog = new System.Windows.Forms.OpenFileDialog();
             this.AddFilterButton = new System.Windows.Forms.Button();
             this.AddIOButton = new System.Windows.Forms.Button();
-            this.BlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.BlockSchematic = new SeniorDesign.FrontEnd.Components.BlockEditor.BlockEditorComponent();
+            this.IOBlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.IOBlockViewerComponent();
+            this.BlockViewer = new SeniorDesign.FrontEnd.Components.Blocks.BlockViewerComponent();
             this.MenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MenuStrip
@@ -60,7 +66,7 @@
             this.helpToolStripMenuItem});
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(884, 24);
+            this.MenuStrip.Size = new System.Drawing.Size(984, 24);
             this.MenuStrip.TabIndex = 0;
             this.MenuStrip.Text = "Menu";
             // 
@@ -168,8 +174,7 @@
             // 
             // AddFilterButton
             // 
-            this.AddFilterButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddFilterButton.Location = new System.Drawing.Point(432, 27);
+            this.AddFilterButton.Location = new System.Drawing.Point(3, 3);
             this.AddFilterButton.Name = "AddFilterButton";
             this.AddFilterButton.Size = new System.Drawing.Size(176, 23);
             this.AddFilterButton.TabIndex = 2;
@@ -179,8 +184,7 @@
             // 
             // AddIOButton
             // 
-            this.AddIOButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddIOButton.Location = new System.Drawing.Point(432, 56);
+            this.AddIOButton.Location = new System.Drawing.Point(3, 32);
             this.AddIOButton.Name = "AddIOButton";
             this.AddIOButton.Size = new System.Drawing.Size(176, 23);
             this.AddIOButton.TabIndex = 3;
@@ -188,41 +192,74 @@
             this.AddIOButton.UseVisualStyleBackColor = true;
             this.AddIOButton.Click += new System.EventHandler(this.AddIOButton_Click);
             // 
-            // BlockViewer
+            // splitContainer1
             // 
-            this.BlockViewer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.BlockViewer.Location = new System.Drawing.Point(432, 90);
-            this.BlockViewer.Name = "BlockViewer";
-            this.BlockViewer.Size = new System.Drawing.Size(440, 340);
-            this.BlockViewer.TabIndex = 5;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.BlockSchematic);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.IOBlockViewer);
+            this.splitContainer1.Panel2.Controls.Add(this.AddFilterButton);
+            this.splitContainer1.Panel2.Controls.Add(this.BlockViewer);
+            this.splitContainer1.Panel2.Controls.Add(this.AddIOButton);
+            this.splitContainer1.Size = new System.Drawing.Size(984, 418);
+            this.splitContainer1.SplitterDistance = 430;
+            this.splitContainer1.TabIndex = 7;
             // 
             // BlockSchematic
             // 
             this.BlockSchematic.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.BlockSchematic.Location = new System.Drawing.Point(12, 27);
+            this.BlockSchematic.Location = new System.Drawing.Point(0, 0);
             this.BlockSchematic.Name = "BlockSchematic";
-            this.BlockSchematic.Size = new System.Drawing.Size(414, 403);
+            this.BlockSchematic.Size = new System.Drawing.Size(427, 418);
             this.BlockSchematic.TabIndex = 4;
+            // 
+            // IOBlockViewer
+            // 
+            this.IOBlockViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.IOBlockViewer.Location = new System.Drawing.Point(3, 61);
+            this.IOBlockViewer.Name = "IOBlockViewer";
+            this.IOBlockViewer.Size = new System.Drawing.Size(544, 357);
+            this.IOBlockViewer.TabIndex = 6;
+            this.IOBlockViewer.Load += new System.EventHandler(this.IOBlockViewer_Load);
+            // 
+            // BlockViewer
+            // 
+            this.BlockViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.BlockViewer.Location = new System.Drawing.Point(3, 61);
+            this.BlockViewer.Name = "BlockViewer";
+            this.BlockViewer.Size = new System.Drawing.Size(544, 357);
+            this.BlockViewer.TabIndex = 5;
             // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 442);
-            this.Controls.Add(this.BlockViewer);
-            this.Controls.Add(this.BlockSchematic);
-            this.Controls.Add(this.AddIOButton);
-            this.Controls.Add(this.AddFilterButton);
+            this.ClientSize = new System.Drawing.Size(984, 442);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.MenuStrip);
             this.MainMenuStrip = this.MenuStrip;
-            this.MinimumSize = new System.Drawing.Size(900, 480);
+            this.MinimumSize = new System.Drawing.Size(1000, 480);
             this.Name = "ControlPanel";
             this.Text = "Streamline - New Schematic";
             this.MenuStrip.ResumeLayout(false);
             this.MenuStrip.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -249,5 +286,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private Components.Blocks.BlockViewerComponent BlockViewer;
+        private Components.Blocks.IOBlockViewerComponent IOBlockViewer;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.AttributeList = new SeniorDesign.FrontEnd.Components.AttributeListComponent();
             this.label1 = new System.Windows.Forms.Label();
             this.BlockName = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -59,6 +60,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.AttributeList);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.BlockName);
             // 
@@ -66,8 +68,19 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(410, 375);
-            this.splitContainer1.SplitterDistance = 73;
+            this.splitContainer1.SplitterDistance = 103;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // AttributeList
+            // 
+            this.AttributeList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AttributeList.Location = new System.Drawing.Point(0, 27);
+            this.AttributeList.Margin = new System.Windows.Forms.Padding(0);
+            this.AttributeList.Name = "AttributeList";
+            this.AttributeList.Size = new System.Drawing.Size(410, 77);
+            this.AttributeList.TabIndex = 4;
             // 
             // label1
             // 
@@ -101,7 +114,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(410, 298);
+            this.splitContainer2.Size = new System.Drawing.Size(410, 268);
             this.splitContainer2.SplitterDistance = 129;
             this.splitContainer2.TabIndex = 1;
             // 
@@ -114,7 +127,7 @@
             this.StreamEditor.Location = new System.Drawing.Point(0, 0);
             this.StreamEditor.Margin = new System.Windows.Forms.Padding(0);
             this.StreamEditor.Name = "StreamEditor";
-            this.StreamEditor.Size = new System.Drawing.Size(129, 298);
+            this.StreamEditor.Size = new System.Drawing.Size(129, 268);
             this.StreamEditor.TabIndex = 0;
             // 
             // splitContainer3
@@ -130,7 +143,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.ConverterEditor);
-            this.splitContainer3.Size = new System.Drawing.Size(277, 298);
+            this.splitContainer3.Size = new System.Drawing.Size(277, 268);
             this.splitContainer3.SplitterDistance = 130;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -143,7 +156,7 @@
             this.PollerEditor.Location = new System.Drawing.Point(0, 0);
             this.PollerEditor.Margin = new System.Windows.Forms.Padding(0);
             this.PollerEditor.Name = "PollerEditor";
-            this.PollerEditor.Size = new System.Drawing.Size(130, 298);
+            this.PollerEditor.Size = new System.Drawing.Size(130, 268);
             this.PollerEditor.TabIndex = 0;
             // 
             // ConverterEditor
@@ -155,7 +168,7 @@
             this.ConverterEditor.Location = new System.Drawing.Point(0, 0);
             this.ConverterEditor.Margin = new System.Windows.Forms.Padding(0);
             this.ConverterEditor.Name = "ConverterEditor";
-            this.ConverterEditor.Size = new System.Drawing.Size(143, 298);
+            this.ConverterEditor.Size = new System.Drawing.Size(143, 268);
             this.ConverterEditor.TabIndex = 2;
             // 
             // IOBlockViewerComponent
@@ -192,5 +205,6 @@
         private IOBlocks.PollerEditorComponent PollerEditor;
         private IOBlocks.ConverterEditorComponent ConverterEditor;
         private System.Windows.Forms.Label label1;
+        internal AttributeListComponent AttributeList;
     }
 }

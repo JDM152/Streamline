@@ -2,8 +2,10 @@
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Connections.Streams;
+using SeniorDesign.Core.Util;
 using SeniorDesign.FrontEnd.Windows;
 using System;
+using System.Collections.Generic;
 
 namespace SeniorDesign.FrontEnd.Connections.Streams
 {
@@ -20,9 +22,10 @@ namespace SeniorDesign.FrontEnd.Connections.Streams
         /// </summary>
         [UserConfigurableInteger(
             Name = "History",
-            Description = "The number of values to graph"
+            Description = "The number of values to graph",
+            Minimum = 1
         )]
-        public int History;
+        public int History = 100;
 
         #endregion
 
@@ -91,6 +94,35 @@ namespace SeniorDesign.FrontEnd.Connections.Streams
             // Pass on to the grapher (if visible and available)
             if (_grapherWindow != null && !_grapherWindow.IsDisposed)
                 _grapherWindow.Grapher.Draw(data);
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            // Start constructing the data array
+            var toReturn = new List<byte>(base.ToBytes());
+
+            // Add all of the user configurable options
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(History));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            // Restore the base first
+            base.Restore(data, ref offset);
+
+            // Restore all of the user configurable options
+            History = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
     }

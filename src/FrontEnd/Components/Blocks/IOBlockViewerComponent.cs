@@ -48,6 +48,7 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
         public void SetViewingComponent(DataConnection component)
         {
             _selected = component;
+            AttributeList.SetComponent(_selected);
             ListBlockContent();
         }
 
@@ -71,6 +72,16 @@ namespace SeniorDesign.FrontEnd.Components.Blocks
 
                 ConverterEditor.SetViewingComponent(_selected.Converter);
             }
+        }
+
+        /// <summary>
+        ///     Updates all components attached to this object
+        /// </summary>
+        public void UpdateAllComponents()
+        {
+            UpdateMediaComponent();
+            UpdateConverterComponent();
+            UpdatePollerComponent();
         }
 
         /// <summary>

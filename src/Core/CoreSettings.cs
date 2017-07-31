@@ -27,7 +27,7 @@ namespace SeniorDesign.Core
             Description = "The number of milliseconds between each tick of simulation",
             Minimum = 1
         )]
-        public int TickTime = 100;
+        public int TickTime = 10;
 
         /// <summary>
         ///     If debug mode is currently enabled
