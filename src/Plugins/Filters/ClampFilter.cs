@@ -8,9 +8,9 @@ using System.Collections.Generic;
 namespace SeniorDesign.Plugins.Filters
 {
     /// <summary>
-    ///     A data filter that quantizes a signal
+    ///     A data filter that clamps a signal between two values
     /// </summary>
-    public class QuantizerFilter : DataFilter
+    public class ClampFilter : DataFilter
     {
         #region User Parameters
 
@@ -32,22 +32,12 @@ namespace SeniorDesign.Plugins.Filters
         )]
         public double Maximum = 100;
 
-        /// <summary>
-        ///     The size of the steps
-        /// </summary>
-        [UserConfigurableDouble(
-            Name = "Step Size",
-            Description = "The size of each step in the range.",
-            Minimum = 0.0000001
-        )]
-        public double StepSize = 10;
-
         #endregion
 
         /// <summary>
         ///     A name for this particular object type
         /// </summary>
-        public override string InternalName { get { return "Quantizer"; } }
+        public override string InternalName { get { return "Clamp Filter"; } }
 
         /// <summary>
         ///     The number of input connections this connectable accepts.
@@ -67,9 +57,9 @@ namespace SeniorDesign.Plugins.Filters
         public override int InputLength { get { return 1; } }
 
         /// <summary>
-        ///     Creates a new Quantizer Filter
+        ///     Creates a new Clamp Filter
         /// </summary>
-        public QuantizerFilter(StreamlineCore core) : base(core) { }
+        public ClampFilter(StreamlineCore core) : base(core) { }
 
         /// <summary>
         ///     Accepts incoming data from a previous connection.
@@ -85,7 +75,7 @@ namespace SeniorDesign.Plugins.Filters
 
             // Quantize all points in each channel
             // Loop through until no data is available
-            while ((BatchMode && data[0].Count > 0) || toReturn[0].Count == 0)
+            while (data[0].Count > 0)
             {
                 var currentData = data.Pop(0);
                 if (currentData < Minimum)
@@ -93,9 +83,9 @@ namespace SeniorDesign.Plugins.Filters
                 else if (currentData > Maximum)
                     toReturn[0].Add(Maximum);
                 else
-                    toReturn[0].Add(Math.Floor((currentData - Minimum) / StepSize) * StepSize + Minimum);
+                    toReturn[0].Add(currentData);
             }
-            
+
 
             // Push to the next node, and clear the saved data
             core.PassDataToNextConnectable(this, toReturn);
@@ -113,7 +103,6 @@ namespace SeniorDesign.Plugins.Filters
             // Add all of the user configurable options
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Minimum));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Maximum));
-            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(StepSize));
 
             return toReturn.ToArray();
         }
@@ -131,7 +120,6 @@ namespace SeniorDesign.Plugins.Filters
             // Restore all of the user configurable options
             Minimum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
             Maximum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
-            StepSize = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
     }
 }

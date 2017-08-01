@@ -59,7 +59,13 @@ namespace SeniorDesign.Plugins.Filters
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
             // Push the multiplied value to the next node
-            core.PassDataToNextConnectable(this, data.Pop(0) * Gain);
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
+
+            while ((BatchMode && data[0].Count > 0) || toReturn[0].Count == 0)
+                toReturn[0].Add(data.Pop(0) * Gain);
+
+            core.PassDataToNextConnectable(this, toReturn);
         }
 
     }

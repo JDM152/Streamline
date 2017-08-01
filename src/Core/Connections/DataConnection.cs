@@ -248,7 +248,7 @@ namespace SeniorDesign.Core.Connections
                 if (!_leftoverDecodedData.MinCountOnAllChannels(pollCount))
                 {
                     // Grab all available bytes, and pass it to the decoder
-                    var data = MediaConnection.ReadToEnd(Core.Settings.InputBuffer);
+                    var data = MediaConnection.ReadToEnd(pollCount);
                     if (_leftoverInputData != null)
                         _leftoverInputData = _leftoverInputData.Concat(data);
                     else

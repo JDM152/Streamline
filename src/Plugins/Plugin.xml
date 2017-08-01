@@ -15,7 +15,6 @@
   <stream name="CSV File Reader" class="SeniorDesign.Plugins.Connections.CSVFileReaderStream"/>
 
   <!-- Pollers decide when data is requested from streams -->
-  <poller name="Periodic" class="SeniorDesign.Plugins.Connections.Pollers.PeriodicPoller"/>
   <poller name="Tick" class="SeniorDesign.Plugins.Connections.Pollers.TickPoller"/>
   
   <!-- Converters change the raw bytes from a stream into data -->
@@ -27,6 +26,7 @@
   <filter name="Gain" class="SeniorDesign.Plugins.Filters.GainFilter"/>
   <filter name="Delay" class="SeniorDesign.Plugins.Filters.DelayFilter"/>
   <filter name="Quantizer" class="SeniorDesign.Plugins.Filters.QuantizerFilter"/>
+  <filter name="Clamp" class="SeniorDesign.Plugins.Filters.ClampFilter"/>
   <filter name="Rolling Average" class="SeniorDesign.Plugins.Filters.RollingAverageFilter"/>
   <filter name="Differentiator" class="SeniorDesign.Plugins.Filters.DifferentiatorFilter"/>
   <filter name="Integrator" class="SeniorDesign.Plugins.Filters.IntegratorFilter"/>

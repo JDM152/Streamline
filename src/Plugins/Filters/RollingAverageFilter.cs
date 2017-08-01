@@ -61,23 +61,20 @@ namespace SeniorDesign.Plugins.Filters
         {
             // Create the packet to return
             var toReturn = new DataPacket();
-            toReturn.EnsureChannelCount(data.ChannelCount);
+            toReturn.AddChannel();
 
             // Loop through until no data is available
-            while (data.MinCountOnAllChannels(SmoothingFactor))
+            while ((BatchMode && data[0].Count > SmoothingFactor) || toReturn[0].Count == 0)
             {
-                for (var k = 0; k < data.ChannelCount; k++)
-                {
-                    // Grab the required amount, but only pop off the earliest
-                    var fulldata = data.PeekRange(k, SmoothingFactor);
-                    data.Pop(k);
+                // Grab the required amount, but only pop off the earliest
+                var fulldata = data.PeekRange(0, SmoothingFactor);
+                data.Pop(0);
 
-                    // Calculate the average
-                    var currentData = 0.0;
-                    for (var j = 0; j < fulldata.Count; j++)
-                        currentData += fulldata[j];
-                    toReturn[k].Add(currentData / fulldata.Count);
-                }
+                // Calculate the average
+                var currentData = 0.0;
+                for (var j = 0; j < fulldata.Count; j++)
+                    currentData += fulldata[j];
+                toReturn[0].Add(currentData / fulldata.Count);
             }
 
             // Push the data

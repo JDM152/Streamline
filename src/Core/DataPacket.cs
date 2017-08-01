@@ -368,5 +368,27 @@ namespace SeniorDesign.Core
             return true;
         }
 
+        /// <summary>
+        ///     Ensures that a minimum of at least min points exists on every defined channel
+        /// </summary>
+        /// <param name="min">The minimum to enforce</param>
+        /// <returns>False if all data channels are empty, and nothing was added</returns>
+        public bool EnsureMinCountOnAllChannels(int min = 1, double def = 0)
+        {
+            int badCount = 0;
+            foreach (var channel in _data)
+                if (channel.Count < min)
+                    badCount++;
+
+            if (badCount >= _data.Count)
+                return false;
+
+
+            foreach (var channel in _data)
+                while (channel.Count < min)
+                    channel.Add(def);
+            return true;
+        }
+
     }
 }

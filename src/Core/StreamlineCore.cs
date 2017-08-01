@@ -380,6 +380,8 @@ namespace SeniorDesign.Core
                     // Schedule the next tick
                     if (!Settings.UnlimitedTickrate)
                         _tickTimer.Change(TickTime, Timeout.Infinite);
+
+                    oneCycle = true;
                 }
             }
         }

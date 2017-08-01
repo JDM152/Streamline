@@ -44,14 +44,21 @@ namespace SeniorDesign.Plugins.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
+
             // Sum every available channel
-            var val = 0.0;
-            for (var k = 0; k < data.ChannelCount; k++)
-                if (data[k].Count > 0)
-                    val += data.Pop(k);
+            while ((BatchMode && data.EnsureMinCountOnAllChannels(1, 0)) || toReturn[0].Count == 0)
+            {
+                var val = 0.0;
+                for (var k = 0; k < data.ChannelCount; k++)
+                    if (data[k].Count > 0)
+                        val += data.Pop(k);
+                toReturn[0].Add(val);
+            }
 
             // Push to the next node
-            core.PassDataToNextConnectable(this, val);
+            core.PassDataToNextConnectable(this, toReturn);
         }
 
     }

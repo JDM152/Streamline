@@ -58,9 +58,13 @@ namespace SeniorDesign.Plugins.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            // Only push if the number of points waiting is greater than the delay
-            if (data[0].Count > Delay)
-                core.PassDataToNextConnectable(this, data.Pop(0));
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
+
+            while ((BatchMode && data[0].Count > Delay) || toReturn[0].Count == 0)
+                toReturn[0].Add(data.Pop(0));
+
+            core.PassDataToNextConnectable(this, toReturn);
         }
 
     }

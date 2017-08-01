@@ -1,4 +1,5 @@
-﻿using SeniorDesign.Core.Util;
+﻿using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Util;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +10,19 @@ namespace SeniorDesign.Core.Filters
     /// </summary>
     public abstract class DataFilter : IConnectable, IRestorable
     {
+
+        #region User Configuration
+
+        /// <summary>
+        ///     If all available input should be processed per tick instead of X points
+        /// </summary>
+        [UserConfigurableBoolean(
+            Name = "Batch Mode",
+            Description = "If all available input should be processed per tick"    
+        )]
+        public bool BatchMode = false;
+
+        #endregion
 
         #region IConnectable
 
@@ -126,6 +140,7 @@ namespace SeniorDesign.Core.Filters
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Name));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionX));
             toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PositionY));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(BatchMode));
 
             return toReturn.ToArray();
         }
@@ -141,6 +156,7 @@ namespace SeniorDesign.Core.Filters
             Name = ByteUtil.GetStringFromSizedArray(data, ref offset);
             PositionX = ByteUtil.GetIntFromSizedArray(data, ref offset);
             PositionY = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            BatchMode = ByteUtil.GetBoolFromSizedArray(data, ref offset);
         }
 
         /// <summary>

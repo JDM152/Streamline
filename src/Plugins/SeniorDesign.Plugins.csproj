@@ -62,6 +62,7 @@
     <Compile Include="Filters\ButterworthHighPassFilter1.cs" />
     <Compile Include="Filters\ButterworthHighPassFilter2.cs" />
     <Compile Include="Filters\ButterworthLowPassFilter2.cs" />
+    <Compile Include="Filters\ClampFilter.cs" />
     <Compile Include="Filters\DelayFilter.cs" />
     <Compile Include="Filters\GainFilter.cs" />
     <Compile Include="Filters\ButterworthLowPassFilter1.cs" />
