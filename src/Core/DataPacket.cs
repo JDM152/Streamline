@@ -9,12 +9,6 @@ namespace SeniorDesign.Core
     {
 
         /// <summary>
-        ///     The index that new data should be added to.
-        ///     This resets every cycle
-        /// </summary>
-        public int ChannelIndex = 0;
-
-        /// <summary>
         ///     The collection of actual data
         /// </summary>
         private List<List<double>> _data = new List<List<double>>();
@@ -164,39 +158,28 @@ namespace SeniorDesign.Core
         }
 
         /// <summary>
-        ///     Adds values to the current channel, and increases
-        ///     the channel index by one.
-        ///     This should be used to keep previous data while still
-        ///     ensuring that channels are added as needed
+        ///     Adds values to a specific channel, creating it
+        ///     if it doesn't exist
         /// </summary>
-        /// <returns>The new current index</returns>
-        public int AddToCurrentChannel(double data)
+        public void AddToChannel(int channel, double data)
         {
-            if (_data.Count <= ChannelIndex)
+            if (_data.Count <= channel)
                 AddChannel(data);
             else
-                _data[ChannelIndex].Add(data);
-            ChannelIndex++;
-
-            return ChannelIndex;
+                _data[channel].Add(data);
         }
 
         /// <summary>
-        ///     Adds values to the current channel, and increases
-        ///     the channel index by one.
-        ///     This should be used to keep previous data while still
-        ///     ensuring that channels are added as needed
+        ///     Adds values to a specific channel, creating it
+        ///     if it doesn't exist
         /// </summary>
         /// <returns>The new current index</returns>
-        public int AddToCurrentChannel(DataPacket data)
+        public void AddToChannel(int channel, DataPacket data)
         {
-            if (_data.Count <= ChannelIndex)
+            if (_data.Count <= channel)
                 AddChannel(data[0]);
             else
-                _data[ChannelIndex] = data[0];
-            ChannelIndex++;
-
-            return ChannelIndex;
+                _data[channel] = data[0];
         }
 
         /// <summary>

@@ -346,8 +346,8 @@ namespace SeniorDesign.Core
                         while (_executionQueue.Count > 0)
                         {
                             var node = _executionQueue.Dequeue();
+                            if (!_connectableMetadata.ContainsKey(node)) continue;
                             if (!node.Enabled || (node.InputCount > 0 && !_connectableMetadata[node].LeftoverData.MinCountOnAllChannels(node.InputLength))) continue;
-                            _connectableMetadata[node].LeftoverData.ChannelIndex = 0;
 
                             // Accept the incoming data
                             if (Settings.DebugMode)
@@ -608,7 +608,8 @@ namespace SeniorDesign.Core
             foreach (var connection in root.NextConnections)
             {
                 // Add the data
-                _connectableMetadata[connection].LeftoverData.AddToCurrentChannel(data);
+                var channelId = _connectableMetadata[connection].IncomingConnections.IndexOf(root);
+                _connectableMetadata[connection].LeftoverData.AddToChannel(channelId, data);
 
                 // Enqueue the new node to be run
                 _executionQueue.Enqueue(connection);
@@ -628,7 +629,8 @@ namespace SeniorDesign.Core
             foreach (var connection in root.NextConnections)
             {
                 // Add the data
-                _connectableMetadata[connection].LeftoverData.AddToCurrentChannel(data);
+                var channelId = _connectableMetadata[connection].IncomingConnections.IndexOf(root);
+                _connectableMetadata[connection].LeftoverData.AddToChannel(channelId, data);
 
                 // Enqueue the new node to be run
                 _executionQueue.Enqueue(connection);

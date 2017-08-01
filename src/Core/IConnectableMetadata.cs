@@ -13,7 +13,8 @@ namespace SeniorDesign.Core
         public readonly DataPacket LeftoverData = new DataPacket();
 
         /// <summary>
-        ///     The connections that provide incoming data
+        ///     The connections that provide incoming data,
+        ///     and maps which channel the data is on
         /// </summary>
         public readonly IList<IConnectable> IncomingConnections = new List<IConnectable>();
 

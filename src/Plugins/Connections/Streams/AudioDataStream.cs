@@ -34,15 +34,6 @@ namespace SeniorDesign.Plugins.Connections
             }
         private int _samplingRate = 44100;
 
-        /// <summary>
-        ///     How many seconds of audio are required before playback begins
-        /// </summary>
-        [UserConfigurableInteger(
-            Name = "Autoplay Sample Count",
-            Description = "The number of points to wait for before auto-playing"
-        )]
-        public int AutoplayCount = 44100;
-
         #endregion
 
         /// <summary>
@@ -63,21 +54,13 @@ namespace SeniorDesign.Plugins.Connections
         /// <summary>
         ///     The stream reader that feeds into the audio device
         /// </summary>
-        protected RawSourceWaveStream SourceStream;
-
-        /// <summary>
-        ///     The stream that will store the written data
-        /// </summary>
-        protected MemoryStream Memory;
+        protected BufferedWaveProvider SourceStream;
 
         /// <summary>
         ///     Initializes the defaults for the audio player
         /// </summary>
         public AudioDataStream()
         {
-            // Create the memory stream to store the audio data in
-            Memory = new MemoryStream(SamplingRate * 2);
-
             // Create the audio player using Floating point format
             ResetWaveFormat();
         }
@@ -96,8 +79,10 @@ namespace SeniorDesign.Plugins.Connections
 
             // Change the format and the stream, and start playing
             Format = WaveFormat.CreateIeeeFloatWaveFormat(SamplingRate, 1);
-            SourceStream = new RawSourceWaveStream(Memory, Format);
+            SourceStream = new BufferedWaveProvider(Format);
+            SourceStream.DiscardOnBufferOverflow = true;
             Player.Init(SourceStream);
+            Player.Play();
         }
 
         /// <summary>
@@ -154,8 +139,6 @@ namespace SeniorDesign.Plugins.Connections
         /// <param name="count">The number of bytes to write</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            // Write to the memory buffer
-            Memory.Write(buffer, offset, count);
         }
 
         /// <summary>
@@ -175,20 +158,8 @@ namespace SeniorDesign.Plugins.Connections
                 // Add every available point
                 while (data[0].Count > 0)
                 {
-                    var d = BitConverter.GetBytes((float) data.Pop(0));
-                    Memory.Write(d, 0, d.Length);
-                }
-
-                // Swap out the buffers and play if we have enough for a sample
-                if (Memory.Position >= AutoplayCount)
-                {
-                    Memory.Position = 0;
-                    if (Player.PlaybackState == PlaybackState.Stopped)
-                        Player.Play();
-                    else
-                        Player.Resume();
-                    
-                    Memory.Position = 0;
+                    var temp = BitConverter.GetBytes((float) data.Pop(0));
+                    SourceStream.AddSamples(temp, 0, temp.Length);
                 }
             }
         }
