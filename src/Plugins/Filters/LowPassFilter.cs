@@ -145,7 +145,7 @@ namespace SeniorDesign.Plugins.Filters
             var toReturn = new DataPacket();
             toReturn.AddChannel();
 
-            while (data[0].Count >= 3)
+            while ((BatchMode && data[0].Count >= 3) || toReturn[0].Count == 0)
             {
 
                 var nd = _b2 * data[0][2] + _b1 * data[0][1] + _b0 * data[0][0] + _a1 * _y1 + _a0 * _y2;

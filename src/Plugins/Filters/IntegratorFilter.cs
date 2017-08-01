@@ -71,7 +71,7 @@ namespace SeniorDesign.Plugins.Filters
             var toReturn = new DataPacket();
             toReturn.AddChannel();
 
-            while (data[0].Count >= 2)
+            while ((BatchMode && data[0].Count >= 2) || data[0].Count == 0)
             {
                 // Calculate the new point
                 var nd = _samplingPeriod * data[0][1] + _samplingPeriod * data[0][0] + LastOutput;

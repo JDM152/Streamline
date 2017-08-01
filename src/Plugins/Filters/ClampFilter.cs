@@ -75,7 +75,7 @@ namespace SeniorDesign.Plugins.Filters
 
             // Quantize all points in each channel
             // Loop through until no data is available
-            while (data[0].Count > 0)
+            while ((BatchMode && data[0].Count > 0) || toReturn[0].Count == 0)
             {
                 var currentData = data.Pop(0);
                 if (currentData < Minimum)

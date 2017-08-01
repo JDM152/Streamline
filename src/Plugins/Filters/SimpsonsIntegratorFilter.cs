@@ -77,17 +77,24 @@ namespace SeniorDesign.Plugins.Filters
         /// <param name="core">The Streamline program this is a part of</param>
         public override void AcceptIncomingData(StreamlineCore core, DataPacket data)
         {
-            // Calculate the new point
-            var nd = _y2 + (data[0][2] + (4.0 * data[0][1]) + data[0][0]) / 3.0;
-            _y2 = _y1;
-            _y1 = _y0;
-            _y0 = nd;
+            var toReturn = new DataPacket();
+            toReturn.AddChannel();
 
-            // Remove the oldest data point
-            data.Pop(0);
+            while ((BatchMode && data[0].Count > InputLength) || toReturn[0].Count == 0)
+            {
+                // Calculate the new point
+                var nd = _y2 + (data[0][2] + (4.0 * data[0][1]) + data[0][0]) / 3.0;
+                _y2 = _y1;
+                _y1 = _y0;
+                _y0 = nd;
+
+                // Remove the oldest data point
+                data.Pop(0);
+                toReturn[0].Add(nd);
+            }
 
             // Push to the next node
-            core.PassDataToNextConnectable(this, nd);
+            core.PassDataToNextConnectable(this, toReturn);
         }
 
         /// <summary>
