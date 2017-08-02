@@ -386,7 +386,7 @@ namespace SeniorDesign.Core
                     if (!Settings.UnlimitedTickrate)
                         _tickTimer.Change(TickTime, Timeout.Infinite);
 
-                    oneCycle = true;
+                    oneCycle = false;
                 }
             }
         }

@@ -48,12 +48,11 @@ namespace SeniorDesign.Plugins.Filters
             toReturn.AddChannel();
 
             // Sum every available channel
-            while ((BatchMode && data.EnsureMinCountOnAllChannels(1, 0)) || toReturn[0].Count == 0)
+            while ((BatchMode && data.EnsureMinCountOnAllChannels(1, 0)) || (toReturn[0].Count == 0 && data.EnsureMinCountOnAllChannels(1, 0)))
             {
                 var val = 0.0;
                 for (var k = 0; k < data.ChannelCount; k++)
-                    if (data[k].Count > 0)
-                        val += data.Pop(k);
+                    val += data.Pop(k);
                 toReturn[0].Add(val);
             }
 

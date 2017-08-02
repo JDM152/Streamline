@@ -179,7 +179,7 @@ namespace SeniorDesign.Core
             if (_data.Count <= channel)
                 AddChannel(data[0]);
             else
-                _data[channel] = data[0];
+                _data[channel].AddRange(data[0]);
         }
 
         /// <summary>
