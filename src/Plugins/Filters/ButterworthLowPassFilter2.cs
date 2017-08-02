@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System;
@@ -10,6 +11,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that simulates a low-pass Butterworth analog filter
     /// </summary>
+    [RenderIcon(Filename = "ButterworthLowPass2")]
     public class ButterworthLowPassFilter2 : DataFilter
     {
 

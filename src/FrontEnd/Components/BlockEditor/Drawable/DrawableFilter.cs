@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Filters;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
 
 namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
 {
@@ -22,6 +23,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         /// <summary>
         ///     Draws this object on a specific GLControl
         /// </summary>
+        /*
         public override void Draw()
         {
             if (!Visible) return;
@@ -46,6 +48,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
 
             GL.PopMatrix();
         }
+        */
 
         /// <summary>
         ///     Deletes this object, and performs the updates in the core

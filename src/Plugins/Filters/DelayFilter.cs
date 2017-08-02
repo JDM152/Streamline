@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that delays input by a specified number of ticks
     /// </summary>
+    [RenderIcon(Filename = "Delay")]
     public class DelayFilter : DataFilter
     {
         #region User Configuration

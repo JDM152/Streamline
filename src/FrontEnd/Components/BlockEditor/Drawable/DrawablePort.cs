@@ -40,10 +40,10 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            GL.LineWidth(Highlighted ? 2.0f : 1.0f);
+            GL.LineWidth(Highlighted ? 4.0f : 2.0f);
             GL.Begin(PrimitiveType.LineLoop);
             {
-                GL.Color3(0.0f, 0.0f, 0.0f);
+                GL.Color3(BlockEditorComponent.LINECOLOR);
                 if (IsOutput)
                 {
                     GL.Vertex3(Owner.PositionX + BlockEditorComponent.BOXWIDTH, Owner.PositionY - BlockEditorComponent.LINELENGTH + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);

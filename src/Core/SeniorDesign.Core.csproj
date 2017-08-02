@@ -45,6 +45,7 @@
     <Compile Include="Attributes\Metadata\MetadataDataStreamAttribute.cs" />
     <Compile Include="Attributes\Metadata\MetadataPollerAttribute.cs" />
     <Compile Include="Attributes\Specialized\FunctionButtonAttribute.cs" />
+    <Compile Include="Attributes\Specialized\RenderIconAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableBooleanAttribute.cs" />
     <Compile Include="Attributes\UserConfigurable\UserConfigurableDoubleAttribute.cs" />

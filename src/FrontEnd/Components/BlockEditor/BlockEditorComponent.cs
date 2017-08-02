@@ -22,17 +22,22 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// <summary>
         ///     The width of boxes in pixels
         /// </summary>
-        public const int BOXWIDTH = 40;
+        public const int BOXWIDTH = 64;
 
         /// <summary>
         ///     The height of boxes in pixels
         /// </summary>
-        public const int BOXHEIGHT = 40;
+        public const int BOXHEIGHT = 64;
 
         /// <summary>
         ///     The length of the input/output lines
         /// </summary>
         public const int LINELENGTH = 5;
+
+        /// <summary>
+        ///     The color of the line
+        /// </summary>
+        public static Color LINECOLOR = Color.FromArgb(64, 128, 196);
 
         #endregion
 

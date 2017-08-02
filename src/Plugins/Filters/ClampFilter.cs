@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System;
@@ -10,6 +11,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that clamps a signal between two values
     /// </summary>
+    [RenderIcon(Filename = "Clamp")]
     public class ClampFilter : DataFilter
     {
         #region User Parameters
