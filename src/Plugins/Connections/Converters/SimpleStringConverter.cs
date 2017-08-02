@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Converter;
+using SeniorDesign.Core.Util;
 using SeniorDesign.Plugins.Enums;
 using System;
 using System.Collections.Generic;
@@ -91,5 +92,32 @@ namespace SeniorDesign.Plugins.Connections.Converters
         ///     The number of output streams this converts from a single byte stream
         /// </summary>
         public override int DecodeDataCount { get { return 1; } }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(SeperatorToken));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation((int) StringEncoding));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            SeperatorToken = ByteUtil.GetStringFromSizedArray(data, ref offset);
+            StringEncoding = (EncodingEnum) ByteUtil.GetIntFromSizedArray(data, ref offset);
+        }
     }
 }

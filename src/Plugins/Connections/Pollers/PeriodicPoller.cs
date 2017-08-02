@@ -1,6 +1,8 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Pollers;
+using SeniorDesign.Core.Util;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace SeniorDesign.Plugins.Connections.Pollers
@@ -96,6 +98,33 @@ namespace SeniorDesign.Plugins.Connections.Pollers
             // Reset the timer as needed
             if ((int) state != PollingTime)
                 PollingTimer.Change(PollingTime, PollingTime);
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PollingTime));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PollingCount));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            PollingTime = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            PollingCount = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
 
     }

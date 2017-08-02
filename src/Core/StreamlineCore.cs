@@ -119,6 +119,11 @@ namespace SeniorDesign.Core
         /// </summary>
         public event EventHandler<IConnectable> OnBlockActivated;
 
+        /// <summary>
+        ///     Event triggered whenever a project schematic is fully loaded
+        /// </summary>
+        public event EventHandler OnSchematicLoad;
+
         #endregion
 
         /// <summary>
@@ -776,10 +781,13 @@ namespace SeniorDesign.Core
             Type type;
 
             var errorStr = $"The schematic file {filename} is corrupted, and cannot be loaded.";
-
+            var curInstr = 0;
+            var prevInstr = 0;
             // Read each byte for instructions
             while (pos < data.Length)
             {
+                prevInstr = curInstr;
+                curInstr = data[pos];
                 switch (data[pos++])
                 {
                     case 0x01: // Node definition
@@ -826,6 +834,7 @@ namespace SeniorDesign.Core
                         stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
                         type = Type.GetType(stype, true, true);
                         var mobj = (DataStream) Activator.CreateInstance(type);
+                        mobj.Restore(data, ref pos);
                         lastDataConnection.MediaConnection = mobj;
 
                         break;
@@ -837,6 +846,7 @@ namespace SeniorDesign.Core
                         stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
                         type = Type.GetType(stype, true, true);
                         var pobj = (PollingMechanism) Activator.CreateInstance(type, this);
+                        pobj.Restore(data, ref pos);
                         lastDataConnection.Poller = pobj;
 
                         break;
@@ -848,6 +858,7 @@ namespace SeniorDesign.Core
                         stype = ByteUtil.GetStringFromSizedArray(data, ref pos);
                         type = Type.GetType(stype, true, true);
                         var cvobj = (DataConverter) Activator.CreateInstance(type);
+                        cvobj.Restore(data, ref pos);
                         lastDataConnection.Converter = cvobj;
 
                         break;
@@ -862,6 +873,8 @@ namespace SeniorDesign.Core
                 AddConnectable(lastConnectable);
                 lastConnectable = null;
             }
+
+            OnSchematicLoad?.Invoke(this, null);
         }
 
         /// <summary>

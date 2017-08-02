@@ -1,7 +1,9 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Streams;
+using SeniorDesign.Core.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SeniorDesign.Plugins.Connections
@@ -89,6 +91,31 @@ namespace SeniorDesign.Plugins.Connections
             while (count-- > 0)
                 toReturn[0].Add(_value);
             return toReturn;
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Value));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            Value = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
 
     }

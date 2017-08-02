@@ -136,5 +136,6 @@ namespace SeniorDesign.Plugins.Connections
             Minimum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
             Maximum = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
+
     }
 }

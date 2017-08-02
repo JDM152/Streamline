@@ -1,6 +1,8 @@
 ﻿using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Streams;
+using SeniorDesign.Core.Util;
 using System;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 
@@ -234,6 +236,39 @@ namespace SeniorDesign.Plugins.Connections
 
             // Update if this still needs compiled or not
             NeedsCompile = (Port == null || !Port.IsOpen);
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(PortName));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(BaudRate));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation((int) ParityBit));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation((int) StopBit));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(DataBits));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            PortName = ByteUtil.GetStringFromSizedArray(data, ref offset);
+            BaudRate = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            ParityBit = (Parity) ByteUtil.GetIntFromSizedArray(data, ref offset);
+            StopBit = (StopBits) ByteUtil.GetIntFromSizedArray(data, ref offset);
+            DataBits = ByteUtil.GetIntFromSizedArray(data, ref offset);
         }
     }
 }

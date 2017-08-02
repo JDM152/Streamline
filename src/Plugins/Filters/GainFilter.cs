@@ -1,6 +1,8 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Filters;
+using SeniorDesign.Core.Util;
+using System.Collections.Generic;
 
 namespace SeniorDesign.Plugins.Filters
 {
@@ -66,6 +68,31 @@ namespace SeniorDesign.Plugins.Filters
                 toReturn[0].Add(data.Pop(0) * Gain);
 
             core.PassDataToNextConnectable(this, toReturn);
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Gain));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            Gain = ByteUtil.GetDoubleFromSizedArray(data, ref offset);
         }
 
     }

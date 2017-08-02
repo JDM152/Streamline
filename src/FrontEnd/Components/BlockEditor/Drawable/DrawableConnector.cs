@@ -75,7 +75,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             var startY = (float) (Root.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT);
             var endX = (float) (Child.PositionX);
             var endY = (float) (Child.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT);
-            if (startX < endX)
+            if (startX > endX)
             {
                 var temp = startX;
                 startX = endX;

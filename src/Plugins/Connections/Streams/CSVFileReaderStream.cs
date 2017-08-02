@@ -1,7 +1,9 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Streams;
+using SeniorDesign.Core.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -169,6 +171,31 @@ namespace SeniorDesign.Plugins.Connections
             ErrorStrings.Add($"Select a valid CSV file");
             InvokeOnErrorStringsChanged();
             return false;
+        }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Filename));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            Filename = ByteUtil.GetStringFromSizedArray(data, ref offset);
         }
     }
 }

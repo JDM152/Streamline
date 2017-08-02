@@ -187,6 +187,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             _core.OnBlocksDisconnected += (e, o) => DisconnectBlocks(o.Item1, o.Item2);
             _core.OnBlockEnabled += (e, o) => Render();
             _core.OnBlockDisabled += (e, o) => Render();
+            _core.OnSchematicLoad += (e, o) => Render();
             //_core.OnBlockActivated += (e, o) => SetBlockActive(o);
 
             // Create the line that is displayed when connecting component
@@ -401,8 +402,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             {
                 // Create the main Block
                 var dfBlock = new DrawableFilter(_core, temp as DataFilter);
-                dfBlock.Object.PositionX = BlockControl.Width / 2;
-                dfBlock.Object.PositionY = BlockControl.Height / 2;
+                if (dfBlock.Object.PositionX == 0 && dfBlock.Object.PositionY == 0)
+                {
+                    dfBlock.Object.PositionX = BlockControl.Width / 2;
+                    dfBlock.Object.PositionY = BlockControl.Height / 2;
+                }
                 _renderables.Add(dfBlock.Z, dfBlock);
                 _objectMapping.Add(temp, dfBlock);
                 newDrawable = dfBlock;
@@ -410,8 +414,11 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
             else if (temp is DataConnection)
             {
                 var dcBlock = new DrawableInputOutput(_core, temp as DataConnection);
-                dcBlock.Object.PositionX = BlockControl.Width / 2;
-                dcBlock.Object.PositionY = BlockControl.Height / 2;
+                if (dcBlock.Object.PositionX == 0 && dcBlock.Object.PositionY == 0)
+                {
+                    dcBlock.Object.PositionX = BlockControl.Width / 2;
+                    dcBlock.Object.PositionY = BlockControl.Height / 2;
+                }
                 _renderables.Add(dcBlock.Z, dcBlock);
                 _objectMapping.Add(temp, dcBlock);
                 newDrawable = dcBlock;

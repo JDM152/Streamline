@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
 using SeniorDesign.Core.Connections.Converter;
+using SeniorDesign.Core.Util;
 using SeniorDesign.Plugins.Util;
 using System;
 using System.Collections.Generic;
@@ -111,6 +112,35 @@ namespace SeniorDesign.Plugins.Connections.Converters
         ///     The number of output streams this converts from a single byte stream
         /// </summary>
         public override int DecodeDataCount { get { return 1; } }
+
+        /// <summary>
+        ///     Converts this object into a byte array representation
+        /// </summary>
+        /// <returns>This object as a restoreable byte array</returns>
+        public override byte[] ToBytes()
+        {
+            var toReturn = new List<byte>(base.ToBytes());
+
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(DataSize));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(Signed));
+            toReturn.AddRange(ByteUtil.GetSizedArrayRepresentation(LittleEndianMode));
+
+            return toReturn.ToArray();
+        }
+
+        /// <summary>
+        ///     Restores the state of this object from the data of ToBytes()
+        /// </summary>
+        /// <param name="data">The data to restore from</param>
+        /// <param name="offset">The offset into the data to start</param>
+        public override void Restore(byte[] data, ref int offset)
+        {
+            base.Restore(data, ref offset);
+
+            DataSize = ByteUtil.GetIntFromSizedArray(data, ref offset);
+            Signed = ByteUtil.GetBoolFromSizedArray(data, ref offset);
+            LittleEndianMode = ByteUtil.GetBoolFromSizedArray(data, ref offset);
+        }
 
     }
 }
