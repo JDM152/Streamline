@@ -125,12 +125,7 @@
     <Compile Include="Components\Blocks\IOBlockViewerComponent.Designer.cs">
       <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\Grapher\GrapherComponent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Components\Grapher\GrapherComponent.Designer.cs">
-      <DependentUpon>GrapherComponent.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Components\Grapher\Grapher.cs" />
     <Compile Include="Components\IAttributeEditorComponent.cs" />
     <Compile Include="Components\AttributeEditors\SelectableListEditorComponent.cs">
       <SubType>UserControl</SubType>
@@ -284,9 +279,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\Blocks\IOBlockViewerComponent.resx">
       <DependentUpon>IOBlockViewerComponent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\Grapher\GrapherComponent.resx">
-      <DependentUpon>GrapherComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\Specialized\FunctionButtonComponent.resx">
       <DependentUpon>FunctionButtonComponent.cs</DependentUpon>

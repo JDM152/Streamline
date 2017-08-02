@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using SeniorDesign.Core;
 
 namespace SeniorDesign.FrontEnd.Windows
 {
@@ -14,6 +15,25 @@ namespace SeniorDesign.FrontEnd.Windows
         public GrapherPanel()
         {
             InitializeComponent();
+        }
+        private Grapher grapher;
+
+        private void GrapherPanel_Load(object sender, System.EventArgs e)
+        {
+            grapher = new Grapher(glControl1); 
+        }
+        
+
+        private void glControl1_Load(object sender, System.EventArgs e)
+        {
+        }
+        public void draw(DataPacket p)
+        {
+            if(grapher == null)
+            {
+                return;
+            }
+            grapher.Draw(p);
         }
     }
 }

@@ -28,34 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Grapher = new SeniorDesign.FrontEnd.Components.Grapher.GrapherComponent();
+            this.glControl1 = new OpenTK.GLControl();
             this.SuspendLayout();
             // 
-            // Grapher
+            // glControl1
             // 
-            this.Grapher.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Grapher.Location = new System.Drawing.Point(12, 12);
-            this.Grapher.Name = "Grapher";
-            this.Grapher.Size = new System.Drawing.Size(260, 238);
-            this.Grapher.TabIndex = 0;
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(13, 14);
+            this.glControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(416, 410);
+            this.glControl1.TabIndex = 0;
+            this.glControl1.VSync = false;
+            this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
             // 
             // GrapherPanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.Grapher);
-            this.MinimumSize = new System.Drawing.Size(300, 300);
+            this.ClientSize = new System.Drawing.Size(442, 438);
+            this.Controls.Add(this.glControl1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MinimumSize = new System.Drawing.Size(439, 431);
             this.Name = "GrapherPanel";
             this.Text = "Grapher";
+            this.Load += new System.EventHandler(this.GrapherPanel_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        internal Components.Grapher.GrapherComponent Grapher;
+        private OpenTK.GLControl glControl1;
     }
 }
