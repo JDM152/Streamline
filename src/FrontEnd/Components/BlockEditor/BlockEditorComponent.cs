@@ -648,6 +648,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
                 }
 
                 BlockControl.SwapBuffers();
+                BlockControl.Context.MakeCurrent(null);
                 _isRendering = false;
             }
         }

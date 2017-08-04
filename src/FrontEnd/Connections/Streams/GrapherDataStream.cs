@@ -92,8 +92,9 @@ namespace SeniorDesign.FrontEnd.Connections.Streams
         public override void WriteDirect(DataPacket data)
         {
             // Pass on to the grapher (if visible and available)
-            if (_grapherWindow != null && !_grapherWindow.IsDisposed)
-                _grapherWindow.Grapher.Draw(data);
+            if (_grapherWindow != null && !_grapherWindow.IsDisposed  && _grapherWindow.Visible)
+                  _grapherWindow.draw(data);
+
         }
 
         /// <summary>
