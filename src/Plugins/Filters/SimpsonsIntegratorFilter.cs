@@ -49,7 +49,7 @@ namespace SeniorDesign.Plugins.Filters
         /// <summary>
         ///     The number of samples per field required to use this filter
         /// </summary>
-        public override int InputLength { get { return 2; } }
+        public override int InputLength { get { return 3; } }
 
         /// <summary>
         ///     The last output data, used in future calculations

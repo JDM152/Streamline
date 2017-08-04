@@ -74,7 +74,7 @@ namespace SeniorDesign.Plugins.Filters
             _b0 = _b2;
 
             _a1 = (2 * t2wp2 - 8) / bottom;
-            _a0 = (4 + 2 * Math.Sqrt(2) * twp - t2wp2) / bottom;
+            _a0 = (4 - 2 * Math.Sqrt(2) * twp + t2wp2) / bottom;
 
         }
 

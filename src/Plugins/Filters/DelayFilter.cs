@@ -10,7 +10,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that delays input by a specified number of ticks
     /// </summary>
-    [RenderIcon(Filename = "Delay")]
+    [RenderIcon(Filename = "TimeDelay")]
     public class DelayFilter : DataFilter
     {
         #region User Configuration
