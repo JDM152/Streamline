@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that computes the rolling average of a given number
     /// </summary>
+    [RenderIcon(Filename = "Smoothing")]
     public class RollingAverageFilter : DataFilter
     {
         #region User Configuration

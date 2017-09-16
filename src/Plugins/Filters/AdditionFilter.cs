@@ -1,4 +1,5 @@
 ﻿using SeniorDesign.Core;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 
 namespace SeniorDesign.Plugins.Filters
@@ -6,6 +7,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that combines two data streams using addition
     /// </summary>
+    [RenderIcon(Filename = "Addition")]
     public class AdditionFilter : DataFilter
     {
 

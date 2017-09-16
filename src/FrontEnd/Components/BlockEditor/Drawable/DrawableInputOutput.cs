@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core;
 using OpenTK.Graphics.OpenGL;
 using SeniorDesign.Core.Connections;
+using System.Drawing;
 
 namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
 {
@@ -22,8 +23,15 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
         public DrawableInputOutput(StreamlineCore core, DataConnection c) : base(core, c)
         {
             Z = 2;
+
+            // Change the texture to Input/Output
+            if (IsOutput)
+                SetBitmap("Output");
+            else
+                SetBitmap("Input");
         }
 
+        /*
         /// <summary>
         ///     Draws this object on a specific GLControl
         /// </summary>
@@ -72,6 +80,7 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
 
             GL.PopMatrix();
         }
+        */
 
         /// <summary>
         ///     Deletes this object, and performs the updates in the core

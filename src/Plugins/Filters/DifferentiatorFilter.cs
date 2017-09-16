@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that performs differentiation on a stream
     /// </summary>
+    [RenderIcon(Filename = "Differentiator")]
     public class DifferentiatorFilter : DataFilter
     {
 
@@ -22,7 +24,7 @@ namespace SeniorDesign.Plugins.Filters
             Description = "The weight given to the difference between points",
             Minimum = 0.00000001
         )]
-        public double SamplingPeriod { get { return 2.0 / _samplingPeriod; } set { _samplingPeriod = 2.0 / value; } }
+        public double SamplingPeriod { get { return _samplingPeriod / 2.0; } set { _samplingPeriod = value * 2.0; } }
         private double _samplingPeriod = 1.0;
 
         #endregion

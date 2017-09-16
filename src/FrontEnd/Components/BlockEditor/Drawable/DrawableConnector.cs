@@ -1,6 +1,7 @@
 ﻿using SeniorDesign.Core;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Drawing;
 
 namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
 {
@@ -43,10 +44,10 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor.Drawable
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            GL.LineWidth(Highlighted ? 2.0f : 1.0f);
+            GL.LineWidth(Highlighted ? 4.0f : 2.0f);
             GL.Begin(PrimitiveType.Lines);
             {
-                GL.Color3(0.0f, 0.0f, 0.0f);
+                GL.Color3(BlockEditorComponent.LINECOLOR);
                 GL.Vertex3(Root.PositionX + BlockEditorComponent.BOXWIDTH, Root.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
                 GL.Vertex3(Child.PositionX, Child.PositionY + 0.5 * BlockEditorComponent.BOXHEIGHT, 0.0f);
             }

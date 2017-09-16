@@ -22,17 +22,22 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         /// <summary>
         ///     The width of boxes in pixels
         /// </summary>
-        public const int BOXWIDTH = 40;
+        public const int BOXWIDTH = 64;
 
         /// <summary>
         ///     The height of boxes in pixels
         /// </summary>
-        public const int BOXHEIGHT = 40;
+        public const int BOXHEIGHT = 64;
 
         /// <summary>
         ///     The length of the input/output lines
         /// </summary>
         public const int LINELENGTH = 5;
+
+        /// <summary>
+        ///     The color of the line
+        /// </summary>
+        public static Color LINECOLOR = Color.FromArgb(64, 128, 196);
 
         #endregion
 
@@ -397,49 +402,56 @@ namespace SeniorDesign.FrontEnd.Components.BlockEditor
         {
             IDrawableIConnectable newDrawable;
 
-            // Create a new Block depending on the type
-            if (temp is DataFilter)
+            lock (ControlPanel.RenderLock)
             {
-                // Create the main Block
-                var dfBlock = new DrawableFilter(_core, temp as DataFilter);
-                if (dfBlock.Object.PositionX == 0 && dfBlock.Object.PositionY == 0)
-                {
-                    dfBlock.Object.PositionX = BlockControl.Width / 2;
-                    dfBlock.Object.PositionY = BlockControl.Height / 2;
-                }
-                _renderables.Add(dfBlock.Z, dfBlock);
-                _objectMapping.Add(temp, dfBlock);
-                newDrawable = dfBlock;
-            }
-            else if (temp is DataConnection)
-            {
-                var dcBlock = new DrawableInputOutput(_core, temp as DataConnection);
-                if (dcBlock.Object.PositionX == 0 && dcBlock.Object.PositionY == 0)
-                {
-                    dcBlock.Object.PositionX = BlockControl.Width / 2;
-                    dcBlock.Object.PositionY = BlockControl.Height / 2;
-                }
-                _renderables.Add(dcBlock.Z, dcBlock);
-                _objectMapping.Add(temp, dcBlock);
-                newDrawable = dcBlock;
-            }
-            else
-            {
-                throw new NotSupportedException($"The type {temp.GetType()} does not have an associated block symbol");
-            }
+                BlockControl.MakeCurrent();
 
-            // Create an input and an output port as needed
-            if (temp.OutputCount != 0)
-            {
-                var oPort = new DrawablePort(_core, temp, true);
-                _renderables.Add(oPort.Z, oPort);
-                newDrawable.MappedObjects.Add(oPort);
-            }
-            if (temp.InputCount != 0)
-            {
-                var iPort = new DrawablePort(_core, temp, false);
-                _renderables.Add(iPort.Z, iPort);
-                newDrawable.MappedObjects.Add(iPort);
+                // Create a new Block depending on the type
+                if (temp is DataFilter)
+                {
+                    // Create the main Block
+                    var dfBlock = new DrawableFilter(_core, temp as DataFilter);
+                    if (dfBlock.Object.PositionX == 0 && dfBlock.Object.PositionY == 0)
+                    {
+                        dfBlock.Object.PositionX = BlockControl.Width / 2;
+                        dfBlock.Object.PositionY = BlockControl.Height / 2;
+                    }
+                    _renderables.Add(dfBlock.Z, dfBlock);
+                    _objectMapping.Add(temp, dfBlock);
+                    newDrawable = dfBlock;
+                }
+                else if (temp is DataConnection)
+                {
+                    var dcBlock = new DrawableInputOutput(_core, temp as DataConnection);
+                    if (dcBlock.Object.PositionX == 0 && dcBlock.Object.PositionY == 0)
+                    {
+                        dcBlock.Object.PositionX = BlockControl.Width / 2;
+                        dcBlock.Object.PositionY = BlockControl.Height / 2;
+                    }
+                    _renderables.Add(dcBlock.Z, dcBlock);
+                    _objectMapping.Add(temp, dcBlock);
+                    newDrawable = dcBlock;
+                }
+                else
+                {
+                    throw new NotSupportedException($"The type {temp.GetType()} does not have an associated block symbol");
+                }
+
+                // Create an input and an output port as needed
+                if (temp.OutputCount != 0)
+                {
+                    var oPort = new DrawablePort(_core, temp, true);
+                    _renderables.Add(oPort.Z, oPort);
+                    newDrawable.MappedObjects.Add(oPort);
+                }
+                if (temp.InputCount != 0)
+                {
+                    var iPort = new DrawablePort(_core, temp, false);
+                    _renderables.Add(iPort.Z, iPort);
+                    newDrawable.MappedObjects.Add(iPort);
+                }
+
+                BlockControl.Context.MakeCurrent(null);
             }
 
             // Select the block

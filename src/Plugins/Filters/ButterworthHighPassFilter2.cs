@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System;
@@ -10,6 +11,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that simulates a low-pass Butterworth analog filter
     /// </summary>
+    [RenderIcon(Filename = "ButterworthHighPass2")]
     public class ButterworthHighPassFilter2 : DataFilter
     {
 
@@ -72,7 +74,7 @@ namespace SeniorDesign.Plugins.Filters
             _b0 = _b2;
 
             _a1 = (2 * t2wp2 - 8) / bottom;
-            _a0 = (4 + 2 * Math.Sqrt(2) * twp - t2wp2) / bottom;
+            _a0 = (4 - 2 * Math.Sqrt(2) * twp + t2wp2) / bottom;
 
         }
 

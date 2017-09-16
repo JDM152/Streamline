@@ -89,6 +89,7 @@
     <Compile Include="Components\BlockEditor\Drawable\DrawableLine.cs" />
     <Compile Include="Components\BlockEditor\Drawable\DrawableObject.cs" />
     <Compile Include="Components\BlockEditor\Drawable\DrawablePort.cs" />
+    <Compile Include="Components\BlockEditor\ImageCache.cs" />
     <Compile Include="Components\Blocks\BlockViewerComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -358,6 +359,9 @@
     <EmbeddedResource Include="Plugin.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>XCOPY "$(SolutionDir)resources/Icons" "Resources/Icons" /Y /I /S</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

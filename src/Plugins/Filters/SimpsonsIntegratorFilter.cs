@@ -1,5 +1,6 @@
 ﻿using SeniorDesign.Core;
 using SeniorDesign.Core.Attributes;
+using SeniorDesign.Core.Attributes.Specialized;
 using SeniorDesign.Core.Filters;
 using SeniorDesign.Core.Util;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace SeniorDesign.Plugins.Filters
     /// <summary>
     ///     A data filter that performs integration on a stream
     /// </summary>
+    [RenderIcon(Filename = "Integrator2")]
     public class SimpsonsIntegratorFilter : DataFilter
     {
 
@@ -47,7 +49,7 @@ namespace SeniorDesign.Plugins.Filters
         /// <summary>
         ///     The number of samples per field required to use this filter
         /// </summary>
-        public override int InputLength { get { return 2; } }
+        public override int InputLength { get { return 3; } }
 
         /// <summary>
         ///     The last output data, used in future calculations
